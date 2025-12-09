@@ -35,23 +35,35 @@ masterarbeit/
 
 ## Usage
 
-### Über Docker
-1. Indexing entweder vorher (über indexing.py) oder nach start über "docker exec rag-app python -m indexing.py"
-2. docker compose up --build
-3. Fragen an FastAPI /ask POST schicken
+1. Docker container starten (+ Image bauen):
+```shell
+docker compose up -d
+```
+2. Indexing Warmup starten:
+```shell
+docker exec rag-app python -m app.warmup_indexing
+```
+3. [MESSUNG] Indexing ausführen:
+```shell
+docker exec rag-app python -m app.indexing
+```
+4. RAG-APP Warmup starten:
+```shell
+docker exec rag-app python -m app.warmup_rag
+```
+5. [MESSUNG] Lasttest auf RAG-APP ausführen ...
 
-### Locally
-1. Indexing über indexing.py
-2. Starten des Systems über api_server.py
-3. Fragen an FastAPI /ask POST schicken
 
 ## Notizen
 Aktuelles Embedding Modell: sentence-transformers/all-MiniLM-L6-v2, [Dokumentation](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2). Wird beim indexing und retrieval (embedding der Frage) verwendet.
 
 Aktuelle LLM (Generation): llama3:8b, [Dokumentation](https://ollama.com/library/llama3). Generiert aus der Frage und dem Kontext eine Antwort.
 
+### sentence_transformers backend
+Bietet die Wahl eines (aus 3) Backends für Sentence Transformers zu nutzen. Default ist PyTorch, für GPU sollte ich mir ONNX anschauen und OpenVINO bietet Beschleunigungen für die CPU (nicht so interessant). So kann die Inferenz der Modelle beschleunigt werdern. Siehe [Dokumentation](https://sbert.net/docs/sentence_transformer/usage/efficiency.html).
+
 ### "Chunking-Strategie"
-Übersicht zur einfachen Chunking-Strategie mit dem aktellen Embedding Model:
+Übersicht zur einfachen Chunking-Strategie (siehe [indexing.py](src/app/indexing.py), Zeile 76 ff., simple_chunk()) mit dem aktellen Embedding Model:
 - Embedding Model [all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2) verwendet einen 384-dimensionalen Vektorraum
 - Bei aktueller Config (chunk_size=512, overlap=64) werden die 11 Dokumente in insgesamt 33.490 chunks eingeteilt
 - Das sind dann `384 * 33.490 = 12.860.160` float-Werte
@@ -90,7 +102,7 @@ Detaillierter Ablauf des RAG-Systems:
 ### indexing
 Um das indexing über die GPU laufen zu lassen, ist in Windows der einfachste Weg das Script über docker zu starten:
 ```bash
-docker compose run --rm rag-app python -m app.indexing
+docker exec rag-app python -m app.indexing
 ```
 
 Pre-Condition des RAG-Systems, die Dokumente werden
@@ -125,6 +137,9 @@ Die Frage muss dafür auch erst einmal embedded werden, dafür wird dasselbe Sen
 Einfach Template für den Prompt, der an die LLM weitergegeben wird, bestehend aus
 - Kontext
 - Frage
+
+### embedding
+Lade ein SentenceTranformer Model, dass Text embedden kann. Wenn möglich wird das Model auf einer GPU (cuda) ausgeführt, wenn nicht auf der CPU. Modelle werden in [emb_models](emb_models) gespeichert. Siehe [Dokumentation](https://sbert.net/docs/sentence_transformer/usage/efficiency.html) zur Wahl eines Backends zur Effizienzsteigerung (z.B. ONNX).
 
 ### llm_client
 Verwendung von Ollama zum Self-Hosting der LLM (Unabhängigkeit). Separater Docker container wird zum Hosten der LLM verwendet, dadurch lassen sich die Messungen voneinander trennen. Die Last der LLM wird getrennt vom restlichen RAG-System. Der Docker container läuft über die GPU (siehe [Docker](#docker)).

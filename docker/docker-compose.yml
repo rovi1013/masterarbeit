@@ -1,0 +1,58 @@
+services:
+  rag-app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: rag-app
+    env_file:
+      - .env
+    environment:
+      DATA_DIR: ${DATA_DIR}                         # Ordner der Dokumente
+      INDEX_DIR: ${INDEX_DIR}                       # Ordner der Datenbank
+      OLLAMA_HOST: "http://ollama:11434"            # Ollama host address
+      OLLAMA_MODEL: ${OLLAMA_MODEL}                 # Ollama Model
+      LOG_DIR: /logs                                # Log Dateien
+      EMBEDDING_MODEL_DIR: ${EMBEDDING_MODEL_DIR}   # Embedding Models
+      HF_HOME: /root/.cache/huggingface             # Fester Ordner für HF Cache
+      ANONYMIZED_TELEMETRY: "False"                 # Disable ChromaDB telemetry
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../src/data:/src/data
+      - ../hf-cache:/root/.cache/huggingface
+      - ../logs:/logs
+      - ../emb_models:/emb_models
+    depends_on:
+      - ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [ gpu ]
+
+  ollama:
+    container_name: ollama
+    image: ollama/ollama:latest
+    env_file:
+      - .env
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama           # Caching Ollama Models
+      - ./entrypoint.sh:/entrypoint.sh
+    environment:
+      OLLAMA_MODEL: ${OLLAMA_MODEL}         # Ollama Model from .env
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [ gpu ]
+    entrypoint: ["/usr/bin/bash", "/entrypoint.sh"]
+
+volumes:
+  ollama-data:

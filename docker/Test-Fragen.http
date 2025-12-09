@@ -1,0 +1,47 @@
+### Frage 1
+POST http://localhost:8000/ask
+Content-Type: application/json; charset=utf-8
+
+{
+  "question": "Was kannst du mir zum Thema Nachhaltigkeit erzählen?"
+}
+
+### Frage 2
+POST http://localhost:8000/ask
+Content-Type: application/json; charset=utf-8
+
+{
+  "question": "Welche Ziele werden verfolgt, um eine bessere Nachhaltigkeit zu erreichen?"
+}
+
+### Frage 3
+POST http://localhost:8000/ask
+Content-Type: application/json; charset=utf-8
+
+{
+  "question": "Was ist der European Green Deal?"
+}
+
+### Frage 4
+POST http://localhost:8000/ask
+Content-Type: application/json; charset=utf-8
+
+{
+  "question": "Lässt sich der Klimawandel noch stoppen?"
+}
+
+### Frage 5
+POST http://localhost:8000/ask
+Content-Type: application/json; charset=utf-8
+
+{
+  "question": "Was muss unternommen werden, um den Klimawandel zu stoppen?"
+}
+
+### Frage 6
+POST http://localhost:8000/ask
+Content-Type: application/json; charset=utf-8
+
+{
+  "question": "Was ist ein Treibhausgas und welches ist am meisten für den Klimawandel verantwortlich?"
+}
