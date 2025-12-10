@@ -7,7 +7,7 @@ WORKDIR /src
 COPY ../requirements.txt /src/requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# App kopieren
+# App in image kopieren
 COPY ../src/app /src/app
 
 # Port für FastAPI

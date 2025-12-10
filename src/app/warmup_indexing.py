@@ -17,6 +17,10 @@ def main():
 
     # Embedding Model vorladen und ein einfaches embedding ausführen
     model = get_embed_model(cfg)
+    embedding_1 = model.encode(["Kleines Warmup"], convert_to_numpy=True)
+    embedding_2 = model.encode(["Kleines Warmup_"], convert_to_numpy=True)
+    similarity = model.similarity(embedding_1, embedding_2)
+    logger.debug(f"[WARMUP] Ergebnisse der Ähnlichkeitsmessung: {similarity.item()}")
     model.encode(["Kleines Warmup"], convert_to_numpy=True)
 
 

@@ -11,23 +11,29 @@ masterarbeit/
 │   ├── docker-compose/         # Docker Compose
 │   ├── .env                    # Environment Variablen
 │   ├── entrypoint.sh           # Entrypoint Script
+│   ├── Test-Frage.http         # Test für RAG-APP
 │   └── usage_scenario/         # GMT Usage Scenario
 │
-├── src/                        # SOURCE CODE
-│   ├── app/                    # RAG App
+├── src/                        # SOURCE CODE & DATA
+│   ├── app/                    # RAG-APP
 │   │   ├── config              # Konfiguration des RAG-Systems
 │   │   ├── api_server          # API Endpoint
+│   │   ├── embedding           # Lade sentence-transformer model
 │   │   ├── indexing            # Erstellen einer Datenbank aus Dokumenten
 │   │   ├── retrieval           # Abruf aus Datenbank 
 │   │   ├── prompt_template     # Prompt Template
 │   │   ├── llm_client          # LLM (Ollama) Client
-│   │   ├── rag_pipeline        # RAG-System
-│   │   └── logging_config      # Logging
+│   │   ├── simple_logging      # Logging
+│   │   ├── warmup_indexing     # Warmup Script Indexing
+│   │   └── warmup_rag          # Warmup Script RAG-APP
 │   │
 │   └── data/
 │       ├── index/              # Kontext Datenbank
 │       └── raw/                # Raw Dokumente
 │
+├── emb_models/                 # Embedding Models Cache
+├── hf-cache/                   # Hugging Face Cache
+├── logs/                       # Logging
 ├── thesis/                     # Submodule Thesis (Overleaf-Sync)
 ├── requirements.txt
 └── README.md
@@ -139,10 +145,10 @@ Einfach Template für den Prompt, der an die LLM weitergegeben wird, bestehend a
 - Frage
 
 ### embedding
-Lade ein SentenceTranformer Model, dass Text embedden kann. Wenn möglich wird das Model auf einer GPU (cuda) ausgeführt, wenn nicht auf der CPU. Modelle werden in [emb_models](emb_models) gespeichert. Siehe [Dokumentation](https://sbert.net/docs/sentence_transformer/usage/efficiency.html) zur Wahl eines Backends zur Effizienzsteigerung (z.B. ONNX).
+Lade ein SentenceTranformer Model, das Text embedden kann. Wenn möglich wird das Model auf einer GPU (cuda) ausgeführt, wenn nicht auf der CPU. Modelle werden in [emb_models](emb_models) gespeichert. Siehe [Dokumentation](https://sbert.net/docs/sentence_transformer/usage/efficiency.html) zur Wahl eines Backends zur Effizienzsteigerung (z.B. ONNX).
 
 ### llm_client
-Verwendung von Ollama zum Self-Hosting der LLM (Unabhängigkeit). Separater Docker container wird zum Hosten der LLM verwendet, dadurch lassen sich die Messungen voneinander trennen. Die Last der LLM wird getrennt vom restlichen RAG-System. Der Docker container läuft über die GPU (siehe [Docker](#docker)).
+Verwendung von Ollama zum Self-Hosting der LLM (Unabhängigkeit). Separater Docker container wird zum Hosten der LLM verwendet, dadurch lassen sich die Messungen voneinander trennen. Die Last der LLM wird getrennt vom restlichen RAG-System. Der Docker container läuft über die GPU (cuda) (siehe [Docker](#docker)).
 
 Der OllamaClient leitet den vollständigen Prompt an die LLM weiter. Ollama bietet einige Konfigurationsmöglichkeiten, mit denen das Verhalten der LLM selbst gesteuert werden kann, wie die temperature oder num_predict (siehe [config](#config)).
 
@@ -174,16 +180,20 @@ Image basiert auf offiziellem [Python](https://hub.docker.com/_/python) Image (V
 Environment wird aus .env geladen
 
 Environment Variablen:
-- ``DATA_DIR``:
-- ``INDEX_DIR``:
-- ``OLLAMA_HOST``:
-- ``OLLAMA_MODEL``:
-- ``HF_HOME``: Setzt einen festen Ordner, an dem die Hugging Face Modelle gecached werden. Dadurch wird verhindert, dass die Modelle bei jedem Aufruf von [indexing.py](/src/app/indexing.py) neu heruntergeladen werden. Siehe [Dokumentation](https://huggingface.co/docs/huggingface_hub/package_reference/environment_variables#hfhome).
+- ``DATA_DIR``: Ordner der Raw Dokumente.
+- ``INDEX_DIR``: Ordner der Embedded Dokumente (Vektordatenbank).
+- ``OLLAMA_HOST``: Die Addresse, unter der Ollama gehostet wird.
+- ``OLLAMA_MODEL``: Das zu verwendente Ollama Model, wird in [.env](docker/.env) oder in [config.yaml](src/app/config.yaml) festgelegt.
+- ``LOG_DIR``: Logging Dateien werden hier abgespeichert.
+- ``EMBEDDING_MODEL_DIR``: Setzt einen festen Ordner, an dem die sentence-transformer Modelle gecached werden. Dadurch wird verhindert, dass die Modelle bei jedem Aufruf von [embedding.py](src/app/embedding.py) neu heruntergeladen werden.
+- ``HF_HOME``: Lokaler Hugging Face Cache; Siehe [Dokumentation](https://huggingface.co/docs/huggingface_hub/package_reference/environment_variables#hfhome).
 - ``ANONYMIZED_TELEMETRY`` (False): Verhindert das Senden von verschiedenen Informationen, ist hier hauptsächlich aus Performancegründen deaktiviert. Siehe [Dokumentation](https://docs.trychroma.com/docs/overview/telemetry)
 
 Persistente Volumes:
 - ``/src/data``: Die Datenbank der Embedded Dokumente sollte nicht jedes Mal neu erstellt werden
 - ``/hf-cache``: Ordner für das Embedding Modell, muss nicht jedes Mal neu heruntergeladen werden
+- ``/logs``: Logging.
+- ``/emb_models``: Speicherort für die sentence-transformer Modelle.
 
 ### ollama service
 Extra Container für die LLM ermöglicht
@@ -196,7 +206,7 @@ Environment Variablen:
 - ``OLLAMA_MODEL``: Welches Model soll verwendet werden (z.B. ``llama3:8b`` oder ``cas/teuken-7b-q4km``, [mehr](https://ollama.com/library?sort=popular))
 
 ## Test-Fragen.http
-Alle Fragen liefern immer dieselbe Antwort, unter Verwendung der aktuellen Konfiguration und LLM.
+Alle Fragen liefern immer dieselbe Antwort, unter Verwendung der aktuellen Konfiguration und LLM (Commit vom 09.12.2025).
 
 Die Antwort auf Frage 4 ist besonders interessant:
 ```json
