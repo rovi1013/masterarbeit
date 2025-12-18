@@ -43,7 +43,7 @@ masterarbeit/
 
 1. Docker container starten (+ Image bauen):
 ```shell
-docker compose up -d
+docker compose up --build
 ```
 2. Indexing Warmup starten:
 ```shell
@@ -58,6 +58,20 @@ docker exec rag-app python -m app.indexing
 docker exec rag-app python -m app.warmup_rag
 ```
 5. [MESSUNG] Lasttest auf RAG-APP ausführen ...
+
+
+## NEXT UP / TODO
+
+### Vorschläge aus Envite Meeting
+* Indexing: Dateien in Markdown konvertieren und dann chunken
+* LLM Frage ummformulieren lassen, um die Fragen umzuformulieren und dann die besten Ergebnisse aus den Abfragen als Kontext verwenden
+* Tabellen und Zahlen aus Kontext explizit abfragen zum Testen (Evaluation)
+* Kleine Infos dirket mal in den Slack Channel
+
+### Ollama Client
+TODO: Erste Anfrage vor Messungen durchführen.
+
+Aktuell dauert die erste Anfrage (trotz warmup) an Ollama Host immer noch länger als darauf folgende. Aber Antwortzeit der ersten Anfrage ist durch das warmup schon reduziert.
 
 
 ## Notizen
