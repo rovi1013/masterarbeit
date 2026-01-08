@@ -3,7 +3,7 @@ POST http://localhost:8000/ask
 Content-Type: application/json; charset=utf-8
 
 {
-  "question": "Was kannst du mir zum Thema Nachhaltigkeit erzählen?"
+  "question": "What can you tell me about sustainability?"
 }
 
 ### Frage 2
@@ -11,7 +11,7 @@ POST http://localhost:8000/ask
 Content-Type: application/json; charset=utf-8
 
 {
-  "question": "Welche Ziele werden verfolgt, um eine bessere Nachhaltigkeit zu erreichen?"
+  "question": "What goals are being pursued to achieve greater sustainability?"
 }
 
 ### Frage 3
@@ -19,7 +19,7 @@ POST http://localhost:8000/ask
 Content-Type: application/json; charset=utf-8
 
 {
-  "question": "Was ist der European Green Deal?"
+  "question": "What is the European Green Deal?"
 }
 
 ### Frage 4
@@ -27,7 +27,7 @@ POST http://localhost:8000/ask
 Content-Type: application/json; charset=utf-8
 
 {
-  "question": "Lässt sich der Klimawandel noch stoppen?"
+  "question": "Can climate change still be stopped?"
 }
 
 ### Frage 5
@@ -35,13 +35,5 @@ POST http://localhost:8000/ask
 Content-Type: application/json; charset=utf-8
 
 {
-  "question": "Was muss unternommen werden, um den Klimawandel zu stoppen?"
-}
-
-### Frage 6
-POST http://localhost:8000/ask
-Content-Type: application/json; charset=utf-8
-
-{
-  "question": "Was ist ein Treibhausgas und welches ist am meisten für den Klimawandel verantwortlich?"
+  "question": "What is a greenhouse gas and which one is most responsible for climate change?"
 }

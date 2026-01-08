@@ -103,6 +103,57 @@ Eigentliche Embeddings (in /data/index/_random_uuid_/); siehe [Storage Layout](h
 - ``length.bin`` (131 KB): Records the number of links each node has, aiding in efficient traversal during searches.
 - ``link_lists.bin`` (281 KB): Stores the adjacency lists for nodes, detailing their connections within the graph.
 
+### Sprachsensitives Retrieval
+Bei Fragen auf Deutsch werden die (deutschen) Wikipedia Artikel den (englischen) PDF Dokumenten bevorzugt. Das liegt daran, dass keine Unterscheidung zwischen verschiedenen Sprachen beim embedding oder retrieval stattfindet. Das führt dazu, dass die englischen PDFs viel seltener in der Ähnlichkeitsüberprüfung in retrieval zu den top-k Ergebnissen zählen. Wenn man sich die top-k Dokumente anschaut, ist bei der deutschen Version der korrekte chunk (chunk 0) des Dokuments EnergyandAI.pdf nicht dabei. Der Name 'World Energy Outlook Special Report\nEnergy and AI\nIEA. CC BY 4.0' wird verwendet, damit zumindest immer das richtige Dokument gefunden wird.
+
+Mit Deutsch "Länder" (countries) in der Frage:
+```json
+{
+    "question": "Welche Länder werden erwähnt in 'World Energy Outlook Special Report\nEnergy and AI\nIEA. CC BY 4.0'?",
+    "answer": "Keine Länder werden in diesem speziellen Bericht der Internationalen Energieagentur (IEA) erwähnt. Der Bericht konzentriert sich auf die Rolle von Artificial Intelligence (AI) im Energiesektor und nicht auf bestimmte Länder.",
+    "context": [
+        " Energy Data Centre provided assistance \nthroughout the preparation of the report.  Valuable input to the analysis and drafting was \nprovided by George Kamiya (independent consultant). \nIEA. CC BY 4.0\n \n6 International Energy Agency | Energy and AI  \n \nThe work could not have been completed without the support and co-operation provided by \nmany government bodies, organisations and companies worldwide,  notably contributions \nfrom: Google, Iberdrola, Microsoft , ReNew, Schneider Electric  (S ustainability Re",
+        "ers \nfrom government, the tech sector and the energy industry. \nPeer reviewers \nMany senior government officials and international experts provided input and reviewed \npreliminary drafts of the report. Their comments and suggestions were of great value. They \ninclude: \nAbhijit Abhyankar Indian Institute of Technology Delhi \nSara Axelrod Crusoe \nHarmeet Bawa Hitachi Energy \nAnna Blomborg Alfa Laval  \nJohannes Böhner Tennet \nMatthew Carr Luffy.ai \nJohn Catillaz GE Vernova \nAlexandre Catta Department of Natura",
+        "Papadimoulis, Jules Sery and Richard Simon. \nIEA. CC BY 4.0.\n \n6 International Energy Agency | World Energy Outlook 2025 \n \nOther contributors from across the IEA were:  Heymi Bahar, Cerstin Berner, Lena Brun, Eren \nÇam, Eleonora Chiarati , Joel Couse, Leïlou Daunit, Pierre Demey, Musa Erdogan, Carlos \nFernández Alvarez, Ciarán Healy, Alexandra Hegarty, Gyubin Hwang, Tomoya  Iwaki, Akos \nLosz, David Martin, Jacob Messing, Gergely Molnár , Jeremy Moorhouse, Quentin Paletta , \nAndrea Pronzati, Anna Sagués Mol",
+        "falt beruhenden globalen 100-Prozent-erneuerbare-Energien-System, welches ohne negative CO<sub>2</sub>-Emissionstechnologien auskommt. Dabei werden die Bereiche Strom, Wärme, Verkehr und Meerwasserentsalzung bis 2050 betrachtet.<ref>{{Internetquelle |url=http://energywatchgroup.org/globales-energiesystem-mit-100-erneuerbaren-energien |titel=Neue Studie: Globales Energiesystem mit 100% Erneuerbaren Energien |werk=energywathgroup.org |archiv-url=https://web.archive.org/web/20220305095734/https://www.energywat",
+        "times as much.  \nPolicy makers and markets have lacked the tools to assess implications \nThe energy sector is therefore at the heart of one of  the most important technological \nrevolutions today. However, there is still a lack of understanding of the  stakes and  \nimplications of this deepening connection between energy and AI. Consistent with its strong \ntrack record of identifying and exploring  emerging issues in the energy sector, th is new  \nInternational Energy Agency (IEA)  special report seeks to f"
+    ]
+}
+```
+Retrived Docs:
+```shell
+2026-01-08 14:20:03 [DEBUG] app.retrieval: hit#1: source=/src/data/raw/EnergyandAI.pdf chunk=21 dist=0.5956
+2026-01-08 14:20:03 [DEBUG] app.retrieval: hit#2: source=/src/data/raw/EnergyandAI.pdf chunk=23 dist=0.5990
+2026-01-08 14:20:03 [DEBUG] app.retrieval: hit#3: source=/src/data/raw/WorldEnergyOutlook2025.pdf chunk=20 dist=0.6038
+2026-01-08 14:20:03 [DEBUG] app.retrieval: hit#4: source=/src/data/raw/Erneuerbare Energie - Wikipedia.txt chunk=322 dist=0.6073
+2026-01-08 14:20:03 [DEBUG] app.retrieval: hit#5: source=/src/data/raw/EnergyandAI.pdf chunk=58 dist=0.6093
+```
+
+Mit Englisch "Länder" (countries) in der Frage:
+```json
+{
+    "question": "Welche countries werden erwähnt in 'World Energy Outlook Special Report\nEnergy and AI\nIEA. CC BY 4.0'?",
+    "answer": "Die folgenden Länder werden im \"World Energy Outlook Special Report: Energy and AI\" erwähnt:\n\n* Australia\n* Austria\n* Belgium\n* Canada\n* Czech Republic\n* Denmark\n* Estonia\n* Finland\n* France\n* Germany\n* Greece\n* Hungary\n* Ireland\n* Italy\n* Japan\n* Korea\n* Latvia\n* Lithuania\n* Luxembourg\n* Mexico\n* Netherlands\n* New Zealand\n* Norway\n* Poland\n* Portugal\n* Republic of Türkiye\n* United Kingdom\n* United States",
+    "context": [
+        "World Energy Outlook Special Report\nEnergy and AI\nIEA. CC BY 4.0\nINTERNATIONAL ENERGY\nAGENCY\nIEA Member \ncountries:    \nAustralia    \nAustria   \nBelgium\nCanada\nCzech Republic \nDenmark\nEstonia\nFinland \nFrance \nGermany \nGreece \nHungary\nIreland \nItaly\nJapan\nKorea\nLatvia\nLithuania \nLuxembourg \nMexico \nNetherlands \nNew Zealand \nNorway\nPoland \nPortugal \nSlovak Republic \nSpain \nSweden \nSwitzerland \nRepublic of Türkiye \nUnited Kingdom \nUnited States\nThe European \nCommission also \nparticipates in the \nwork of the IE",
+        "n:  Austria, Belgium, Bulgaria, Croatia, Cyprus 1,2, Czech Republic, Denmark, \nEstonia, Finland, France, Germany, Greece, Hungary, Ireland, Italy, Latvia, Lithuania, \nLuxembourg, Malta, Netherlands, Poland, Portugal, Romania, Slovak Republic, Slovenia, \nSpain and Sweden. \nIEA (International Energy Agency):   Australia, Austria, Belgium, Canada, Czechia, Denmark, \nEstonia, Finland, France, Germany, Greece, Hungary, Ireland, Italy, Japan, Korea, Latvia, \nLithuania, Luxembourg, Mexico, New Zealand, Norway, Pol",
+        ". CC BY 4.0.\n \n490 International Energy Agency | World Energy Outlook 2025 \n \nRegional and country groupings \nAdvanced economies:  O rganisation for Economic Co -operation and Development (OECD)  \ngrouping and Bulgaria, Croatia, Cyprus1,2, Malta and Romania. \nAfrica:  North Africa and sub-Saharan Africa regional groupings. \nAsia Pacific:   Southeast Asia regional grouping and Australia, Bangladesh, Democratic \nPeople’s Republic of Korea (North Korea), India, Japan, Korea, Mongolia, Nepal, New Zealand, \nPaki",
+        "ca. OECD/IEA, Paris, France, 237 pp.\nIEA, 2017: World Energy Outlook 2017. Flagship Report, November 2017, IEA, \nParis, France.\nIEA, 2018: World Energy Balances 2018. In: International Energy Agency, \nOECD/IEA, Paris, France.\nIEA, 2019a: World Energy Investment 2019. Flagship Report, May 2019. \nOECD, Paris, France 176 pp.\nIEA, 2019b: Securing Investments in Low-Carbon Power Generation Sources. \nOECD, Paris, 16 pp.\nIEA, 2019c: Africa Energy Outlook 2019. 288 pp. https://www.iea.org/reports/\nafrica-energy-out",
+        "r, Iceland, Israel 5, Kosovo, Montenegro, North Macedonia, Norway, Republic of \nMoldova, Serbia, Switzerland, Türkiye, Ukraine and United Kingdom. \nEuropean Union:  Austria, Belgium, Bulgaria, Croatia, Cyprus 1,2, Czech Republic, Denmark, \nEstonia, Finland, France, Germany, Greece, Hungary, Ireland, Italy, Latvia, Lithuania, \nLuxembourg, Malta, Netherlands, Poland, Portugal, Romania, Slovak Republic, Slovenia, \nSpain and Sweden. \nIEA (International Energy Agency) : Australia, Austria, Belgium, Canada, Czech"
+    ]
+}
+```
+
+Retrieved Docs:
+```shell
+2026-01-08 14:14:22 [DEBUG] app.retrieval: hit#1: source=/src/data/raw/EnergyandAI.pdf chunk=0 dist=0.4574
+2026-01-08 14:14:22 [DEBUG] app.retrieval: hit#2: source=/src/data/raw/WorldEnergyOutlook2025.pdf chunk=2730 dist=0.5339
+2026-01-08 14:14:22 [DEBUG] app.retrieval: hit#3: source=/src/data/raw/WorldEnergyOutlook2025.pdf chunk=2726 dist=0.5589
+2026-01-08 14:14:22 [DEBUG] app.retrieval: hit#4: source=/src/data/raw/IPCC_AR6_WGIII_FullReport.pdf chunk=21446 dist=0.5734
+2026-01-08 14:14:22 [DEBUG] app.retrieval: hit#5: source=/src/data/raw/EnergyandAI.pdf chunk=1582 dist=0.5993
+```
+
+
 ## RAG-System
 
 3-Schritte System:

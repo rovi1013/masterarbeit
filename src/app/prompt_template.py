@@ -1,11 +1,11 @@
 BASE_PROMPT = """
-Du bist ein Assistenzsystem. Beantworte die Frage nur anhand des Kontexts.
+You are an assistance system. Answer the question based solely on the context.
 
-Kontext:
+Context:
 {context}
 
-Frage:
+Question:
 {question}
 
-Antwort:
+Answer:
 """

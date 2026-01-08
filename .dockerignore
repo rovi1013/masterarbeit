@@ -17,6 +17,7 @@ venv/
 # Daten und Dokumente
 src/data/
 hf-cache/
+thesis/
 logs/
 
 # Env-Dateien
