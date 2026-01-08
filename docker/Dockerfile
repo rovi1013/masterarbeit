@@ -1,6 +1,9 @@
 # Basisimage Python 3.12
 FROM python:3.12-slim
 
+# Install curl
+RUN apt-get update && apt-get install -y curl
+
 WORKDIR /src
 
 # Python Packages installieren

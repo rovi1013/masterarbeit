@@ -1,0 +1,76 @@
+---
+name: RAG-System Test
+author: Vincent Roßkencht <vincent.rossknecht@envite.de>
+description: Dieser Test dient der Messung des Energieverbrauchs des RAG-Systems.
+
+compose-file: !include docker-compose.yml
+
+flow:
+
+  # 1. Warmup Indexing
+  - name: Warmup Indexing
+    container: rag-app
+    commands:
+      - type: console
+        command: python -m app.warmup_indexing
+        log-stdout: true
+        read-notes-stdout: true
+
+  - name: Pause nach Warmup Indexing
+    container: rag-app
+    commands:
+      - type: console
+        command: sleep 10
+
+  # 2. Indexing
+  - name: Indexing
+    container: rag-app
+    commands:
+      - type: console
+        command: python -m app.indexing
+        log-stdout: true
+        read-notes-stdout: true
+
+  - name: Pause nach Indexing
+    container: rag-app
+    commands:
+      - type: console
+        command: sleep 10
+
+  # 3. Warmup RAG
+  - name: Warmup RAG
+    container: rag-app
+    commands:
+      - type: console
+        command: python -m app.warmup_rag
+        log-stdout: true
+        read-notes-stdout: true
+
+  - name: Pause nach Warmup RAG
+    container: rag-app
+    commands:
+      - type: console
+        command: sleep 10
+
+  # 4. RAG Querries
+  - name: RAG Querries
+    container: rag-app
+    commands:
+      - type: console
+        command: >
+          curl -X POST http://127.0.0.1:8000/ask
+          -H "Content-Type: application/json"
+          -d '{"question": "Was ist Nachhaltigkeit?"}'
+        log-stdout: true
+        read-notes-stdout: true
+
+      - type: console
+        command: sleep 5
+
+      - type: console
+        command: >
+          curl -X POST http://127.0.0.1:8000/ask
+          -H "Content-Type: application/json"
+          -d '{"question": "Was ist ein Treibhausgas?"}'
+        log-stdout: true
+        read-notes-stdout: true
