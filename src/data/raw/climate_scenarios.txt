@@ -1,0 +1,11 @@
+Climate and Energy Scenarios
+
+Scenarios are structured descriptions of possible futures. They are not predictions but tools for analysis.
+
+Energy and climate scenarios often vary assumptions about:
+- Economic growth
+- Population development
+- Technology adoption
+- Climate and energy policies
+
+Scenarios help compare pathways with different temperature outcomes and energy system transformations.

@@ -3,6 +3,9 @@
 Dieses Repository enthält den praktischen Teil zu meiner Masterarbeit: 
 **Nachhaltigkeit durch Effizienzsteigerung in Retrieval-Augmented Generation (RAG)-Systemen**
 
+## Lizenz
+Der Code ist lizensiert unter der MIT-Lizenz. Inhalte Dritter sind unter LICENSES.md dokumentiert.
+
 ## Repository Struktur
 ```text
 masterarbeit/

@@ -1,0 +1,3 @@
+Energy System Basics
+
+An energy system includes the production, conversion, transport, and use of energy. Primary energy sources include fossil fuels, nuclear energy, and renewables. Electricity systems are a core part of modern energy systems. They consist of generation, transmission, distribution, and consumption. Decarbonizing energy systems means reducing emissions across all stages, not only electricity generation but also transport, industry, and buildings.

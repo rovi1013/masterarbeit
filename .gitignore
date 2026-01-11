@@ -9,6 +9,8 @@ __pycache__/
 
 # Data
 data/
+!data/raw/
+!data/raw/**
 experiments/
 
 # Huggingface Cache
