@@ -23,13 +23,6 @@ services:
     image: ollama/ollama:latest
     ports:
       - "11434:11434"
-    volumes:
-      - ollama-data:/root/.ollama
-      - ./entrypoint.sh:/entrypoint.sh
     environment:
       OLLAMA_MODEL: llama3:8b
     restart: unless-stopped
-    entrypoint: ["/usr/bin/bash", "/entrypoint.sh"]
-
-volumes:
-  ollama-data:
