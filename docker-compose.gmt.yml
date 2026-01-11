@@ -1,8 +1,8 @@
 services:
   rag-app:
     build:
-      context: ..
-      dockerfile: docker/Dockerfile.gmt
+      context: .
+      dockerfile: Dockerfile.gmt
     container_name: rag-app
     environment:
       DATA_DIR: /src/data/raw

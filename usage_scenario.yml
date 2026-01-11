@@ -3,7 +3,7 @@ name: RAG-System Test
 author: Vincent Roßkencht <vincent.rossknecht@envite.de>
 description: Dieser Test dient der Messung des Energieverbrauchs des RAG-Systems.
 
-compose-file: !include docker/docker-compose.gmt.yml
+compose-file: !include docker-compose.gmt.yml
 
 flow:
 
