@@ -4,6 +4,7 @@ author: Vincent Roßkencht <vincent.rossknecht@envite.de>
 description: Dieser Test dient der Messung des Energieverbrauchs des RAG-Systems.
 
 compose-file: !include docker/docker-compose.yml
+ignore-unsupported-compose: true
 
 flow:
 
