@@ -1,0 +1,39 @@
+services:
+  rag-app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.gmt
+    container_name: rag-app
+    env_file:
+      - .env
+    environment:
+      DATA_DIR: /src/data/raw
+      INDEX_DIR: /src/data/index
+      OLLAMA_HOST: "http://ollama:11434"
+      OLLAMA_MODEL: ${OLLAMA_MODEL}
+      LOG_DIR: /logs
+      EMBEDDING_MODEL_DIR: /emb_models
+      HF_HOME: /root/.cache/huggingface
+      ANONYMIZED_TELEMETRY: "False"
+    ports:
+      - "8000:8000"
+    depends_on:
+      - ollama
+
+  ollama:
+    container_name: ollama
+    image: ollama/ollama:latest
+    env_file:
+      - .env
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+      - ./entrypoint.sh:/entrypoint.sh
+    environment:
+      OLLAMA_MODEL: ${OLLAMA_MODEL}
+    restart: unless-stopped
+    entrypoint: ["/usr/bin/bash", "/entrypoint.sh"]
+
+volumes:
+  ollama-data:
