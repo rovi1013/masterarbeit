@@ -15,7 +15,6 @@ masterarbeit/
 │   ├── .env                    # Environment Variablen
 │   ├── entrypoint.sh           # Entrypoint Script
 │   ├── Test-Frage.http         # Test für RAG-APP
-│   └── usage_scenario/         # GMT Usage Scenario
 │
 ├── src/                        # SOURCE CODE & DATA
 │   ├── app/                    # RAG-APP
@@ -37,8 +36,8 @@ masterarbeit/
 ├── emb_models/                 # Embedding Models Cache
 ├── hf-cache/                   # Hugging Face Cache
 ├── logs/                       # Logging
-├── thesis/                     # Submodule Thesis (Overleaf-Sync)
-├── requirements.txt
+├── requirements.txt            # Python Packages
+├── usage_scenario.yaml         # GMT Usage Scenario
 └── README.md
 ```
 
