@@ -15,7 +15,6 @@ venv/
 .vscode/
 
 # Daten und Dokumente
-src/data/
 hf-cache/
 logs/
 
