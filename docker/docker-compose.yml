@@ -9,12 +9,12 @@ services:
     environment:
       DATA_DIR: ${DATA_DIR}                         # Ordner der Dokumente
       INDEX_DIR: ${INDEX_DIR}                       # Ordner der Datenbank
-      OLLAMA_HOST: "http://ollama:11434"            # Ollama host address
-      OLLAMA_MODEL: ${OLLAMA_MODEL}                 # Ollama Model
+      OLLAMA_HOST: "http://ollama:11434"            # Ollama Host Adresse
+      OLLAMA_MODEL: ${OLLAMA_MODEL}                 # Ollama Modell
       LOG_DIR: /logs                                # Log Dateien
-      EMBEDDING_MODEL_DIR: ${EMBEDDING_MODEL_DIR}   # Embedding Models
-      HF_HOME: /root/.cache/huggingface             # Fester Ordner für HF Cache
-      ANONYMIZED_TELEMETRY: "False"                 # Disable ChromaDB telemetry
+      EMBEDDING_MODEL_DIR: ${EMBEDDING_MODEL_DIR}   # Embedding Modelle
+      HF_HOME: /root/.cache/huggingface             # Fester Ordner fuer HF Cache
+      ANONYMIZED_TELEMETRY: "False"                 # ChromaDB Telemetrie deaktivieren
     ports:
       - "8000:8000"
     volumes:
@@ -34,16 +34,16 @@ services:
 
   ollama:
     container_name: ollama
-    image: ollama/ollama:latest
+    image: ollama/ollama:0.13.0
     env_file:
       - .env
     ports:
       - "11434:11434"
     volumes:
-      - ollama-data:/root/.ollama           # Caching Ollama Models
+      - ollama-data:/root/.ollama           # Caching Ollama Modelle
       - ./entrypoint.sh:/entrypoint.sh
     environment:
-      OLLAMA_MODEL: ${OLLAMA_MODEL}         # Ollama Model from .env
+      OLLAMA_MODEL: ${OLLAMA_MODEL}         # Ollama Modell
     restart: unless-stopped
     deploy:
       resources:

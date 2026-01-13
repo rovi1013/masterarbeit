@@ -4,8 +4,6 @@ services:
       context: .
       dockerfile: Dockerfile.gmt
     container_name: rag-app
-    docker-run-args:
-      - --gpus=all
     environment:
       DATA_DIR: /src/data/raw
       INDEX_DIR: /src/data/index

@@ -2,7 +2,7 @@ data_dir: "../data/raw"
 index_dir: "../data/index"
 
 embedding_model: "sentence-transformers/all-MiniLM-L6-v2"
-embedding_device: "cuda"
+embedding_device: "cpu"
 
 chunk_size: 512
 chunk_overlap: 64
