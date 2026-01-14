@@ -8,12 +8,6 @@ This repository contains:
 
 ## Third-party documents (src/data/raw)
 
-### ClimateChange2023SynthesisReport.pdf
-- Title: Climate Change 2023 Synthesis Report
-- Author/Publisher: Intergovernmental Panel on Climate Change (IPCC)
-- Source: https://www.ipcc.ch/report/ar6/syr/
-- License: Creative Commons Attribution 4.0 International (CC BY 4.0)
-
 ### EmissionsGapReport2024.pdf
 - Title: Emissions Gap Report 2024
 - Author/Publisher: United Nations Environment Programme (UNEP)
