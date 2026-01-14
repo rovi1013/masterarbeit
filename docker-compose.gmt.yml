@@ -22,7 +22,7 @@ services:
     container_name: ollama
     image: ollama/ollama@sha256:d4188c1dfa870386a14e299976aed96daeb83876b69e1a852c9d09ea76463b9f
     docker-run-args:
-      - -v ollama:/root/.ollama:ro
+      #- -v ollama:/root/.ollama:ro
       - --gpus=all
     ports:
       - "11434:11434"
