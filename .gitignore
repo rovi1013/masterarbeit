@@ -24,3 +24,6 @@ logs/*
 # Lokale Embedding Modelle
 emb_models/*
 !emb_models/.gitkeep
+
+# GMT Messungen
+/gmt-raw-data/

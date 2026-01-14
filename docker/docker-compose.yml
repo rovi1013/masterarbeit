@@ -19,6 +19,7 @@ services:
       - "8000:8000"
     volumes:
       - ../src/data:/src/data
+      - ../src/scripts:/src/scripts
       - ../hf-cache:/root/.cache/huggingface
       - ../logs:/logs
       - ../emb_models:/emb_models
@@ -34,7 +35,7 @@ services:
 
   ollama:
     container_name: ollama
-    image: ollama/ollama:0.13.0
+    image: ollama/ollama@sha256:d4188c1dfa870386a14e299976aed96daeb83876b69e1a852c9d09ea76463b9f
     env_file:
       - .env
     ports:

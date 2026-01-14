@@ -35,7 +35,7 @@ flow:
     container: rag-app
     commands:
       - type: console
-        command: sleep 10
+        command: sleep 5
 
   # 2. Indexing
   - name: Indexing
@@ -50,7 +50,7 @@ flow:
     container: rag-app
     commands:
       - type: console
-        command: sleep 10
+        command: sleep 5
 
   # 3. Warmup RAG
   - name: Warmup RAG
@@ -65,27 +65,13 @@ flow:
     container: rag-app
     commands:
       - type: console
-        command: sleep 10
+        command: sleep 5
 
   # 4. RAG Querries
   - name: RAG Querries
     container: rag-app
     commands:
       - type: console
-        command: >
-          curl -X POST http://127.0.0.1:8000/ask
-          -H "Content-Type: application/json"
-          -d '{"question": "Was ist Nachhaltigkeit?"}'
-        log-stdout: true
-        read-notes-stdout: true
-
-      - type: console
-        command: sleep 5
-
-      - type: console
-        command: >
-          curl -X POST http://127.0.0.1:8000/ask
-          -H "Content-Type: application/json"
-          -d '{"question": "Was ist ein Treibhausgas?"}'
+        command: ./src/scripts/rag_querries.sh
         log-stdout: true
         read-notes-stdout: true

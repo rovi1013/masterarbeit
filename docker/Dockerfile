@@ -1,5 +1,5 @@
 # Basisimage Python 3.12
-FROM python:3.12-slim
+FROM python:3.12-slim@sha256:d75c4b6cdd039ae966a34cd3ccab9e0e5f7299280ad76fe1744882d86eedce0b
 
 # Install curl
 RUN apt-get update && apt-get install -y curl
