@@ -17,14 +17,8 @@ services:
       - "8000:8000"
     depends_on:
       - ollama
-    deploy:
-      resources:
-        limits:
-          memory: '1024'
-          cpus: '1'
-        reservations:
-          memory: '1024'
-          cpus: '1'
+    docker-run-args:
+      - --cpus="1"
 
   ollama:
     container_name: ollama

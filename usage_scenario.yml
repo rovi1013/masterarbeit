@@ -31,12 +31,6 @@ flow:
         log-stdout: true
         read-notes-stdout: true
 
-  - name: Pause nach Warmup Indexing
-    container: rag-app
-    commands:
-      - type: console
-        command: sleep 5
-
   # 2. Indexing
   - name: Indexing
     container: rag-app
@@ -46,12 +40,6 @@ flow:
         log-stdout: true
         read-notes-stdout: true
 
-  - name: Pause nach Indexing
-    container: rag-app
-    commands:
-      - type: console
-        command: sleep 5
-
   # 3. Warmup RAG
   - name: Warmup RAG
     container: rag-app
@@ -60,12 +48,6 @@ flow:
         command: python -m app.warmup_rag
         log-stdout: true
         read-notes-stdout: true
-
-  - name: Pause nach Warmup RAG
-    container: rag-app
-    commands:
-      - type: console
-        command: sleep 5
 
   # 4. RAG Querries
   - name: RAG Querries

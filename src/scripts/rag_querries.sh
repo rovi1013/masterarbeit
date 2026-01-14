@@ -2,8 +2,9 @@
 set -e
 
 QUESTIONS=(
-  # Allgemeine Faktenfragen - 8
+  # Allgemeine Faktenfragen - 9
   "What is the main objective of the European Green Deal?"
+  "What are the main drivers of climate change?"
   "According to the World Energy Outlook 2025, which energy source shows the fastest growth in electricity generation?"
   "What role does renewable electricity play in global decarbonisation according to the IEA?"
   "Which sectors are identified as the largest contributors to global energy demand growth?"
