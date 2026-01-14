@@ -6,21 +6,21 @@ description: Dieser Test dient der Messung des Energieverbrauchs des RAG-Systems
 compose-file: !include docker-compose.gmt.yml
 
 flow:
-  # 0. Ollama Modell explizit pullen vor restlichem flow
-  - name: Warten auf Ollama container
-    container: ollama
-    commands:
-      - type: console
-        command: sleep 20
-        log-stdout: true
-
-  - name: Ollama Modell pullen
-    container: ollama
-    commands:
-      - type: console
-        command: ollama pull llama3:8b
-        log-stdout: true
-        read-notes-stdout: true
+#  # 0. Ollama Modell explizit pullen vor restlichem flow
+#  - name: Warten auf Ollama container
+#    container: ollama
+#    commands:
+#      - type: console
+#        command: sleep 5
+#        log-stdout: true
+#
+#  - name: Ollama Modell pullen
+#    container: ollama
+#    commands:
+#      - type: console
+#        command: ollama pull llama3:8b
+#        log-stdout: true
+#        read-notes-stdout: true
 
   # 1. Warmup Indexing
   - name: Warmup Indexing
