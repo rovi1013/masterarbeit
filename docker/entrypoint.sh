@@ -9,7 +9,7 @@ pid=$!
 sleep 5
 
 # Default to llama3 model (if OLLAMA_MODEL is empty/doesn't exist)
-MODEL="${OLLAMA_MODEL:-llama3:8b}"
+MODEL="${OLLAMA_MODEL:-llama3:latest}"
 
 # Pull Ollama model
 echo "Pulling model: $MODEL"
