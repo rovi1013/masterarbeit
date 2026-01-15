@@ -54,6 +54,6 @@ flow:
     container: rag-app
     commands:
       - type: console
-        command: ./src/scripts/rag_querries.sh
+        command: pwd #/src/scripts/rag_querries.sh
         log-stdout: true
         read-notes-stdout: true
