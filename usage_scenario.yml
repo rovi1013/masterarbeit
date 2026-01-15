@@ -14,13 +14,17 @@ flow:
         command: sleep 5
         log-stdout: true
 
-  - name: Ollama Modell pullen
-    container: ollama
-    commands:
       - type: console
-        command: ollama pull llama3:8b
+        command: ollama list
         log-stdout: true
-        read-notes-stdout: true
+
+#  - name: Ollama Modell pullen
+#    container: ollama
+#    commands:
+#      - type: console
+#        command: ollama pull llama3:8b
+#        log-stdout: true
+#        read-notes-stdout: true
 
   # 1. Warmup Indexing
   - name: Warmup Indexing
