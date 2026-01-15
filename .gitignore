@@ -6,11 +6,13 @@
 __pycache__/
 *.pyc
 .venv/
+.venv-gmt/
 
 # Data
-data/
-!data/raw/
-!data/raw/**
+src/data/index/*
+!src/data/index/.gitkeep
+!src/data/raw/
+!src/data/raw/*
 experiments/
 
 # Huggingface Cache
@@ -26,4 +28,7 @@ emb_models/*
 !emb_models/.gitkeep
 
 # GMT Messungen
-/gmt-raw-data/
+gmt/gmt-data/raw-data/*
+!gmt/gmt-data/raw-data/.gitkeep
+!gmt/gmt-data/*
+!gmt/gmt-data/filtered-data/*

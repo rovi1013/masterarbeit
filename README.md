@@ -14,7 +14,7 @@ masterarbeit/
 │   ├── docker-compose/         # Docker Compose
 │   ├── .env                    # Environment Variablen
 │   ├── entrypoint.sh           # Entrypoint Script
-│   ├── Test-Frage.http         # Test für RAG-APP
+│   └── Test-Frage.http         # Test für RAG-APP
 │
 ├── src/                        # SOURCE CODE & DATA
 │   ├── app/                    # RAG-APP

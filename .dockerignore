@@ -21,3 +21,6 @@ logs/
 # Env-Dateien
 .env
 *.env
+
+# GMT
+gmt/
