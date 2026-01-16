@@ -17,6 +17,8 @@ services:
       - "8000:8000"
     depends_on:
       - ollama
+    docker-run-args:
+      - --gpus=all
 
   ollama:
     container_name: ollama

@@ -29,7 +29,5 @@ emb_models/*
 
 # GMT Messungen
 gmt/gmt-data/raw-data/*
-!gmt/gmt-data/raw-data/.gitkeep
-gmt/gmt-data/filtered-data/*
+gmt/gmt-data/processed-data/*
 !gmt/gmt-data/filtered-data/*.gz
-!gmt/gmt-data/filtered-data/.gitkeep
