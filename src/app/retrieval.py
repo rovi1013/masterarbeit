@@ -15,7 +15,7 @@ def get_collection(cfg: Config | None = None):
     return client.get_or_create_collection("rag")
 
 
-def retrieve(cfg: Config, question: str) -> list[str]:
+def retrieve(cfg: Config, question: str):
     collection = get_collection(cfg)
 
     model = get_embed_model(cfg)
@@ -46,4 +46,4 @@ def retrieve(cfg: Config, question: str) -> list[str]:
         )
 
     logger.debug(f"Retriever hat {len(docs)} Dokumente zurückgegeben.")    # Für dynamisches top_k
-    return docs
+    return docs, metas

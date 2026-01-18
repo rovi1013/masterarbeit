@@ -12,14 +12,21 @@ class RagPipeline:
         self.llm = OllamaClient(cfg)
 
     def answer(self, question: str) -> dict:
-        docs = retrieve(self.cfg, question)
+        docs, metas = retrieve(self.cfg, question)
         context = "\n\n".join(docs)
 
         prompt = BASE_PROMPT.format(context=context, question=question)
         answer = self.llm.generate(prompt)
 
-        return {
-            "question": question,
-            "answer": answer,
-            "context": docs,
-        }
+        if self.cfg.enable_context:
+            return {
+                "question": question,
+                "answer": answer,
+                "context": docs,
+                "context_meta": metas,
+            }
+        else:
+            return {
+                "question": question,
+                "answer": answer,
+            }

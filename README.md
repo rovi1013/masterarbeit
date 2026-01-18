@@ -1,6 +1,6 @@
 # RAG Energieeffizienz-Evaluation
 
-Dieses Repository enthält den praktischen Teil zu meiner Masterarbeit: 
+Dieses Repository enthält den praktischen Teil zur Masterarbeit: 
 **Nachhaltigkeit durch Effizienzsteigerung in Retrieval-Augmented Generation (RAG)-Systemen**
 
 ## Lizenz
@@ -16,6 +16,12 @@ masterarbeit/
 │   ├── entrypoint.sh           # Entrypoint Script
 │   └── Test-Frage.http         # Test für RAG-APP
 │
+├── eval-gmt/                   # GREEN METRICS TOOL
+│   └── README.md
+│
+├── eval-ragas/                 # RAGAS FRAMEWORK
+│   └── README.md
+│
 ├── src/                        # SOURCE CODE & DATA
 │   ├── app/                    # RAG-APP
 │   │   ├── config              # Konfiguration des RAG-Systems
@@ -29,15 +35,21 @@ masterarbeit/
 │   │   ├── warmup_indexing     # Warmup Script Indexing
 │   │   └── warmup_rag          # Warmup Script RAG-APP
 │   │
-│   └── data/
-│       ├── index/              # Kontext Datenbank
-│       └── raw/                # Raw Dokumente
+│   ├── data/
+│   │   ├── index/              # Kontext Datenbank
+│   │   └── raw/                # Raw Dokumente
+│   │
+│   └── scripts/
+│       └── rag_querries.sh     # Fragekatalog für die RAG API
 │
 ├── emb_models/                 # Embedding Models Cache
 ├── hf-cache/                   # Hugging Face Cache
 ├── logs/                       # Logging
-├── requirements.txt            # Python Packages
 ├── usage_scenario.yaml         # GMT Usage Scenario
+├── docker-compose.gmt.yml      # GMT Docker Compose
+├── Dockerfile.gmt              # GMT Dockerfile
+├── requirements.txt            # Python Packages
+├── LICENSES.md                 # Datensatz (src/data/raw/) Lizenzinformationen
 └── README.md
 ```
 
