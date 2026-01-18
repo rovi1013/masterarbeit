@@ -23,4 +23,7 @@ logs/
 *.env
 
 # GMT
-gmt/
+eval-gmt/
+
+# RAGAS
+eval-ragas/

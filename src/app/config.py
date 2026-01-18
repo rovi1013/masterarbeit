@@ -11,6 +11,7 @@ class Config:
 
     embedding_model: str
     embedding_device: str
+    enable_context: bool
 
     chunk_size: int
     chunk_overlap: int

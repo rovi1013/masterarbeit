@@ -5,7 +5,7 @@
 # Ollama Process ID
 pid=$!
 
-# Pause for Ollama to start
+# Pause for Ollama to start properly
 sleep 5
 
 # Default to llama3 model (if OLLAMA_MODEL is empty/doesn't exist)

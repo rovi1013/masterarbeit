@@ -7,6 +7,7 @@ __pycache__/
 *.pyc
 .venv/
 .venv-gmt/
+.venv-ragas/
 
 # Data
 src/data/index/*
@@ -28,6 +29,10 @@ emb_models/*
 !emb_models/.gitkeep
 
 # GMT Messungen
-gmt/gmt-data/raw-data/*
-gmt/gmt-data/processed-data/*
-!gmt/gmt-data/filtered-data/*.gz
+eval-gmt/gmt-data/raw-data/*
+eval-gmt/gmt-data/processed-data/*
+!eval-gmt/gmt-data/processed-data/*.gz
+
+# RAGAS Messungen
+eval-ragas/ragas-data/*
+!eval-ragas/ragas-data/*.gz
