@@ -17,8 +17,7 @@ COPY src/app /src/app
 COPY src/data /src/data
 
 # Skript für RAG Querries
-COPY src/scripts /src/scripts
-RUN chmod +x /src/scripts/rag_querries.sh
+COPY src/querries /src/scripts
 
 # Embedding Modell
 COPY emb_models /emb_models

@@ -36,3 +36,6 @@ eval-gmt/gmt-data/processed-data/*
 # RAGAS Messungen
 eval-ragas/ragas-data/*
 !eval-ragas/ragas-data/*.gz
+
+# Misc
+src/querries/rag_querries.sh

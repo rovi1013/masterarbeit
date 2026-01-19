@@ -19,7 +19,7 @@ services:
       - "8000:8000"
     volumes:
       - ../src/data:/src/data
-      - ../src/scripts:/src/scripts
+      - ../src/querries:/src/querries
       - ../hf-cache:/root/.cache/huggingface
       - ../logs:/logs
       - ../emb_models:/emb_models
