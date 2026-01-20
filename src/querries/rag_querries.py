@@ -8,13 +8,13 @@ API_URL = "http://127.0.0.1:8000/ask"
 
 def post_question(question: str) -> str:
     data = json.dumps({"question": question}).encode("utf-8")
-    req = urlib.request.Request(
+    req = urllib.request.Request(
         API_URL,
         data,
         headers={"Content-Type": "application/json"},
         method=POST,
     )
-    with urlib.request.urlopen(req, timeout=120) as response:
+    with urllib.request.urlopen(req, timeout=120) as response:
         return response.read().decode("utf-8", errors="replace")
 
 
