@@ -1,6 +1,6 @@
 import json
 import sys
-import urllib.request
+from urllib.request import Request, urlopen
 
 JSON_PATH = "./querries/questions.json"
 API_URL = "http://127.0.0.1:8000/ask"
@@ -8,13 +8,13 @@ API_URL = "http://127.0.0.1:8000/ask"
 
 def post_question(question: str) -> str:
     data = json.dumps({"question": question}).encode("utf-8")
-    req = urllib.request.Request(
+    req = Request(
         API_URL,
         data,
         headers={"Content-Type": "application/json"},
         method=POST,
     )
-    with urllib.request.urlopen(req, timeout=120) as response:
+    with urlopen(req, timeout=120) as response:
         return response.read().decode("utf-8", errors="replace")
 
 
