@@ -12,7 +12,7 @@ def post_question(question: str) -> str:
         API_URL,
         data,
         headers={"Content-Type": "application/json"},
-        method=POST,
+        method="POST",
     )
     with urlopen(req, timeout=120) as response:
         return response.read().decode("utf-8", errors="replace")
