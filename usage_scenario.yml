@@ -43,6 +43,6 @@ flow:
     container: rag-app
     commands:
       - type: console
-        command: ./querries/rag_querries.py
+        command: python ./querries/rag_querries.py
         log-stdout: true
         read-notes-stdout: true
