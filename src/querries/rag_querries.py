@@ -1,6 +1,6 @@
 import json
 import sys
-import urlib.request
+import urllib.request
 
 JSON_PATH = "./querries/questions.json"
 API_URL = "http://127.0.0.1:8000/ask"
