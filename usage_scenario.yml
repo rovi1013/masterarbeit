@@ -15,11 +15,6 @@ flow:
         log-stdout: true
         read-notes-stdout: true
 
-      - type: console
-        command: pip list
-        log-stdout: true
-        read-notes-stdout: true
-
   # 2. Indexing
   - name: Indexing
     container: rag-app

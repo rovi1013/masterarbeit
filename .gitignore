@@ -14,7 +14,6 @@ src/data/index/*
 !src/data/index/.gitkeep
 !src/data/raw/
 !src/data/raw/*
-experiments/
 
 # Huggingface Cache
 hf-cache/*
@@ -39,3 +38,4 @@ eval-ragas/ragas-data/*
 
 # Misc
 src/querries/rag_querries.sh
+experiments/

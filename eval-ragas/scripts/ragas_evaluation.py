@@ -120,7 +120,7 @@ async def main():
     }
 
     dump_json_gz(out_path, out)
-    print(f"Wrote: {out_path}")
+    print(f"Ergebnisse der Evaluation: {out_path}\n########## EVALUATION DONE ##########")
 
 
 if __name__ == "__main__":
