@@ -2,8 +2,13 @@ import argparse
 import json
 import gzip
 import ijson
+import re
 from pathlib import Path
 from datetime import datetime
+
+# Filter für die manuell gesetzten marker im GMT stdout
+MARK_PREFIX = "##GMT_MARK##"
+MARK_RE = re.compile(r".*##GMT_MARK##\s+ts_us=(\d+)\s+event=([A-Z0-9_]+)(?:\s+(.*))?$")
 
 OUT_DIR = Path("gmt-data/processed-data")
 BYTES_UNITS = {"Bytes", "bytes", "Byte", "B"}  # GMT gibt Byte mit verschiedenen Namen aus
@@ -33,6 +38,97 @@ def parse_args():
     ap.add_argument("-p", "--phase-data", required=True, help="Pfad zu *_phase-data.json")
     ap.add_argument("-c", "--compress-lvl", type=int, default=9, help="Gzip compression level (1-9)")
     return ap.parse_args()
+
+
+def parse_markers(stdout: str):
+    out = []
+    if not stdout:
+        return out
+
+    for line in stdout.splitlines():
+        if MARK_PREFIX not in line:
+            continue
+        m = MARK_RE.match(line.strip())
+        if not m:
+            continue
+        ts_us = int(m.group(1))
+        event = m.group(2)
+        rest = m.group(3) or ""
+
+        meta = {}
+        for tok in rest.split():
+            if "=" in tok:
+                continue
+            k, v = tok.split("=", 1)
+            meta[k] = v
+
+        out.append({"ts_us": ts_us, "event": event, "meta": meta})
+    out.sort(key=lambda x: x["ts_us"])
+    return out
+
+
+def extract_stdout_from_cmd(logs_rag_app: list, needles) -> str:
+    if isinstance(needles, str):
+        needles = [needles]
+
+    for e in logs_rag_app or []:
+        if e.get("type") != "flow_command":
+            continue
+        cmd = e.get("cmd") or ""
+        if any(n in cmd for n in needles):
+            return e.get("stdout") or ""
+
+    return ""
+
+
+def make_key(base: str, meta: dict):
+    if allow_qid and base == "RETRIEVAL":
+        qid = meta.get("q_id")
+        return base, qid
+    return base, None
+
+
+def build_subwindow_from_markers(parent_name: str, markers: list, allow_qid: bool):
+    starts = {}
+    windows = []
+
+    for m in markers:
+        ev = m["event"]
+        ts = m["ts_us"]
+        meta = m.get("meta") or {}
+
+        if ev.endswith("_START"):
+            base = ev[:-6]
+            k = make_key(base, meta)
+            starts[k] = ts
+
+        elif ev.endswith("_END"):
+            base = ev[:-4]
+            k = make_key(base, meta)
+            s = starts.pop(k, None)
+            if s is None:
+                continue
+            e = ts
+            if e <= s:
+                continue
+
+            base_name = base
+            if allow_qid and base == "RETRIEVAL":
+                qid = (meta.get("q_id") or "unknown")
+                wname = f"{parent_name}/{base_name}/{qid}"
+            else:
+                wname = f"{parent_name}/{base_name}"
+
+            windows.append({
+                "name": wname,
+                "kind": "sub_window",
+                "start_us": int(s),
+                "end_us": int(e),
+                "duration_s": (e - s) / 1e6,
+            })
+
+    windows.sort(key=lambda w: w["start_us"])
+    return windows
 
 
 def date_prefix(path: Path) -> str:
@@ -84,9 +180,30 @@ def load_run_and_windows(phase_path: Path):
             "end_us": e,
             "duration_s": (e - s) / 1e6,
         })
+
+    logs = data.get("logs", {}) or {}
+    rag_logs = logs.get("rag-app", []) or []
+    indexing_stdout = extract_stdout_for_cmd(rag_logs, "python -m app.indexing")
+    rag_stdout = extract_stdout_for_cmd(rag_logs, "rag_querries.py")
+    indexing_markers = parse_markers(indexing_stdout)
+    rag_markers = parse_markers(rag_stdout)
+
+    sub_windows = []
+    # Indexing: EMBEDDING_* und PERSIST_IN_DB_*
+    sub_windows += build_subwindows_from_markers("Indexing", indexing_markers, allow_qid=False)
+
+    # RAG Querries: RETRIEVAL_* mit q_id
+    sub_windows += build_subwindows_from_markers("RAG Querries", rag_markers, allow_qid=True)
+
+    windows.extend(sub_windows)
     windows.sort(key=lambda w: w["start_us"])
 
-    return run, windows
+    marker_map = {
+        "Indexing": indexing_markers,
+        "RAG Querries": rag_markers,
+    }
+
+    return run, windows, marker_map
 
 
 def iter_measurements(path: Path):
@@ -167,7 +284,7 @@ def main():
     measurements_path = Path(args.measurements)
     phase_path = Path(args.phase_data)
 
-    run, windows = load_run_and_windows(phase_path)
+    run, windows, marker_map = load_run_and_windows(phase_path)
     run_id = run.get("id") or "unknown"
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -245,6 +362,7 @@ def main():
         },
         "windows": windows,
         "records": records,
+        "markers": marker_map,
         "entity_mappings": {
             k: sorted(v) for k, v in mappings.items()
         },

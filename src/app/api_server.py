@@ -14,10 +14,11 @@ app = FastAPI(title="RAG Baseline API")
 
 class Question(BaseModel):
     question: str
+    q_id: str
 
 
 # Einfacher POST endpoint für RAG-APP
 @app.post("/ask")
 async def ask(payload: Question):
-    result = pipeline.answer(payload.question)
+    result = pipeline.answer(payload.question, payload.q_id)
     return result

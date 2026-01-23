@@ -100,6 +100,17 @@ options:
   -c, --compress-lvl COMPRESS_LVL       Gzip compression level (1-9)
 ````
 
+**Regex für Markierungen in stdout**:
+- ``.*``: beliebige Zeichen, beliebig viele
+- ``##GMT_MARK##``: Markierung für timestamps in stdout
+- ``\s+``: whitespace
+- ``ts_us=(\d+)``: _ts_us_ gefolgt von einer Zahl (timestamp)
+- ``\s+``: whitespace
+- ``event=([A-Z0-9_]+)``: _event_ gefolgt von einem Namen der nur aus Großbustaben und Zahlen besteht
+- ``\s+``: whitespace
+- ``(?:\s+(.*))?$``: optionale Gruppe (``?``), fängt den restlichen String bis Zeilenende (``$``) ein
+
+
 ### Filter der Messungen
 Das Skript [filter_gmt_meassurement.py](scripts/filter_gmt_measurement.py) filtert bestimmte Messergebnisse aus den Roh-Messdaten ``JJJJ-MM-DD_<Messlauf-ID>_measurements.json`` von GMT heraus. Außerdem wird die Datei zu einer ``.gz`` komprimiert. Der Output ist eine ``JJJJ-MM-DD_<Messlauf-ID>_measurements_filtered.json.gz``. Insgesamt wird dadurch die Größe von ``>20MB`` der Roh-Messdaten auf ``<1MB`` reduziert. In der Tabelle sind die verwendeten Messwerte mit (✔) markiert und die herausgefilterten mit (✖).
 

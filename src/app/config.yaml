@@ -5,7 +5,7 @@ embedding_model: "sentence-transformers/all-MiniLM-L6-v2"
 embedding_device: "cuda"
 enable_context: True
 
-chunk_size: 512
+chunk_size: 2048
 chunk_overlap: 64
 top_k: 5
 

@@ -22,8 +22,8 @@ def main():
     similarity = model.similarity(embedding_1, embedding_2)
     logger.debug(f"[WARMUP] Ergebnisse der Ähnlichkeitsmessung: {similarity.item()}")
     model.encode(["Kleines Warmup"], convert_to_numpy=True)
+    logger.info("========== WARMUP INDEXING FERTIG ==========")
 
 
 if __name__ == '__main__':
     main()
-    logger.info("========== WARMUP INDEXING FERTIG ==========")

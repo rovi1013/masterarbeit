@@ -56,40 +56,42 @@ async def main():
     for r in records:
         question = r["question"]
         answer = r["answer"]
+        category = r["category"]
         contexts = r.get("contexts") or []
         context_meta = r.get("context_meta") or []
 
-        f = (await faithfulness.ascore(
-            user_input=question,
-            response=answer,
-            retrieved_contexts=contexts
-        )).value
+        if category not in ["negative", "Negative", "NEGATIVE"]:
+            f = (await faithfulness.ascore(
+                user_input=question,
+                response=answer,
+                retrieved_contexts=contexts
+            )).value
 
-        ar = (await answer_rel.ascore(
-            user_input=question,
-            response=answer
-        )).value
+            ar = (await answer_rel.ascore(
+                user_input=question,
+                response=answer
+            )).value
 
-        cu = (await ctx_util.ascore(
-            user_input=question,
-            response=answer,
-            retrieved_contexts=contexts
-        )).value
+            cu = (await ctx_util.ascore(
+                user_input=question,
+                response=answer,
+                retrieved_contexts=contexts
+            )).value
 
-        scored.append({
-            "id": r["id"],
-            "category": r.get("category"),
-            "question": question,
-            "answer": answer,
-            "context_meta": context_meta,
-            "metrics": {
-                "faithfulness": f,
-                "answer_relevancy": ar,
-                "context_utilization": cu,
-            }
-        })
+            scored.append({
+                "id": r["id"],
+                "category": r.get("category"),
+                "question": question,
+                "answer": answer,
+                "context_meta": context_meta,
+                "metrics": {
+                    "faithfulness": f,
+                    "answer_relevancy": ar,
+                    "context_utilization": cu,
+                }
+            })
 
-        print(f"Frage [{r["id"]}] evaluiert.")
+        print(f"Frage [{r["id"]}] bearbeitet.")
 
     def mavg(name):
         vals = [x["metrics"][name] for x in scored]

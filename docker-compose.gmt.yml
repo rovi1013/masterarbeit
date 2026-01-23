@@ -13,6 +13,7 @@ services:
       EMBEDDING_MODEL_DIR: /emb_models
       HF_HOME: /root/.cache/huggingface
       ANONYMIZED_TELEMETRY: "False"
+      RAG_PRINT_RESPONSES: "__GMT_VAR_RAG_PRINT_RESPONSES__"
     ports:
       - "8000:8000"
     depends_on:
