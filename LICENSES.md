@@ -2,53 +2,17 @@
 
 This repository contains:
 1) **Source code** (licensed under the repository's main LICENSE), and
-2) **Third-party documents** in `src/data/raw/` which remain under their original licenses.
+2) **Dataset** (downloaded at runtime)
 
 ---
 
-## Third-party documents (src/data/raw)
+## Dataset
 
-### EmissionsGapReport2024.pdf
-- Title: Emissions Gap Report 2024
-- Author/Publisher: United Nations Environment Programme (UNEP)
-- Source: https://www.unep.org/resources/emissions-gap-report-2024
-- License: Creative Commons Attribution 4.0 International (CC BY 4.0)
-
-### EnergyandAI.pdf
-- Title: Energy and AI
-- Author/Publisher: International Energy Agency (IEA)
-- Source: https://www.iea.org/reports/energy-and-ai
-- License: Creative Commons Attribution 4.0 International (CC BY 4.0)
-
-### EuropeanGreenDeal.pdf
-- Title: The European Green Deal
-- Author/Publisher: European Commission, Secretariat-General 
-- Source: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:52019DC0640
-- License: Creative Commons Attribution 4.0 International (CC BY 4.0)
-
-### GlobalEnergyReview2025.pdf
-- Title: Global Energy Review 2025
-- Author/Publisher: International Energy Agency (IEA)
-- Source: https://www.iea.org/reports/global-energy-review-2025
-- License: Creative Commons Attribution 4.0 International (CC BY 4.0)
-
-### GlobalResourcesOutlook2024.pdf
-- Title: Global Resources Outlook 2024
-- Author/Publisher: International Resource Panel (IRP) & United Nations Environment Programme (UNEP)
-- Source: https://www.resourcepanel.org/reports/global-resources-outlook-2024
-- License: Creative Commons Attribution 4.0 International (CC BY 4.0)
-
-### Renewables2024.pdf
-- Title: Renewables 2024
-- Author/Publisher: International Energy Agency (IEA)
-- Source: https://www.iea.org/reports/renewables-2024
-- License: Creative Commons Attribution 4.0 International (CC BY 4.0)
-
-### WorldEnergyOutlook2025.pdf
-- Title: World Energy Outlook 2025
-- Author/Publisher: International Energy Agency (IEA)
-- Source: https://www.iea.org/reports/world-energy-outlook-2025
-- License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+- Dataset: common-pile/arxiv_papers (Hugging Face)
+- Revision: 963fe980c55b353980653f1a27c1dc0c8a2d7058
+- Access: selection of documents downloaded during measurement runs via src/scripts/get_dataset.py; see src/scripts/dataset_selection.json for specific document IDs used; documents are not stored in this repository.
+- Licensing: per-document license (metadata column)
+- Citation: Kandpal et al., "The Common Pile v0.1: An 8TB Dataset of Public Domain and Openly Licensed Text", 2025, arXiv 2506.05209.
 
 ---
 

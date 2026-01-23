@@ -17,7 +17,7 @@ COPY src/app /src/app
 COPY src/data /src/data
 
 # Skript für RAG Querries
-COPY src/querries /src/querries
+COPY src/scripts /src/scripts
 
 # Embedding Modell
 COPY emb_models /emb_models

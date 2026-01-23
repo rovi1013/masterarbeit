@@ -11,9 +11,9 @@ __pycache__/
 
 # Data
 src/data/index/*
+src/data/raw/*
 !src/data/index/.gitkeep
-!src/data/raw/
-!src/data/raw/*
+!src/data/raw/.gitkeep
 
 # Huggingface Cache
 hf-cache/*
@@ -37,5 +37,6 @@ eval-ragas/ragas-data/*
 !eval-ragas/ragas-data/*.gz
 
 # Misc
-src/querries/rag_querries.sh
+misc/rag_querries.sh
 experiments/
+misc/

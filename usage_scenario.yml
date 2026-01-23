@@ -6,6 +6,15 @@ description: Dieser Test dient der Messung des Energieverbrauchs des RAG-Systems
 compose-file: !include docker-compose.gmt.yml
 
 flow:
+  # 0. Datensatz von HF downloaden
+  - name: Download Dataset
+    container: rag-app
+    commands:
+      - type: console
+        command: python scripts/get_dataset.py
+        log-stdout: true
+        read-notes-stdout: true
+
   # 1. Warmup Indexing
   - name: Warmup Indexing
     container: rag-app
@@ -38,6 +47,6 @@ flow:
     container: rag-app
     commands:
       - type: console
-        command: python querries/rag_querries.py
+        command: python scripts/rag_querries.py
         log-stdout: true
         read-notes-stdout: true
