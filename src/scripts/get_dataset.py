@@ -3,9 +3,10 @@ import re
 from pathlib import Path
 from datasets import load_dataset
 
+from app.config import load_config
 
-DATASET_SELECTION_PATH = "scripts/dataset_selection.json"
-OUT_DIR = "data/raw"
+cfg = load_config()
+DATASET_SELECTION_PATH = "scripts/dataset.json"
 
 
 def make_filename_safe(name: str) -> str:
@@ -23,7 +24,7 @@ def main():
     total_ids = dataset_selction["n"]
     ids = set(dataset_selction["ids"])
 
-    out_dir = Path(OUT_DIR)
+    out_dir = Path(cfg.data_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
     # Alte Dokumente löschen
