@@ -4,8 +4,8 @@ from pathlib import Path
 from datasets import load_dataset
 
 
-DATASET_SELECTION_PATH = "src/scripts/dataset_selection.json"
-OUT_DIR = "src/data/raw"
+DATASET_SELECTION_PATH = "scripts/dataset_selection.json"
+OUT_DIR = "data/raw"
 
 
 def make_filename_safe(name: str) -> str:
