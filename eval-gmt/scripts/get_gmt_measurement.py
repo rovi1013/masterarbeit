@@ -32,7 +32,7 @@ def fetch_json(url: str, key: str, timeout_s: int) -> dict:
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser()
+    ap = argparse.ArgumentParser(description="Rufe die GMT API auf und speichere die Daten.")
     ap.add_argument("-k", "--key", required=True, help="X-Authentication token")
     ap.add_argument("-r", "--run-id", required=True, help="Messlauf-ID (UUID)")
     args = ap.parse_args()

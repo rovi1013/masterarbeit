@@ -33,7 +33,7 @@ METRIC_SPEC = {
 
 
 def parse_args():
-    ap = argparse.ArgumentParser()
+    ap = argparse.ArgumentParser(description="Fasse die Measurement und Phase-Data Daten zusammen.")
     ap.add_argument("-m", "--measurements", required=True, help="Pfad zu *_measurements.json")
     ap.add_argument("-p", "--phase-data", required=True, help="Pfad zu *_phase-data.json")
     ap.add_argument("-c", "--compress-lvl", type=int, default=9, help="Gzip compression level (1-9)")

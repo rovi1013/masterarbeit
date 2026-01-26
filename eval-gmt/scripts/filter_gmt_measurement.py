@@ -61,7 +61,7 @@ def check_output(path: Path):
 
 
 def main():
-    ap = argparse.ArgumentParser()
+    ap = argparse.ArgumentParser(description="Filtert bestimmte Metriken aus einem GMT Messlauf heraus.")
     ap.add_argument("-i", "--input", required=True, help="Input JSON Datei von GMT.")
     ap.add_argument(
         "-p", "--plain",

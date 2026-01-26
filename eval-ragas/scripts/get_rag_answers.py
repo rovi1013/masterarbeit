@@ -22,9 +22,9 @@ def read_questions(path: Path):
         return json.load(f)
 
 
-def fetch_json(question: str, timeout_s: int):
+def fetch_json(q_id: str, question: str, timeout_s: int):
     try:
-        payload = json.dumps({"question": question}).encode("utf-8")
+        payload = json.dumps({"q_id": q_id, "question": question}).encode("utf-8")
         req = Request(
             API_URL,
             data=payload,
@@ -65,14 +65,14 @@ def main():
 
     with tqdm(total=len(questions)) as pbar:
         for idx, q in enumerate(questions, start=1):
-            qid = q.get("q_id")
+            q_id = q.get("q_id")
             question = q.get("question")
             gold_doc = q.get("gold_doc")
             ground_truth = q.get("ground_truth", None)
             pbar.set_description(f"Frage {q_id} wird bearbeitet")
 
             record = {
-                "q_id": qid,
+                "q_id": q_id,
                 "question": question,
                 "answer": None,
                 "contexts": [],
@@ -82,7 +82,7 @@ def main():
                 "error": None,
             }
 
-            res = fetch_json(question, 60)
+            res = fetch_json(q_id, question, 60)
             record["answer"] = res.get("answer")
             record["contexts"] = res.get("context", []) or []
             record["context_meta"] = res.get("context_meta", []) or []
