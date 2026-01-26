@@ -4,17 +4,10 @@ services:
       context: ..
       dockerfile: docker/Dockerfile
     container_name: rag-app
-    env_file:
-      - .env
     environment:
-      DATA_DIR: ${DATA_DIR}                         # Ordner der Dokumente
-      INDEX_DIR: ${INDEX_DIR}                       # Ordner der Datenbank
-      OLLAMA_HOST: "http://ollama:11434"            # Ollama Host Adresse
-      OLLAMA_MODEL: ${OLLAMA_MODEL}                 # Ollama Modell
-      LOG_DIR: /logs                                # Log Dateien
-      EMBEDDING_MODEL_DIR: ${EMBEDDING_MODEL_DIR}   # Embedding Modelle
-      HF_HOME: /root/.cache/huggingface             # Fester Ordner fuer HF Cache
+      HF_HOME: "/root/.cache/huggingface"           # Fester Ordner fuer HF Cache
       ANONYMIZED_TELEMETRY: "False"                 # ChromaDB Telemetrie deaktivieren
+      RAG_PRINT_RESPONSES: "0"                      # Ausgabe der rag_querries [0/1]
     ports:
       - "8000:8000"
     volumes:
@@ -36,15 +29,13 @@ services:
   ollama:
     container_name: ollama
     image: ollama/ollama@sha256:d4188c1dfa870386a14e299976aed96daeb83876b69e1a852c9d09ea76463b9f
-    env_file:
-      - .env
     ports:
       - "11434:11434"
     volumes:
       - ollama-data:/root/.ollama           # Caching Ollama Modelle
       - ./entrypoint.sh:/entrypoint.sh
     environment:
-      OLLAMA_MODEL: ${OLLAMA_MODEL}         # Ollama Modell
+      OLLAMA_MODEL: "llama3:latest"         # Ollama Modell
     restart: unless-stopped
     deploy:
       resources:

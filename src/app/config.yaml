@@ -1,17 +1,18 @@
-data_dir: "../data/raw"
-index_dir: "../data/index"
+data_dir: "/src/data/raw"
+index_dir: "/src/data/index"
+embed_dir: "/emb_models"
+log_dir: "/logs"
 
 embedding_model: "sentence-transformers/all-MiniLM-L6-v2"
 embedding_device: "cuda"
-enable_context: True
 
-chunk_size: 2048
+chunk_size: 512
 chunk_overlap: 64
 top_k: 5
 
 llm_host: "http://ollama:11434"
 llm_model: "llama3:latest"
-temperature: 0
-max_tokens: 1024
+temperature: 0.0
+max_tokens: 512
 
 log_level: "DEBUG"

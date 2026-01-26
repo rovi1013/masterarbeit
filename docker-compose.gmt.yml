@@ -5,13 +5,7 @@ services:
       dockerfile: Dockerfile.gmt
     container_name: rag-app
     environment:
-      DATA_DIR: /src/data/raw
-      INDEX_DIR: /src/data/index
-      OLLAMA_HOST: "http://ollama:11434"
-      OLLAMA_MODEL: llama3:latest
-      LOG_DIR: /logs
-      EMBEDDING_MODEL_DIR: /emb_models
-      HF_HOME: /root/.cache/huggingface
+      HF_HOME: "/root/.cache/huggingface"
       ANONYMIZED_TELEMETRY: "False"
       RAG_PRINT_RESPONSES: "__GMT_VAR_RAG_PRINT_RESPONSES__"
     ports:
@@ -30,5 +24,5 @@ services:
     ports:
       - "11434:11434"
     environment:
-      OLLAMA_MODEL: llama3:latest
+      OLLAMA_MODEL: "llama3:latest"
     restart: unless-stopped
