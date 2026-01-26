@@ -9,7 +9,7 @@ masterarbeit/
 │   ├── docker-compose.yml      # Docker Compose
 │   ├── Dockerfile              # Docker Image
 │   ├── entrypoint.sh           # Entrypoint Script
-│   └── Test-Frage.http         # Test für RAG-APP
+│   └── Test-Fragen.http        # Test für RAG-APP
 │
 ├── docker-compose.gmt.yml      # GMT Docker Compose
 ├── Dockerfile.gmt              # GMT Dockerfile
@@ -27,7 +27,7 @@ Environment Variablen:
 - ``DATA_DIR``: Ordner der Raw Dokumente.
 - ``INDEX_DIR``: Ordner der Embedded Dokumente (Vektordatenbank).
 - ``OLLAMA_HOST``: Die Addresse, unter der Ollama gehostet wird.
-- ``OLLAMA_MODEL``: Das zu verwendente Ollama Model, wird in [.env](.env) oder in [config.yaml](../src/app/config.yaml) festgelegt.
+- ``OLLAMA_MODEL``: Das zu verwendente Ollama Model, wird in [config.yaml](../src/app/config.yaml) festgelegt.
 - ``LOG_DIR``: Logging Dateien werden hier abgespeichert.
 - ``EMBEDDING_MODEL_DIR``: Setzt einen festen Ordner, an dem die sentence-transformer Modelle gecached werden. Dadurch wird verhindert, dass die Modelle bei jedem Aufruf von [embedding.py](src/app/embedding.py) neu heruntergeladen werden.
 - ``HF_HOME``: Lokaler Hugging Face Cache; Siehe [Dokumentation](https://huggingface.co/docs/huggingface_hub/package_reference/environment_variables#hfhome).
@@ -44,7 +44,7 @@ Extra Container für die LLM ermöglicht
 - Ausführung des Models auf einer GPU
 - getrennte Messungen vom restlichen RAG-System
 
-Entrypoint-Script läd die konfigurierte LLM (in [.env](/docker/.env)) beim Starten des containers herunter, dadurch werden die Messungen nicht beeinflusst. 
+Entrypoint-Script läd die konfigurierte LLM beim Starten des containers herunter, dadurch werden die Messungen nicht beeinflusst. 
 
 Environment Variablen:
 - ``OLLAMA_MODEL``: Welches Model soll verwendet werden (z.B. ``llama3:8b`` oder ``cas/teuken-7b-q4km``, [mehr](https://ollama.com/library?sort=popular))

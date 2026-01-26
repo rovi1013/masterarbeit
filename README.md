@@ -18,8 +18,8 @@ masterarbeit/
 │
 ├── src/                        # SOURCE CODE & DATA
 │   ├── app/                    # RAG-APP
-│   │   ├── config              # Konfiguration des RAG-Systems
-│   │   ├── api_server          # API Endpoint
+│   │   ├── config              # Konfigurationsvariablen
+│   │   ├── api_server          # RAG App API Endpoint
 │   │   ├── embedding           # Lade sentence-transformer model
 │   │   ├── indexing            # Erstellen einer Datenbank aus Dokumenten
 │   │   ├── retrieval           # Abruf aus Datenbank 
@@ -37,7 +37,8 @@ masterarbeit/
 │   └── scripts/
 │       ├── dataset.json        # Auswahl aus HF Datensatz
 │       ├── get_dataset.py      # Datensatz von HF herunterladen
-│       └── rag_querries.py     # Fragekatalog für die RAG API
+│       ├── questions.json      # Fragekatalog für die RAG API
+│       └── rag_querries.py     # RAG API mit Fragekatalog aufrufen
 │
 ├── emb_models/                 # Embedding Models Cache
 ├── hf-cache/                   # Hugging Face Cache
@@ -70,21 +71,22 @@ Für die Ausführung und Verwendung des RAG-Systems sind Docker und Python vorra
 ### Konfiguration
 In der Datei [config.yaml](src/app/config.yaml) können verschiedene Variablen eingestellt werden.
 
-| Variable         | Beschreibung                                                | Type  | Default                                  |
-|:-----------------|:------------------------------------------------------------|:------|:-----------------------------------------|
-| data_dir         | Verzeichnis, in das der Roh Datensatz heruntergeladen wird. | str   | "../data/raw"                            |
-| index_dir        | Verzeichnis, in dem der Embedded Datesatz gespeicht wird.   | str   | "../data/index"                          |
-| embedding_model  | Das Embedding Modell von Hugging Face.                      | str   | "sentence-transformers/all-MiniLM-L6-v2" |
-| embedding_device | Das Gerät, das fürs Embedding verwendet werden soll.        | str   | "cuda"                                   |
-| enable_context   | ?                                                           | bool  | True                                     |
-| chunk_size       | Größe der Chunks, in die der Datensatz gesplittet wird.     | int   | 2048                                     |
-| chunk_overlap    | Größe des Overlap zwischen den Chunks.                      | int   | 64                                       |
-| top_k            | Anzahl der Treffer, die vom Retrieval zurückgegeben werden. | int   | 5                                        |
-| llm_host         | Adresse, an der die LLM gehostet wird.                      | str   | "http://ollama:11434"                    |
-| llm_model        | LLM Modell, das in der Generation verwendet wird.           | str   | "llama3:latest"                          |
-| temperature      | Temperatur für die Generation der LLM.                      | float | 0                                        |
-| max_tokens       | Maximale Antwortlänge der LLM (in Tokens).                  | int   | 1024                                     |
-| log_level        | Ausgabe-Level des Logging.                                  | str   | "DEBUG"                                  |
+| #  | Variable         | Beschreibung                                                | Type  | Default                                  |
+|:---|:-----------------|:------------------------------------------------------------|:------|:-----------------------------------------|
+| 1  | data_dir         | Verzeichnis, in das der Roh Datensatz heruntergeladen wird. | str   | "/src/data/raw"                          |
+| 2  | index_dir        | Verzeichnis, in dem der Embedded Datesatz gespeicht wird.   | str   | "/src/data/index"                        |
+| 3  | embed_dir        | Verzeichnis, in dem die Embedding Modelle gecached sind.    | str   | "/emb_models"                            |
+| 4  | log_dir          | Verzeichnis, in dem die Logs persistiert werden.            | str   | "/logs"                                  |
+| 5  | embedding_model  | Das Embedding Modell von Hugging Face.                      | str   | "sentence-transformers/all-MiniLM-L6-v2" |
+| 6  | embedding_device | Das Gerät, das fürs Embedding verwendet werden soll.        | str   | "cuda"                                   |
+| 7  | chunk_size       | Größe der Chunks, in die der Datensatz gesplittet wird.     | int   | 512                                      |
+| 8  | chunk_overlap    | Größe des Overlap zwischen den Chunks.                      | int   | 64                                       |
+| 9  | top_k            | Anzahl der Treffer, die vom Retrieval zurückgegeben werden. | int   | 5                                        |
+| 10 | llm_host         | Adresse, an der die LLM gehostet wird.                      | str   | "http://ollama:11434"                    |
+| 11 | llm_model        | LLM Modell, das in der Generation verwendet wird.           | str   | "llama3:latest"                          |
+| 12 | temperature      | Temperatur für die Generation der LLM.                      | float | 0.0                                      |
+| 13 | max_tokens       | Maximale Antwortlänge der LLM (in Tokens).                  | int   | 512                                      |
+| 14 | log_level        | Ausgabe-Level des Logging.                                  | str   | "DEBUG"                                  |
 
 ### Docker starten
 Docker Image bauen und container starten:
@@ -132,7 +134,7 @@ Detaillierter Ablauf des RAG-Systems:
 3. Weiterleitung der Frage an die "Zentrale" des RAG-Systems [rag_pipeline.py](src/app/rag_pipeline.py). Von hier wird das RAG-System gesteuert (Retrieval → Augmentation → Generation).
 4. RETRIEVAL: Auf Basis der Frage, wird in [retrieval.py](src/app/retrieval.py) der Kontext aus der Datenbank geholt.
 5. AUGMENTATION: Unter Verwendung des Prompt Templates ([prompt_template.py](src/app/prompt_template.py)) wird in [rag_pipeline.py](src/app/rag_pipeline.py) der finale Prompt erstellt. 
-6. GENERATION: Der Prompt wird an den [llm_client.py](src/app/llm_client.py) weitergeleitet und die LLM (Modell definiert in [.env](docker/.env)) generiert eine passende Antwort auf Basis des Kontexts.
+6. GENERATION: Der Prompt wird an den [llm_client.py](src/app/llm_client.py) weitergeleitet und die LLM generiert eine passende Antwort auf Basis des Kontexts.
 7. Antwort wird über FastAPI zusammen mit der Frage und dem Kontext zurückgesendet.
 
 ### indexing
@@ -191,7 +193,7 @@ In [config.yaml](src/app/config.yaml) werden Konstanten gesetzt und die RAG-APP 
 - ``chunk_size``: Größe der Chunks (je nach Chunking Strategie auch dynamisch möglich)
 - ``chunk_overlap``: Overlap zwischen den einzelnen Chunks (je nach Chunking Strategie auch dynamisch möglich)
 - ``llm_host``: URL für Verbindung zu LLM
-- ``llm_model``: Model, welches verwendet werden soll (hier nur die Defaulteinstellung, wird von Model in [.env](docker/.env) überschrieben)
+- ``llm_model``: Model, welches verwendet werden soll
 - ``temperature``: Randomness/Kreativität der LLM-Antwort
 - ``max_tokens``: Maximale Länge der Antwort
   - Weitere Konfigurationsmöglichkeiten der LLM sind unter anderem: mirostat, mirostat_eta, mirostat_tau, num_ctx, repeat_last_n, repeat_penalty, seed, stop, top_k, top_p, min_p (siehe [Dokumentation](https://docs.ollama.com/modelfile#valid-parameters-and-values))
@@ -207,7 +209,9 @@ mit dem Skript [get_dataset.py](src/scripts/get_dataset.py)
 963fe980c55b353980653f1a27c1dc0c8a2d7058
 
 
+## Optimierungsstrategien
 
+### 
 
 
 ## NEXT UP / TODO
