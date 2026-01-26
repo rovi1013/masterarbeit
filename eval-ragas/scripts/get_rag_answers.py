@@ -1,6 +1,7 @@
 import argparse
 import json
 import datetime
+from tqdm import tqdm
 from pathlib import Path
 from urllib.request import Request, urlopen
 
@@ -62,29 +63,33 @@ def main():
     records = []
     ok = 0
 
-    for idx, q in enumerate(questions, start=1):
-        qid = q.get("id")
-        question = q.get("question")
-        category = q.get("category", None)
+    with tqdm(total=len(questions)) as pbar:
+        for idx, q in enumerate(questions, start=1):
+            qid = q.get("q_id")
+            question = q.get("question")
+            gold_doc = q.get("gold_doc")
+            ground_truth = q.get("ground_truth", None)
+            pbar.set_description(f"Frage {q_id} wird bearbeitet")
 
-        record = {
-            "id": qid,
-            "category": category,
-            "question": question,
-            "answer": None,
-            "contexts": [],
-            "context_meta": [],
-            "ground_truth": None,
-            "error": None,
-        }
+            record = {
+                "q_id": qid,
+                "question": question,
+                "answer": None,
+                "contexts": [],
+                "context_meta": [],
+                "gold_doc": gold_doc,
+                "ground_truth": ground_truth,
+                "error": None,
+            }
 
-        res = fetch_json(question, 60)
-        record["answer"] = res.get("answer")
-        record["contexts"] = res.get("context", []) or []
-        record["context_meta"] = res.get("context_meta", []) or []
-        ok += 1
+            res = fetch_json(question, 60)
+            record["answer"] = res.get("answer")
+            record["contexts"] = res.get("context", []) or []
+            record["context_meta"] = res.get("context_meta", []) or []
+            ok += 1
 
-        records.append(record)
+            records.append(record)
+            pbar.update(1)
 
     out_json = {
         "meta": {

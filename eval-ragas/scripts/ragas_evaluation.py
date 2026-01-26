@@ -28,6 +28,11 @@ def dump_json_gz(path: Path, obj):
         json.dump(obj, f, ensure_ascii=False, indent=2)
 
 
+def mavg(name):
+    vals = [x["metrics"][name] for x in scored]
+    return mean(vals) if vals else None
+
+
 async def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("-i", "--input", required=True, help="Pfad zu *_answers.json.")
@@ -53,49 +58,49 @@ async def main():
     ctx_util = ContextUtilization(llm=llm)
 
     scored = []
-    for r in records:
-        question = r["question"]
-        answer = r["answer"]
-        category = r["category"]
-        contexts = r.get("contexts") or []
-        context_meta = r.get("context_meta") or []
+    with tqdm(total=len(records)) as pbar:
+        for r in records:
+            q_id = r["q_id"]
+            question = r["question"]
+            answer = r["answer"]
+            category = r["category"]
+            contexts = r.get("contexts") or []
+            context_meta = r.get("context_meta") or []
+            pbar.set_description(f"Frage {q_id} wird bearbeitet")
 
-        if category not in ["negative", "Negative", "NEGATIVE"]:
-            f = (await faithfulness.ascore(
-                user_input=question,
-                response=answer,
-                retrieved_contexts=contexts
-            )).value
+            if category not in ["negative", "Negative", "NEGATIVE"]:
+                f = (await faithfulness.ascore(
+                    user_input=question,
+                    response=answer,
+                    retrieved_contexts=contexts
+                )).value
 
-            ar = (await answer_rel.ascore(
-                user_input=question,
-                response=answer
-            )).value
+                ar = (await answer_rel.ascore(
+                    user_input=question,
+                    response=answer
+                )).value
 
-            cu = (await ctx_util.ascore(
-                user_input=question,
-                response=answer,
-                retrieved_contexts=contexts
-            )).value
+                cu = (await ctx_util.ascore(
+                    user_input=question,
+                    response=answer,
+                    retrieved_contexts=contexts
+                )).value
 
-            scored.append({
-                "id": r["id"],
-                "category": r.get("category"),
-                "question": question,
-                "answer": answer,
-                "context_meta": context_meta,
-                "metrics": {
-                    "faithfulness": f,
-                    "answer_relevancy": ar,
-                    "context_utilization": cu,
-                }
-            })
+                scored.append({
+                    "q_id": q_id,
+                    "question": question,
+                    "answer": answer,
+                    "context_meta": context_meta,
+                    "gold_doc": r["gold_doc"],
+                    "ground_truth": r["ground_truth"],
+                    "metrics": {
+                        "faithfulness": f,
+                        "answer_relevancy": ar,
+                        "context_utilization": cu,
+                    }
+                })
 
-        print(f"Frage [{r["id"]}] bearbeitet.")
-
-    def mavg(name):
-        vals = [x["metrics"][name] for x in scored]
-        return mean(vals) if vals else None
+            pbar.update(1)
 
     out = {
         "meta": {
@@ -122,7 +127,7 @@ async def main():
     }
 
     dump_json_gz(out_path, out)
-    print(f"Ergebnisse der Evaluation: {out_path}\n########## EVALUATION DONE ##########")
+    print("########## EVALUATION DONE ##########")
 
 
 if __name__ == "__main__":
