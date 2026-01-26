@@ -59,7 +59,7 @@ def load_documents(data_dir: str) -> List[RawDocument]:
         try:
             text = loader(path)
             if not text.strip():
-                logger.debug(f"Leeres Dokument: {path}")
+                logger.warning(f"Leeres Dokument: {path}")
                 continue
 
             metadata = {
@@ -92,18 +92,17 @@ def simple_chunk(doc: RawDocument, chunk_size: int, overlap: int) -> List[RawDoc
     chunks: list[RawDocument] = []
 
     start = 0
-    n = len(text)
     step = max(1, chunk_size - overlap)
     chunk_index = 0
 
-    while start < n:
+    while start < len(text):
         end = start + chunk_size
         chunk_text = text[start:end]
+        metadata = dict(doc.metadata)
+        metadata["chunk_index"] = chunk_index
         if chunk_text.strip():
-            metadata = dict(doc.metadata)
-            metadata["chunk_index"] = chunk_index
             chunks.append(RawDocument(text=chunk_text, metadata=metadata))
-            chunk_index += 1
+        chunk_index += 1
         start += step
 
     return chunks
@@ -168,7 +167,7 @@ def build_index(cfg: Config | None = None, reset_db: bool = False) -> None:
             "hnsw:num_threads": 4,
             "hnsw:batch_size": 10_000,
             "hnsw:sync_threshold": 200_000,
-        },
+        }
     )
 
     ids = [str(i) for i in range(len(chunked_docs))]
@@ -185,12 +184,14 @@ def build_index(cfg: Config | None = None, reset_db: bool = False) -> None:
     for start in range(0, total, batch_size):
         end = min(start + batch_size, total)
         batch_ids = ids[start:end]
+        batch_docs = texts[start:end]
         batch_embs = embeddings[start:end]
         batch_metas = metadatas[start:end]
 
         logger.info(f"Füge Batch {start}–{end} von {total} hinzu ...")
         collection.add(
             ids=batch_ids,
+            documents=batch_docs,
             embeddings=batch_embs,
             metadatas=batch_metas,
         )

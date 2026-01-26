@@ -18,17 +18,10 @@ class RagPipeline:
         prompt = BASE_PROMPT.format(context=context, question=question)
         answer = self.llm.generate(prompt)
 
-        if self.cfg.enable_context:
-            return {
-                "q_id": q_id,
-                "question": question,
-                "answer": answer,
-                "context": docs,
-                "context_meta": metas,
-            }
-        else:
-            return {
-                "q_id": q_id,
-                "question": question,
-                "answer": answer,
-            }
+        return {
+            "q_id": q_id,
+            "question": question,
+            "answer": answer,
+            "context": docs,
+            "context_meta": metas,
+        }

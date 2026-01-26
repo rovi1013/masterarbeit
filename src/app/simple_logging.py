@@ -12,7 +12,7 @@ def setup_logging():
     level_name = cfg.log_level.upper().strip()
     level = getattr(logging, level_name, logging.INFO)
 
-    log_path = Path(os.getenv("LOG_DIR", "/logs")).resolve()
+    log_path = Path(cfg.log_dir)
     log_path.mkdir(parents=True, exist_ok=True)
     log_file = log_path / "rag_app.log"
 

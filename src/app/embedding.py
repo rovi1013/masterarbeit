@@ -11,7 +11,7 @@ _model: SentenceTransformer | None = None
 
 
 def _get_model_dir(cfg: Config) -> Path:
-    base_dir = Path(os.getenv("EMBEDDING_MODEL_DIR", "/emb_models"))
+    base_dir = Path(cfg.embed_dir)
     safe_name = cfg.embedding_model.replace("/", "_")
     return base_dir / safe_name
 

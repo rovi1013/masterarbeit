@@ -37,8 +37,6 @@ def retrieve(cfg: Config, question: str, q_id: str):
     docs = retrieval_result.get("documents", [[]])[0]
     metas = retrieval_result.get("metadatas", [[]])[0]
     dists = retrieval_result.get("distances", [[]])[0]
-    if not docs:
-        logger.warning("Keine Dokumente gefunden.")
 
     for rank, (meta, dist) in enumerate(zip(metas, dists), start=1):
         logger.debug(
