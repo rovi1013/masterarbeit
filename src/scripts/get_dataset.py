@@ -1,11 +1,9 @@
 import json
 import re
+from tqdm import tqdm
 from pathlib import Path
 from datasets import load_dataset
 
-from app.config import load_config
-
-cfg = load_config()
 DATASET_SELECTION_PATH = "scripts/dataset.json"
 
 
@@ -24,7 +22,7 @@ def main():
     total_ids = dataset_selction["n"]
     ids = set(dataset_selction["ids"])
 
-    out_dir = Path(cfg.data_dir)
+    out_dir = Path("/src/data/raw")
     out_dir.mkdir(parents=True, exist_ok=True)
 
     # Alte Dokumente löschen
@@ -36,27 +34,30 @@ def main():
     found = 0
     missing = set(ids)
 
-    for row in ds:
-        doc_id = row.get("id")
-        if doc_id not in missing:
-            continue
+    with tqdm(total=total_ids) as pbar:
+        pbar.set_description(f"Datensatz {dataset} wird gespeichert")
+        for row in ds:
+            doc_id = row.get("id")
+            if doc_id not in missing:
+                continue
 
-        text = row.get("text", "")
-        file_name = out_dir / f"arxiv_{make_filename_safe(doc_id)}.txt"
-        file_name.write_text(text, encoding="utf-8", errors="ignore")
+            text = row.get("text", "")
+            file_name = out_dir / f"arxiv_{make_filename_safe(doc_id)}.txt"
+            file_name.write_text(text, encoding="utf-8", errors="ignore")
 
-        missing.remove(doc_id)
-        found += 1
+            missing.remove(doc_id)
+            found += 1
 
-        if not missing:
-            break
+            if not missing:
+                break
+            pbar.update(1)
 
     if missing:
         raise RuntimeError(
             f"{len(missing)}/{total_ids} Dokumente konnten nicht geladen werden."
         )
 
-    print(f"{found}/{total_ids} Dokumente wurden gespeichert.\n########## DATASET DOWNLOAD DONE ##########")
+    print(f"{found}/{total_ids} Dokumente erfolgreich gespeichert.\n########## DATASET DOWNLOAD DONE ##########")
 
 
 if __name__ == "__main__":
