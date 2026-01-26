@@ -12,7 +12,7 @@ Das Green Metrics Tool ist eine modulare Suite aus verschiedenen Tools, die Ener
 eval-gmt/
 ├── gmt-data/                           # MESSLAUF DATEN
 │   ├── filtered-data/                  # Gefilterete Daten
-│   └── raw_data/                       # Rod-Daten von GMT
+│   └── raw_data/                       # Roh-Daten von GMT
 │
 ├── scripts/                            # MESSDATEN AUFBEREITUNG
 │   ├── create_measurement_summary.py   # Zusammenfassung eines Messlaufs
@@ -23,8 +23,50 @@ eval-gmt/
 └── README.md
 ````
 
+## Workflow
+1. Prerequisites
+2. Messung auf GMT Testsystem durchführen
+3. Ergebnisse von GMT API abrufen
+4. Ergebnisse der Messung zusammenfassen
+
+### Prerequisites
+Setup des Python VENV und installation der Python Packages:
+````shell
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+````
+
+### Messung auf GMT Testsystem durchführen
+_Messungen mit Community Version haben einige Limitationen, siehe [GMT Website](https://www.green-coding.io/products/green-metrics-tool/)_. 
+
+Die Messung kann über den Tab [Submit Software](https://metrics.green-coding.io/request.html) im Scenario Runner gestartet werden. Die Ergebnisse der Messung können unter [Runs / Repos](https://metrics.green-coding.io/runs.html) aufgerufen werden. Über die URL der einzelnen Messungen erhält man die ``GMT RUN ID``:  ``https://.../stats.html?id=<GMT RUN ID>``.
+
+### Ergebnisse von GMT API abrufen
+Das Skript [get_gmt_measurement.py](#downlaod-der-messungen) ruft 2 Endpoints der GMT API auf und speichert die Antworten als JSON mit den Formaten ``YYYY-MM-DD_<GMT RUN ID>_measurements.json`` und ``YYYY-MM-DD_<GMT RUN ID>_phase-data.json`` in [gmt-data/raw-data/](gmt-data/raw-data).
+````shell
+python .\scripts\get_gmt_measurement.py --key "<GMT AUTHENTICATION TOKEN>" --run-id "<GMT RUN ID>"
+````
+
+### Ergebnisse der Messung zusammenfassen
+Die 2 Endpoints der GMT API geben eine Menge Raw Data zurück, diese Daten werden mit dem Skript [create_measurement_summary.py](#summary-der-messwerte) zusammengefasst und als GZIP komprimierte JSON mit dem Format ``YYYY-MM-DD_<GMT RUN ID>_summary.json.gz`` in [gmt-data/processed-data/](gmt-data/processed-data) abgespeichert.
+````shell
+python .\scripts\create_measurement_summary.py --measurements "*_measurements.json" --phase-data "*_phase-data.json"
+````
+
+
+## GMT Mess-Durchläufe
+
+| Datum      | Beschreibung     | ID                                   |
+|:-----------|:-----------------|:-------------------------------------|
+| 2026-01-15 | GMT Test Messung | eb96fce5-f8d5-442e-8edf-e66e8bdcc391 |
+|            |                  |                                      |
+|            |                  |                                      |
+|            |                  |                                      |
+
+
 ## GMT Messwerte
-Über die [GMT API](https://api.green-coding.io/docs#/) kann eine Reihe von Messdaten heruntergeladen werden (siehe [Download der Messungen](#downlaod-der-messungen)). In der Tabelle steht eine knappe Zusammenfassung der verfügbaren Metriken. Die Messwerte haben per Default alle eine ``sampling_rate`` von 99, was bedeutet, dass sie alle 99ms erhoben werden, also etwa 10 Messungen pro Sekunde. 
+GMT stellt eine Reihe von Messdaten zur Verfügung, in der Tabelle steht eine knappe Zusammenfassung der verfügbaren Metriken. Die Messwerte haben per Default alle eine ``sampling_rate`` von 99, was bedeutet, dass sie alle 99ms erhoben werden, also etwa 10 Messungen pro Sekunde. 
 
 | Metric Provider                    | Beschreibung                                                           | Einheit |
 |:-----------------------------------|:-----------------------------------------------------------------------|:--------|
@@ -38,28 +80,11 @@ eval-gmt/
 | memory_used_cgroup_container       | RAM Auslastung eines Containers.                                       | Bytes   |
 | gpu_energy_nvidia_nvml_component   | Energieverbrauch durch die GPU erhoben via NVML                        | mW      |
 
-## GMT Mess-Durchläufe
-
-| Datum      | Beschreibung     | ID                                   |
-|:-----------|:-----------------|:-------------------------------------|
-| 2026-01-15 | GMT Test Messung | eb96fce5-f8d5-442e-8edf-e66e8bdcc391 |
-|            |                  |                                      |
-|            |                  |                                      |
-|            |                  |                                      |
 
 ## Skripts
-Nutzung der Skripts in ``eval-gmt/`` (Windows):
-````shell
-# 1. Python virtual environment aufsetzen
-python -m venv .venv
-.venv/Scripts/activate
-
-# 2. Python Packages installieren
-pip install -r requirements.txt
-````
 
 ### Downlaod der Messungen
-Das Skript [get_gmt_measurement.py](scripts/get_gmt_measurement.py) läd die Messdaten über die [GMT API](https://api.green-coding.io/docs#/) herunter. Dafür sind der Authetication Token und die Messlauf-ID notwendig. Die Messdaten werden von ``/v1/measurements/single/{id}`` heruntergeladen und als JSON abgespeichert mit dem Namensformat ``JJJJ-MM-DD_<Messlauf-ID>_measurements.json``. Die Datei ist so strukturiert:
+Das Skript [get_gmt_measurement.py](scripts/get_gmt_measurement.py) läd die Messdaten über die [GMT API](https://api.green-coding.io/docs#/) herunter. Dafür sind der Authetication Token und die Messlauf-ID notwendig. Die Messdaten werden von ``/v1/measurements/single/{id}`` heruntergeladen und als JSON abgespeichert mit dem Namensformat ``YYYY-MM-DD_<GMT RUN ID>_measurements.json``. Die Datei ist so strukturiert:
 ````json
 {
   "success": [true/false],
@@ -75,10 +100,12 @@ Das Skript [get_gmt_measurement.py](scripts/get_gmt_measurement.py) läd die Mes
   ]
 }
 ````
-Das resultiert in einer mehrere hunderttausend Zeilen langen JSON Datei, wobei die "data" Liste alle Messwerte beinhaltet und nicht weiter strukturiert ist. Daher ist eine weitere Datei für die Auswertung eines Messlaufs notwendig. Die Metadaten eines Messlaufs werdem über ``/v2/run/{id}`` heruntergeladen und als JSON abgespeichert mit dem Namensformat ``JJJJ-MM-DD_<Messlauf-ID>_phase-data.json``. Hier sind alle Informationen zum Messlauf gespeichert.
+Das resultiert in einer mehrere hunderttausend Zeilen langen JSON Datei, wobei die "data" Liste alle Messwerte beinhaltet und nicht weiter strukturiert ist. Daher ist eine weitere Datei für die Auswertung eines Messlaufs notwendig. Die Metadaten eines Messlaufs werdem über ``/v2/run/{id}`` heruntergeladen und als JSON abgespeichert mit dem Namensformat ``YYYY-MM-DD_<GMT RUN ID>_phase-data.json``.
 
 ````shell
 usage: get_gmt_measurement.py [-h] -k KEY -r RUN_ID
+
+Rufe die GMT API auf und speichere die Daten.
 
 options:
   -h, --help           show this help message and exit
@@ -88,10 +115,12 @@ options:
 
 
 ### Summary der Messwerte
-Das Skript [create_measurement_summary.py](scripts/create_measurement_summary.py) erstellt aus den beiden Dateien ``JJJJ-MM-DD_<Messlauf-ID>_measurements.json`` und ``JJJJ-MM-DD_<Messlauf-ID>_phase-data.json`` eine Zusammenfassung für den entsprechenden Messlauf.
+Das Skript [create_measurement_summary.py](scripts/create_measurement_summary.py) erstellt aus den beiden Dateien ``YYYY-MM-DD_<Messlauf-ID>_measurements.json`` und ``YYYY-MM-DD_<Messlauf-ID>_phase-data.json`` eine Zusammenfassung für den entsprechenden Messlauf.
 
 ````shell
 usage: create_measurement_summary.py [-h] -m MEASUREMENTS -p PHASE_DATA [-c COMPRESS_LVL]
+
+Fasse die Measurement und Phase-Data Daten zusammen.
 
 options:
   -h, --help                            show this help message and exit
@@ -112,7 +141,7 @@ options:
 
 
 ### Filter der Messungen
-Das Skript [filter_gmt_meassurement.py](scripts/filter_gmt_measurement.py) filtert bestimmte Messergebnisse aus den Roh-Messdaten ``JJJJ-MM-DD_<Messlauf-ID>_measurements.json`` von GMT heraus. Außerdem wird die Datei zu einer ``.gz`` komprimiert. Der Output ist eine ``JJJJ-MM-DD_<Messlauf-ID>_measurements_filtered.json.gz``. Insgesamt wird dadurch die Größe von ``>20MB`` der Roh-Messdaten auf ``<1MB`` reduziert. In der Tabelle sind die verwendeten Messwerte mit (✔) markiert und die herausgefilterten mit (✖).
+Das Skript [filter_gmt_meassurement.py](scripts/filter_gmt_measurement.py) filtert bestimmte Messergebnisse aus den Roh-Messdaten ``YYYY-MM-DD_<Messlauf-ID>_measurements.json`` von GMT heraus. Außerdem wird die Datei zu einer ``.gz`` komprimiert. Der Output ist eine ``YYYY-MM-DD_<Messlauf-ID>_measurements_filtered.json.gz``. Insgesamt wird dadurch die Größe von ``>20MB`` der Roh-Messdaten auf ``<1MB`` reduziert. In der Tabelle sind die verwendeten Messwerte mit (✔) markiert und die herausgefilterten mit (✖).
 
 
 | Metric Provider                    |   |
@@ -130,6 +159,8 @@ Das Skript [filter_gmt_meassurement.py](scripts/filter_gmt_measurement.py) filte
 
 ````shell
 usage: filter_gmt_measurement.py [-h] -i INPUT [-p]
+
+Filtert bestimmte Metriken aus einem GMT Messlauf heraus.
 
 options:
   -h, --help         show this help message and exit

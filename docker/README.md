@@ -1,4 +1,5 @@
 # Virtualisierung via Docker
+
 Dieser Arbeit verwendet 2 seperate Services: rag-app und ollma. Wobei der ollama service einfach nur ein offizielles Docker Image ist ([Link](https://hub.docker.com/r/ollama/ollama)). Der rag-app service basiert auf einem Python Image und wird in [Dockerfile](Dockerfile) konfiguriert. 
 
 ## Struktur

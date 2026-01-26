@@ -1,7 +1,7 @@
-# RAG Energieeffizienz-Evaluation
+# RAG App Dokumentation
 
 Dieses Repository enthält den praktischen Teil zur Masterarbeit: 
-**Nachhaltigkeit durch Effizienzsteigerung in Retrieval-Augmented Generation (RAG)-Systemen**
+**Nachhaltigkeit durch Effizienzsteigerung in Retrieval-Augmented Generation (RAG)-Systemen**.
 
 ## Lizenz
 Der Code ist lizensiert unter der MIT-Lizenz. Inhalte Dritter sind unter LICENSES.md dokumentiert.
@@ -50,7 +50,7 @@ masterarbeit/
 
 Die Struktur bietet eine Übersicht zu den einzelnen Modulen dieses Respositories. In dieser README ist die App selbst und alles was dazu gehört dokumentiert. Für ``docker/``, ``eval-gmt/`` und ``eval_ragas/`` gibt es jeweils eigende Dokumentationen im jeweiligen Verzeichnis.
 
-[Docker Dokumentation](docker/README.md) 
+[Virtualisierung via Docker Dokumentation](docker/README.md) 
 
 [Green Metrics Tool Dokumentation](eval-gmt/README.md)
 
