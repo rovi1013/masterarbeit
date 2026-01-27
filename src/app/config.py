@@ -31,6 +31,9 @@ def env_override(var_name: str, default: str) -> str:
     if not v:
         print(f"default: {default}")
         return default
+    # Wenn GMT placeholder nicht ersetzt wurde
+    if v == f"__GMT_VAR_{var_name}__":
+        return default
     print(f"v: {v}")
     return v
 
