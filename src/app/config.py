@@ -54,7 +54,7 @@ def load_config(path: str | Path = Path(__file__).parent / "config.yaml") -> Con
     data["top_k"] = env_override("TOP_K", data["top_k"])
 
     data["llm_host"] = env_override("LLM_HOST", data["llm_host"])
-    data["llm_model"] = os.getenv("OLLAMA_MODEL", data["llm_model"])
+    data["llm_model"] = env_override("OLLAMA_MODEL", data["llm_model"])
     data["temperature"] = env_override("TEMPERATURE", data["temperature"])
     data["max_tokens"] = env_override("MAX_TOKENS", data["max_tokens"])
 
