@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile.gmt
     container_name: rag-app
     environment:
-      LLM_HOST: "http://127.0.0.1:11434"
+      LLM_HOST: "http://ollama:11434"
       HF_HOME: "/root/.cache/huggingface"
       ANONYMIZED_TELEMETRY: "False"
       RAG_PRINT_RESPONSES: __GMT_VAR_RAG_PRINT_RESPONSES__

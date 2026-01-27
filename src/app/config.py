@@ -30,9 +30,6 @@ def env_override(var_name: str, default: str) -> str:
     v = os.getenv(var_name)
     if not v:
         return default
-    # GMT Environment Variablen
-    if v == f"__GMT_VAR_{var_name}__":
-        return default
     return v
 
 
