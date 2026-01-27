@@ -29,7 +29,9 @@ class Config:
 def env_override(var_name: str, default: str) -> str:
     v = os.getenv(var_name)
     if not v:
+        print(f"default: {default}")
         return default
+    print(f"v: {v}")
     return v
 
 
