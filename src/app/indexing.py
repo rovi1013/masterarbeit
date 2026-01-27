@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Dict, Any
-from pypdf import PdfReader
 import chromadb
 import shutil
 import logging
@@ -21,21 +20,7 @@ class RawDocument:
 
 # ========== LOAD DOCUMENTS ==========
 #
-# Aktuell nur .txt im Datensatz; reicht zm testen der Energieeffizienz
-
-def load_txt(path: Path) -> str:
-    return path.read_text(encoding="utf-8", errors="ignore")
-
-
-def load_pdf(path: Path) -> str:
-    reader = PdfReader(str(path))
-    texts: list[str] = []
-    for page in reader.pages:
-        page_text = page.extract_text() or ""
-        texts.append(page_text)
-    return "\n".join(texts)
-
-
+# Aktuell nur .txt im Datensatz; reicht zm testen der Energieeffizien
 def load_documents(data_dir: str) -> List[RawDocument]:
     base = Path(data_dir)
     docs: list[RawDocument] = []
@@ -44,20 +29,8 @@ def load_documents(data_dir: str) -> List[RawDocument]:
         if not path.is_file():
             continue
 
-        suffix = path.suffix.lower()
-
-        if suffix == ".txt":
-            loader = load_txt
-            doc_type = "txt"
-        elif suffix == ".pdf":
-            loader = load_pdf
-            doc_type = "pdf"
-        else:
-            # andere Dateitypen aktuell ignorieren
-            continue
-
         try:
-            text = loader(path)
+            text = path.read_text(encoding="utf-8", errors="ignore")
             if not text.strip():
                 logger.warning(f"Leeres Dokument: {path}")
                 continue

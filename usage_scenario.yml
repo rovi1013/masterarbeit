@@ -24,14 +24,14 @@ flow:
         log-stdout: true
         read-notes-stdout: true
 
-  # 2. Indexing
-  - name: Indexing
-    container: rag-app
-    commands:
-      - type: console
-        command: python -m app.indexing
-        log-stdout: true
-        read-notes-stdout: true
+#  # 2. Indexing
+#  - name: Indexing
+#    container: rag-app
+#    commands:
+#      - type: console
+#        command: python -m app.indexing
+#        log-stdout: true
+#        read-notes-stdout: true
 
   # 3. Warmup RAG
   - name: Warmup RAG
@@ -42,11 +42,11 @@ flow:
         log-stdout: true
         read-notes-stdout: true
 
-  # 4. RAG Querries
-  - name: RAG Querries
-    container: rag-app
-    commands:
-      - type: console
-        command: python scripts/rag_querries.py
-        log-stdout: true
-        read-notes-stdout: true
+#  # 4. RAG Querries
+#  - name: RAG Querries
+#    container: rag-app
+#    commands:
+#      - type: console
+#        command: python scripts/rag_querries.py
+#        log-stdout: true
+#        read-notes-stdout: true
