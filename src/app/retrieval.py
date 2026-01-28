@@ -8,7 +8,7 @@ from app.time_marker import mark
 logger = logging.getLogger(__name__)
 
 
-def get_collection(cfg: Config | None = None):
+def _get_collection(cfg: Config | None = None):
     if cfg is None:
         cfg = load_config()
 
@@ -17,7 +17,7 @@ def get_collection(cfg: Config | None = None):
 
 
 def retrieve(cfg: Config, question: str, q_id: str):
-    collection = get_collection(cfg)
+    collection = _get_collection(cfg)
 
     model = get_embed_model(cfg)
     query_emb = model.encode(

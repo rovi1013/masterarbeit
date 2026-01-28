@@ -3,7 +3,7 @@ import logging
 from app.config import load_config
 from app.simple_logging import setup_logging
 from app.rag_pipeline import RagPipeline
-from app.retrieval import get_collection
+from app.retrieval import _get_collection
 from app.embedding import get_embed_model
 
 logger = logging.getLogger(__name__)
@@ -14,7 +14,7 @@ def main():
     cfg = load_config()
 
     # Collection öffnen (pre-loading)
-    collection = get_collection(cfg)
+    collection = _get_collection(cfg)
     logger.debug(f"[WARMUP] Collection Größe: {collection.count()} Chunks.")
 
     # Embedding Model vorladen und ein einfaches embedding ausführen

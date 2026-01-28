@@ -21,7 +21,7 @@ class RawDocument:
 # ========== LOAD DOCUMENTS ==========
 #
 # Aktuell nur .txt im Datensatz; reicht zm testen der Energieeffizien
-def load_documents(data_dir: str) -> List[RawDocument]:
+def _load_documents(data_dir: str) -> List[RawDocument]:
     base = Path(data_dir)
     docs: list[RawDocument] = []
 
@@ -59,7 +59,7 @@ def load_documents(data_dir: str) -> List[RawDocument]:
 # 1. simple_chunk(): Feste Chunk Größe und fester Overlap, möglichst einfaches aufteilen der Dokumente
 # 2. ....
 
-def simple_chunk(doc: RawDocument, chunk_size: int, overlap: int) -> List[RawDocument]:
+def _simple_chunk(doc: RawDocument, chunk_size: int, overlap: int) -> List[RawDocument]:
     """
     Einfache Chunking Strategie mit fester chunk size und einem festen overlap zwischen den Chunks.
     :param doc: Liste der Klasse RawDocument
@@ -100,7 +100,7 @@ def reset_index_dir(index_dir: str) -> None:
     logger.info(f"Index-Ordner neu angelegt: {p}.")
 
 
-def build_index(cfg: Config | None = None, reset_db: bool = False) -> None:
+def _build_index(cfg: Config | None = None, reset_db: bool = False) -> None:
     if cfg is None:
         cfg = load_config()
 
@@ -109,13 +109,13 @@ def build_index(cfg: Config | None = None, reset_db: bool = False) -> None:
 
     # ========== 1. Dokumente Laden ==========
     logger.info(f"Lade Dokumente aus {cfg.data_dir} ...")
-    docs = load_documents(cfg.data_dir)
+    docs = _load_documents(cfg.data_dir)
 
     # ========== 2. Dokumente Chunken ==========
     logger.info("Chunking der Dokumente ...")
     chunked_docs: list[RawDocument] = []
     for doc in docs:
-        chunked_docs.extend(simple_chunk(doc, cfg.chunk_size, cfg.chunk_overlap))
+        chunked_docs.extend(_simple_chunk(doc, cfg.chunk_size, cfg.chunk_overlap))
 
     logger.info(f"Insgesamt {len(chunked_docs)} Chunks erstellt.")
 
@@ -130,7 +130,12 @@ def build_index(cfg: Config | None = None, reset_db: bool = False) -> None:
     texts = [d.text for d in chunked_docs]
     logger.info("Berechne Embeddings ...")
     mark("EMBEDDING_START")
-    embeddings = model.encode(texts, convert_to_numpy=True, show_progress_bar=True)
+    embeddings = model.encode(
+        texts,
+        convert_to_numpy=True,
+        normalize_embeddings=True,
+        show_progress_bar=True
+    )
     mark("EMBEDDING_END")
 
     # ========== 4. Datenbank erstellen ==========
@@ -186,4 +191,4 @@ if __name__ == "__main__":
 
     # ENV-Variable 'ANONYMIZED_TELEMETRY' zu 'false' setzen
     setup_logging()
-    build_index()
+    _build_index()

@@ -57,7 +57,7 @@ def parse_markers(stdout: str):
 
         meta = {}
         for tok in rest.split():
-            if "=" in tok:
+            if "=" not in tok:
                 continue
             k, v = tok.split("=", 1)
             meta[k] = v
@@ -72,8 +72,6 @@ def extract_stdout_from_cmd(logs_rag_app: list, needles) -> str:
         needles = [needles]
 
     for e in logs_rag_app or []:
-        if e.get("type") != "flow_command":
-            continue
         cmd = e.get("cmd") or ""
         if any(n in cmd for n in needles):
             return e.get("stdout") or ""
@@ -81,14 +79,14 @@ def extract_stdout_from_cmd(logs_rag_app: list, needles) -> str:
     return ""
 
 
-def make_key(base: str, meta: dict):
+def make_key(base: str, meta: dict, allow_qid: bool):
     if allow_qid and base == "RETRIEVAL":
         qid = meta.get("q_id")
         return base, qid
     return base, None
 
 
-def build_subwindow_from_markers(parent_name: str, markers: list, allow_qid: bool):
+def build_subwindows_from_markers(parent_name: str, markers: list, allow_qid: bool):
     starts = {}
     windows = []
 
@@ -99,12 +97,12 @@ def build_subwindow_from_markers(parent_name: str, markers: list, allow_qid: boo
 
         if ev.endswith("_START"):
             base = ev[:-6]
-            k = make_key(base, meta)
+            k = make_key(base, meta, allow_qid)
             starts[k] = ts
 
         elif ev.endswith("_END"):
             base = ev[:-4]
-            k = make_key(base, meta)
+            k = make_key(base, meta, allow_qid)
             s = starts.pop(k, None)
             if s is None:
                 continue
@@ -183,8 +181,8 @@ def load_run_and_windows(phase_path: Path):
 
     logs = data.get("logs", {}) or {}
     rag_logs = logs.get("rag-app", []) or []
-    indexing_stdout = extract_stdout_for_cmd(rag_logs, "python -m app.indexing")
-    rag_stdout = extract_stdout_for_cmd(rag_logs, "rag_querries.py")
+    indexing_stdout = extract_stdout_from_cmd(rag_logs, "python -m app.indexing")
+    rag_stdout = extract_stdout_from_cmd(rag_logs, "docker run -it -d --name rag-app")
     indexing_markers = parse_markers(indexing_stdout)
     rag_markers = parse_markers(rag_stdout)
 
