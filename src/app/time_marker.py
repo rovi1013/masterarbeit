@@ -3,7 +3,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-PREFIX = "##TIME_MARK##"
+PREFIX = "##GMT_MARK##"
 
 
 def mark(event: str, **kv):

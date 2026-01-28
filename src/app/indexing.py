@@ -29,6 +29,12 @@ def load_documents(data_dir: str) -> List[RawDocument]:
         if not path.is_file():
             continue
 
+        suffix = path.suffix.lower()
+        if suffix == ".txt":
+            doc_type = "txt"
+        else:
+            continue
+
         try:
             text = path.read_text(encoding="utf-8", errors="ignore")
             if not text.strip():

@@ -5,7 +5,7 @@ from tqdm import tqdm
 from pathlib import Path
 from urllib.request import Request, urlopen
 
-QUESTIONS_PATH = Path("questions.json")
+QUESTIONS_PATH = Path("../src/scripts/questions.json")
 OUT_DIR = Path("ragas-data")
 API_URL = "http://localhost:8000/ask"
 
