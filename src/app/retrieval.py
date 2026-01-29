@@ -3,12 +3,11 @@ import chromadb
 
 from app.config import Config, load_config
 from app.embedding import get_embed_model
-from app.time_marker import mark
 
 logger = logging.getLogger(__name__)
 
 
-def _get_collection(cfg: Config | None = None):
+def get_collection(cfg: Config | None = None):
     if cfg is None:
         cfg = load_config()
 
@@ -16,8 +15,8 @@ def _get_collection(cfg: Config | None = None):
     return client.get_or_create_collection("rag")
 
 
-def retrieve(cfg: Config, question: str, q_id: str):
-    collection = _get_collection(cfg)
+def retrieve(cfg: Config, question: str):
+    collection = get_collection(cfg)
 
     model = get_embed_model(cfg)
     query_emb = model.encode(
@@ -26,13 +25,11 @@ def retrieve(cfg: Config, question: str, q_id: str):
         normalize_embeddings=True,
     )
 
-    mark("RETRIEVAL_START", q_id=q_id)
     retrieval_result = collection.query(
         query_embeddings=query_emb,
         n_results=cfg.top_k,
         include=["documents", "metadatas", "distances"],
     )
-    mark("RETRIEVAL_END", q_id=q_id)
 
     docs = retrieval_result.get("documents", [[]])[0]
     metas = retrieval_result.get("metadatas", [[]])[0]

@@ -11,8 +11,8 @@ class RagPipeline:
         self.cfg = cfg
         self.llm = OllamaClient(cfg)
 
-    def answer(self, question: str, q_id: str) -> dict:
-        docs, metas = retrieve(self.cfg, question, q_id)
+    def answer(self, q_id: str, question: str) -> dict:
+        docs, metas = retrieve(self.cfg, question)
         context = "\n\n".join(docs)
 
         prompt = BASE_PROMPT.format(context=context, question=question)

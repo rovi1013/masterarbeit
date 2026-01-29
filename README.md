@@ -130,7 +130,7 @@ docker exec rag-app python .\scripts\rag_querries.py
 
 Detaillierter Ablauf des RAG-Systems:
 1. Indexing der Dokumente mit [indexing.py](src/app/indexing.py). Wird manuell und getrennt vom rest des Systems ausgeführt, da das Indexing nur einmal aufgerufen werden muss. Danach sind die Embedded Dokumente in der chromaDB gespeichert.
-2. Aufruf der RAG-APP über API, konfiguriert in [api_server.py](src/app/api_server.py), mit einer Frage. Aktuell keine Konversation möglich, rein theoretisch einfach implementierbar, sorgt allerdings für unnötigen overhead und könnte die Messungen verfälschen. 
+2. Aufruf der RAG-APP über API, konfiguriert in [api_server.py](src/app/api_client.py), mit einer Frage. Aktuell keine Konversation möglich, rein theoretisch einfach implementierbar, sorgt allerdings für unnötigen overhead und könnte die Messungen verfälschen. 
 3. Weiterleitung der Frage an die "Zentrale" des RAG-Systems [rag_pipeline.py](src/app/rag_pipeline.py). Von hier wird das RAG-System gesteuert (Retrieval → Augmentation → Generation).
 4. RETRIEVAL: Auf Basis der Frage, wird in [retrieval.py](src/app/retrieval.py) der Kontext aus der Datenbank geholt.
 5. AUGMENTATION: Unter Verwendung des Prompt Templates ([prompt_template.py](src/app/prompt_template.py)) wird in [rag_pipeline.py](src/app/rag_pipeline.py) der finale Prompt erstellt. 
