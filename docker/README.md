@@ -2,6 +2,7 @@
 
 Dieser Arbeit verwendet 2 seperate Services: rag-app und ollma. Wobei der ollama service einfach nur ein offizielles Docker Image ist ([Link](https://hub.docker.com/r/ollama/ollama)). Der rag-app service basiert auf einem Python Image und wird in [Dockerfile](Dockerfile) konfiguriert. 
 
+
 ## Struktur
 ````text
 masterarbeit/
@@ -20,6 +21,7 @@ masterarbeit/
 
 ## Dockerfile für RAG-APP
 Image basiert auf offiziellem [Python](https://hub.docker.com/_/python) Image mit der Version _python:3.12-slim_ und dem Digest ``sha256:d75c4b6cdd039ae966a34cd3ccab9e0e5f7299280ad76fe1744882d86eedce0b``. Durch den Digest kann immer sichergestellt werden, dass das exakt selbe Image von Docker Hub geladen wird.
+
 
 ## rag-app service
 Environment wird aus .env geladen
@@ -40,6 +42,7 @@ Persistente Volumes:
 - ``/logs``: Logging.
 - ``/emb_models``: Speicherort für die sentence-transformer Modelle.
 
+
 ## ollama service
 Extra Container für die LLM ermöglicht
 - Ausführung des Models auf einer GPU
@@ -50,5 +53,8 @@ Entrypoint-Script läd die konfigurierte LLM beim Starten des containers herunte
 Environment Variablen:
 - ``OLLAMA_MODEL``: Welches Model soll verwendet werden (z.B. ``llama3:8b`` oder ``cas/teuken-7b-q4km``, [mehr](https://ollama.com/library?sort=popular))
 
-## Test-Fragen.http
-Alle Fragen liefern immer dieselbe Antwort, unter Verwendung der aktuellen Konfiguration mit ``temperature: 0`` und LLM.
+
+## Container in GMT
+Die Ausführung auf der GMT Testbench erfordert das [usage_scenario.yml](../usage_scenario.yml). Hier wird ein bestimmter Workflow festgelegt, der auf der Testbench ausgeführt wird.
+
+Zusätzlich wurden am Dockerfile und der Docker Compose kleine Änderungen für GMT vorgenommen. [docker-compose.gmt.yaml](../docker-compose.gmt.yml) und [Dockerfile.gmt](../Dockerfile.gmt) sind die angepassten Versionen.

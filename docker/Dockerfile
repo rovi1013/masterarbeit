@@ -16,5 +16,5 @@ COPY ../src/app /src/app
 # Port für FastAPI
 EXPOSE 8000
 
-# Start von API
+# Start der API über uvicorn
 CMD ["uvicorn", "app.api_client:app", "--host", "0.0.0.0", "--port", "8000"]

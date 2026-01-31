@@ -110,9 +110,7 @@ async def main():
                 "base_url": OLLAMA_BASE_URL,
                 "model": JUDGE_MODEL,
             },
-            "embeddings": {
-                "model": EMBEDDING_MODEL,
-            },
+            "embedding_model": EMBEDDING_MODEL,
             "metrics": ["faithfulness", "answer_relevancy", "context_utilization"],
         },
         "summary": {
@@ -125,7 +123,7 @@ async def main():
     }
 
     dump_json_gz(out_path, out)
-    print("########## EVALUATION DONE ##########")
+    print("========== EVALUATION DONE ==========")
 
 
 if __name__ == "__main__":

@@ -55,16 +55,6 @@ python .\scripts\create_measurement_summary.py --measurements "*_measurements.js
 ````
 
 
-## GMT Mess-Durchläufe
-
-| Datum      | Beschreibung     | ID                                   |
-|:-----------|:-----------------|:-------------------------------------|
-| 2026-01-15 | GMT Test Messung | eb96fce5-f8d5-442e-8edf-e66e8bdcc391 |
-|            |                  |                                      |
-|            |                  |                                      |
-|            |                  |                                      |
-
-
 ## GMT Messwerte
 GMT stellt eine Reihe von Messdaten zur Verfügung, in der Tabelle steht eine knappe Zusammenfassung der verfügbaren Metriken. Die Messwerte haben per Default alle eine ``sampling_rate`` von 99, was bedeutet, dass sie alle 99ms erhoben werden, also etwa 10 Messungen pro Sekunde. 
 
@@ -87,7 +77,7 @@ GMT stellt eine Reihe von Messdaten zur Verfügung, in der Tabelle steht eine kn
 Das Skript [get_gmt_measurement.py](scripts/get_gmt_measurement.py) läd die Messdaten über die [GMT API](https://api.green-coding.io/docs#/) herunter. Dafür sind der Authetication Token und die Messlauf-ID notwendig. Die Messdaten werden von ``/v1/measurements/single/{id}`` heruntergeladen und als JSON abgespeichert mit dem Namensformat ``YYYY-MM-DD_<GMT RUN ID>_measurements.json``. Die Datei ist so strukturiert:
 ````json
 {
-  "success": [true/false],
+  "success": "[true/false]",
   "data": [
     [
       "Entity_Name",
@@ -100,7 +90,7 @@ Das Skript [get_gmt_measurement.py](scripts/get_gmt_measurement.py) läd die Mes
   ]
 }
 ````
-Das resultiert in einer mehrere hunderttausend Zeilen langen JSON Datei, wobei die "data" Liste alle Messwerte beinhaltet und nicht weiter strukturiert ist. Daher ist eine weitere Datei für die Auswertung eines Messlaufs notwendig. Die Metadaten eines Messlaufs werdem über ``/v2/run/{id}`` heruntergeladen und als JSON abgespeichert mit dem Namensformat ``YYYY-MM-DD_<GMT RUN ID>_phase-data.json``.
+Das resultiert in einer mehrere Hunderttausend bis Millionen Zeilen langen JSON Datei, wobei die "data" Liste alle Messwerte beinhaltet und nicht weiter strukturiert ist. Daher ist eine weitere Datei für die Auswertung eines Messlaufs notwendig. Die Metadaten eines Messlaufs werdem über ``/v2/run/{id}`` heruntergeladen und als JSON abgespeichert mit dem Namensformat ``YYYY-MM-DD_<GMT RUN ID>_phase-data.json``.
 
 ````shell
 usage: get_gmt_measurement.py [-h] -k KEY -r RUN_ID
@@ -129,15 +119,114 @@ options:
   -c, --compress-lvl COMPRESS_LVL       Gzip compression level (1-9)
 ````
 
-**Regex für Markierungen in stdout**:
-- ``.*``: beliebige Zeichen, beliebig viele
-- ``##GMT_MARK##``: Markierung für timestamps in stdout
-- ``\s+``: whitespace
-- ``ts_us=(\d+)``: _ts_us_ gefolgt von einer Zahl (timestamp)
-- ``\s+``: whitespace
-- ``event=([A-Z0-9_]+)``: _event_ gefolgt von einem Namen der nur aus Großbustaben und Zahlen besteht
-- ``\s+``: whitespace
-- ``(?:\s+(.*))?$``: optionale Gruppe (``?``), fängt den restlichen String bis Zeilenende (``$``) ein
+Das Schema der JSON Datei (Details zu einigen Teilen in den Tabellen):
+````json
+{
+  "run": {
+    "metadata": "Alles mögliche an Metadaten zu dem Messlauf aus *_phase-data.json; TABELLE"
+  },
+  "source_files": {
+    "phase_data": "*_phase-data.json",
+    "measurements": "*_measurements.json"
+  },
+  "windows": [
+    {
+      "name": "Name der GMT Messlauf-Window",
+      "kind": "Typ der Window: gmt_phase|workflow_step|sub_window",
+      "start_us": Start Timestamp in Mikrosekunden,
+      "end_us": Ende Timestamp in Mikrosekunden,
+      "duration_s": Dauer der Window
+    },
+    ...
+  ],
+  "records": [
+    {
+      "window": "Name der GMT Messlauf-Window",
+      "kind": "Typ der Window: gmt_phase|workflow_step|sub_window",
+      "metrics": {
+        "Liste von Metriken pro Window aggregiert; TABELLEN": {
+          "unit": "Unit",
+          "enities": {
+            "Entity_name_1": {
+              "aggregation_type": Wert,
+               ...
+              "count": Anzahl der aggregierten Werte
+            },
+            "Entity_name_2": {
+              ...
+            }
+          }
+        }
+      },
+      ...
+      "window_N": ...
+    }
+  ],
+  "markers": {
+    "Indexing": [
+      "Auflistung aller Marker aus Indexing"
+    ],
+    "RAG Querries": [
+      "Auflistung aller Marker aus RAG Querries"
+    ]
+  },
+  "entity_mappings": {
+    "entity_name_new": "entity_name_old aus *_measurements.json"
+  },
+  "stats": {
+    "total_rows_seen": Anzahl der verarbeiteten JSON Reihen,
+    "updates_written": Anzahl der verwendeten JSON Reihen
+  },
+  "notes": "Notizen"
+}
+````
+
+In den meisten Fällen ist ``total_rows_seen`` detulich niedriger als ``updates_written``, da einige Reihen mehrfach verwendet werden. Beispielsweise die Werte aus der window ``[RUNTIME]`` kommen auch in den einzelnen windows des Typs ``workflow_step`` (Download Dataset, Indexing, Warmup Indexing, ...) vor.
+
+Metadaten für Zusammenfassung des Messlaufs (aus *_phase-data.json):
+
+| Name                     | Beschreibung                                 |
+|:-------------------------|:---------------------------------------------|
+| id                       | GMT Messlauf ID                              |
+| name                     | GMT Messlauf Name                            |
+| date                     | Datum des Messlaufs                          |
+| uri                      | GitHub Repository Link                       |
+| branch                   | GitHub Branch                                |
+| commit_hash              | Hash des Git Commits                         |
+| filename                 | Name der usage_scenario                      |
+| machine_id               | ID der Testbench                             |
+| gmt-hash                 | Hash des GMT Git Commit                      |
+| created_at               | Erstellungs-Zeitpunkt des Messlaufs          |
+| failed                   | Messlauf Erfolgreich durchlaufen (Boolean)   |
+| warnings                 | Anzahl der Warnings in Messlauf              |
+| start_measurement        | Start-Zeitpunkt des Messlaufs                |
+| end_measurement          | End-Zeitpunkt des Messlaufs                  |
+| usage_scenario_variables | Liste der verwendeten GMT Umgebungsvariablen |
+
+
+Aggregation der einzelnen Metriken:
+
+| Metric Provider                    | Unit  | Entities                                          | Aggregation | 
+|:-----------------------------------|:------|:--------------------------------------------------|:------------|
+| cpu_energy_rapl_msr_component      | uJ    | Package_0                                         | SUM Wh      |
+| memory_energy_rapl_msr_component   | uJ    | DRAM_TOTAL                                        | SUM Wh      |
+| gpu_energy_nvidia_nvml_component   | uJ    | GPU_TOTAL                                         | SUM Wh      |
+| psu_energy_ac_mcp_machine_provider | uJ    | PSU_TOTAL                                         | SUM Wh      |
+| cpu_utilization_procfs_system      | Ratio | [SYSTEM]                                          | MEAN/MAX    |
+| cpu_utilization_cgroup_container   | Ratio | rag-app & ollama                                  | MEAN/MAX    |
+| memory_used_cgroup_container       | Bytes | rag-app & ollama                                  | MEAN/MAX    |
+| network_io_cgroup_container        | Bytes | rag-app & ollama                                  | SUM MiB/MAX |
+| lmsensors_temperature_component    | C     | TEMP_CORE & TEMP_PACKAGE<br>unknown: TEMP_IGNORED | MEAN/MAX    |
+
+Entity name mappings:
+
+| Metric Provider                  | Entity Name GMT                | New Entity Name |
+|:---------------------------------|:-------------------------------|:----------------|
+| memory_energy_rapl_msr_component | DRAM_0                         | DRAM_TOTAL      |
+| gpu_energy_nvidia_nvml_component | NVIDIA GeForce GTX 1080-0      | GPU_TOTAL       | 
+| lmsensors_temperature_component  | coretemp-isa-0000_Core-0       | TEMP_CORE       |
+| lmsensors_temperature_component  | coretemp-isa-0000_Package-id-0 | TEMP_PACKAGE    |
+| lmsensors_temperature_component  | unknown                        | TEMP_IGNORED    |
 
 
 ### Filter der Messungen

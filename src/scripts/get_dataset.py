@@ -7,12 +7,6 @@ from datasets import load_dataset
 DATASET_SELECTION_PATH = "scripts/dataset.json"
 
 
-def make_filename_safe(name: str) -> str:
-    # Dateinamen werden Dateisystem Safe gemacht und auf 100 (+6) Zeichen länge beschränkt
-    name = re.sub(r"[^A-Za-z0-9._-]+", "_", name)
-    return name[:100]
-
-
 def main():
     dataset_selction = json.loads(Path(DATASET_SELECTION_PATH).read_text(encoding="utf-8"))
 
@@ -42,7 +36,7 @@ def main():
                 continue
 
             text = row.get("text", "")
-            file_name = out_dir / f"arxiv_{make_filename_safe(doc_id)}.txt"
+            file_name = out_dir / f"arxiv_{doc_id}.txt"
             file_name.write_text(text, encoding="utf-8", errors="ignore")
 
             missing.remove(doc_id)
@@ -57,7 +51,7 @@ def main():
             f"{len(missing)}/{total_ids} Dokumente konnten nicht geladen werden."
         )
 
-    print(f"{found}/{total_ids} Dokumente erfolgreich gespeichert.\n########## DATASET DOWNLOAD DONE ##########")
+    print(f"{found}/{total_ids} Dokumente erfolgreich gespeichert.\n========== DATASET DOWNLOAD DONE ==========")
 
 
 if __name__ == "__main__":

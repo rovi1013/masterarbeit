@@ -102,7 +102,7 @@ def main():
 
     json.dump(out_json, open(out_path, "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
 
-    print(f"Erfolgereiche Fragen: {ok}/{len(questions)}.\n########## DOWNLOAD DONE ##########")
+    print(f"Erfolgereiche Fragen: {ok}/{len(questions)}.\n========== DOWNLOAD DONE ==========")
 
 
 if __name__ == "__main__":

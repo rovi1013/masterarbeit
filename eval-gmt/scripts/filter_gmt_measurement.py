@@ -111,7 +111,7 @@ def main():
         # Footer
         fout.write("]}\n")
 
-    print(f"JSON von {total} Reihen auf {kept} Reihen reduziert.\n########## FILTERING DONE ##########")
+    print(f"JSON von {total} Reihen auf {kept} Reihen reduziert.\n========== FILTERING DONE ==========")
 
 
 if __name__ == "__main__":

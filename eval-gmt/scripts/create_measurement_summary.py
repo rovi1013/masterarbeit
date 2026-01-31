@@ -1,38 +1,108 @@
+from __future__ import annotations
+
 import argparse
-import json
 import gzip
+import json
 import ijson
 import re
-from pathlib import Path
+from dataclasses import dataclass
 from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict, Iterable, Iterator, List, Optional, Tuple
 
-# Filter für die manuell gesetzten marker im GMT stdout
+OUT_DIR = Path("gmt-data/processed-data")
+
+BYTES_UNITS = {"Bytes", "bytes", "Byte", "B"}  # GMT may emit different spellings
+TEMP_INPUT_UNITS = {"centi°C"}  # temperature values come as centi°C
+
 MARK_PREFIX = "##GMT_MARK##"
 MARK_RE = re.compile(r".*##GMT_MARK##\s+ts_us=(\d+)\s+event=([A-Z0-9_]+)(?:\s+(.*))?$")
 
-OUT_DIR = Path("gmt-data/processed-data")
-BYTES_UNITS = {"Bytes", "bytes", "Byte", "B"}  # GMT gibt Byte mit verschiedenen Namen aus
-TEMP_UNITS = {"centi°C"}
+CONTAINERS = {"rag-app", "ollama"}
 
-# Definitionen der Metriken
-METRIC_SPEC = {
-    # Energiemetriken (uJ deltas -> SUMME)
-    "cpu_energy_rapl_msr_component": {"type": "energy", "unit": "uJ", "entities": ["Package_0"]},
-    "memory_energy_rapl_msr_component": {"type": "energy", "unit": "uJ", "entities": ["DRAM_TOTAL"]},
-    "gpu_energy_nvidia_nvml_component": {"type": "energy", "unit": "uJ", "entities": ["GPU_TOTAL"]},
-    "psu_energy_ac_mcp_machine": {"type": "energy", "unit": "uJ", "entities": ["PSU_TOTAL"]},
-    # Auslastungsmetriken (Ratio -> MEAN/MAX)
-    "cpu_utilization_procfs_system": {"type": "meanmax", "unit": "Ratio", "entities": ["[SYSTEM]"]},
-    "cpu_utilization_cgroup_container": {"type": "meanmax", "unit": "Ratio", "entities": ["rag-app", "ollama"]},
-    "memory_used_cgroup_container": {"type": "meanmax", "unit": "Bytes", "entities": ["rag-app", "ollama"]},
-    # Netzwerk IO Metrik (Bytes deltas -> SUMME/MAX
-    "network_io_cgroup_container": {"type": "summax_bytes", "unit": "Bytes", "entities": ["rag-app", "ollama"]},
-    # Temperatur (centi°C -> MEAN/MAX)
-    "lmsensors_temperature_component": {"type": "meanmax", "unit": "C", "entities": ["TEMP_CORE", "TEMP_PACKAGE"]},
+# Keep the original spelling to avoid breaking downstream consumers.
+PARENT_INDEXING = "Indexing"
+PARENT_RAG = "RAG Querries"
+
+CMD_INDEXING = "python -m app.indexing"
+CMD_RAG = "docker run -it -d --name rag-app"
+
+
+# Daten Klassen
+@dataclass(frozen=True)
+class Window:
+    name: str
+    kind: str
+    start_us: int
+    end_us: int
+
+    @property
+    def duration_s(self) -> float:
+        return (self.end_us - self.start_us) / 1e6
+
+    def to_json(self) -> Dict[str, Any]:
+        return {
+            "name": self.name,
+            "kind": self.kind,
+            "start_us": int(self.start_us),
+            "end_us": int(self.end_us),
+            "duration_s": self.duration_s,
+        }
+
+
+@dataclass(frozen=True)
+class Marker:
+    ts_us: int
+    event: str
+    meta: Dict[str, str]
+
+    def to_json(self) -> Dict[str, Any]:
+        return {"ts_us": int(self.ts_us), "event": self.event, "meta": dict(self.meta)}
+
+
+@dataclass(frozen=True)
+class MetricSpec:
+    mtype: str
+    out_unit: str
+    out_entities: Tuple[str, ...]
+
+
+@dataclass
+class AggBucket:
+    sum: float = 0.0
+    count: int = 0
+    max: Optional[float] = None
+
+    def update(self, value: float, track_max: bool) -> None:
+        self.sum += value
+        self.count += 1
+        if track_max:
+            if self.max is None or value > self.max:
+                self.max = value
+
+
+# Metriken von GMT
+METRIC_SPEC: Dict[str, MetricSpec] = {
+    # Energie (uJ deltas -> SUM)
+    "cpu_energy_rapl_msr_component": MetricSpec("energy", "uJ", ("Package_0",)),
+    "memory_energy_rapl_msr_component": MetricSpec("energy", "uJ", ("DRAM_TOTAL",)),
+    "gpu_energy_nvidia_nvml_component": MetricSpec("energy", "uJ", ("GPU_TOTAL",)),
+    "psu_energy_ac_mcp_machine": MetricSpec("energy", "uJ", ("PSU_TOTAL",)),
+    # CPU/RAM Auslastung (Ratio/Bytes -> MEAN/MAX)
+    "cpu_utilization_procfs_system": MetricSpec("meanmax", "Ratio", ("[SYSTEM]",)),
+    "cpu_utilization_cgroup_container": MetricSpec("meanmax", "Ratio", ("rag-app", "ollama")),
+    "memory_used_cgroup_container": MetricSpec("meanmax", "Bytes", ("rag-app", "ollama")),
+    # Network IO (Bytes deltas -> SUM/MAX)
+    "network_io_cgroup_container": MetricSpec("summax_bytes", "Bytes", ("rag-app", "ollama")),
+    # Temperatur (centi°C -> °C -> MEAN/MAX)
+    "lmsensors_temperature_component": MetricSpec("meanmax", "C", ("TEMP_CORE", "TEMP_PACKAGE")),
 }
 
 
-def parse_args():
+# ================ #
+# Aufruf Parameter #
+# ================ #
+def parse_args() -> argparse.Namespace:
     ap = argparse.ArgumentParser(description="Fasse die Measurement und Phase-Data Daten zusammen.")
     ap.add_argument("-m", "--measurements", required=True, help="Pfad zu *_measurements.json")
     ap.add_argument("-p", "--phase-data", required=True, help="Pfad zu *_phase-data.json")
@@ -40,95 +110,90 @@ def parse_args():
     return ap.parse_args()
 
 
-def parse_markers(stdout: str):
-    out = []
+# ==================== #
+# Markers ##GMT_MARK## #
+# ==================== #
+def parse_markers(stdout: str) -> List[Marker]:
     if not stdout:
-        return out
+        return []
 
+    markers: List[Marker] = []
     for line in stdout.splitlines():
         if MARK_PREFIX not in line:
             continue
         m = MARK_RE.match(line.strip())
         if not m:
             continue
+
         ts_us = int(m.group(1))
         event = m.group(2)
         rest = m.group(3) or ""
 
-        meta = {}
+        meta: Dict[str, str] = {}
         for tok in rest.split():
             if "=" not in tok:
                 continue
             k, v = tok.split("=", 1)
             meta[k] = v
 
-        out.append({"ts_us": ts_us, "event": event, "meta": meta})
-    out.sort(key=lambda x: x["ts_us"])
-    return out
+        markers.append(Marker(ts_us=ts_us, event=event, meta=meta))
+
+    markers.sort(key=lambda x: x.ts_us)
+    return markers
 
 
-def extract_stdout_from_cmd(logs_rag_app: list, needles) -> str:
-    if isinstance(needles, str):
-        needles = [needles]
-
-    for e in logs_rag_app or []:
-        cmd = e.get("cmd") or ""
+def extract_stdout_from_cmd(logs: List[Dict[str, Any]], needles: Iterable[str]) -> str:
+    needles = list(needles)
+    for entry in logs or []:
+        cmd = entry.get("cmd") or ""
         if any(n in cmd for n in needles):
-            return e.get("stdout") or ""
-
+            return entry.get("stdout") or ""
     return ""
 
 
-def make_key(base: str, meta: dict, allow_qid: bool):
+def _marker_key(base: str, meta: Dict[str, str], allow_qid: bool) -> Tuple[str, Optional[str]]:
     if allow_qid and base == "RETRIEVAL":
-        qid = meta.get("q_id")
-        return base, qid
+        return base, meta.get("q_id")
     return base, None
 
 
-def build_subwindows_from_markers(parent_name: str, markers: list, allow_qid: bool):
-    starts = {}
-    windows = []
+def build_subwindows_from_markers(parent_name: str, markers: List[Marker], allow_qid: bool, ) -> List[Window]:
+    starts: Dict[Tuple[str, Optional[str]], int] = {}
+    out: List[Window] = []
 
     for m in markers:
-        ev = m["event"]
-        ts = m["ts_us"]
-        meta = m.get("meta") or {}
+        ev = m.event
+        ts = m.ts_us
 
         if ev.endswith("_START"):
             base = ev[:-6]
-            k = make_key(base, meta, allow_qid)
-            starts[k] = ts
+            starts[_marker_key(base, m.meta, allow_qid)] = ts
+            continue
 
-        elif ev.endswith("_END"):
+        if ev.endswith("_END"):
             base = ev[:-4]
-            k = make_key(base, meta, allow_qid)
-            s = starts.pop(k, None)
-            if s is None:
+            key = _marker_key(base, m.meta, allow_qid)
+            start_ts = starts.pop(key, None)
+            if start_ts is None:
                 continue
-            e = ts
-            if e <= s:
+            if ts <= start_ts:
                 continue
 
-            base_name = base
             if allow_qid and base == "RETRIEVAL":
-                qid = (meta.get("q_id") or "unknown")
-                wname = f"{parent_name}/{base_name}/{qid}"
+                qid = m.meta.get("q_id") or "unknown"
+                name = f"{parent_name}/{base}/{qid}"
             else:
-                wname = f"{parent_name}/{base_name}"
+                name = f"{parent_name}/{base}"
 
-            windows.append({
-                "name": wname,
-                "kind": "sub_window",
-                "start_us": int(s),
-                "end_us": int(e),
-                "duration_s": (e - s) / 1e6,
-            })
+            out.append(Window(name=name, kind="sub_window", start_us=int(start_ts), end_us=int(ts)))
 
-    windows.sort(key=lambda w: w["start_us"])
-    return windows
+    out.sort(key=lambda w: w.start_us)
+    return out
 
 
+# =================== #
+# Phase-Data Auslesen #
+# =================== #
 def date_prefix(path: Path) -> str:
     try:
         prefix = path.name.split("_", 1)[0]
@@ -138,10 +203,12 @@ def date_prefix(path: Path) -> str:
         return datetime.now().strftime("%Y-%m-%d")
 
 
-def load_run_and_windows(phase_path: Path):
-    data = json.load(open(phase_path, "r", encoding="utf-8")).get("data", {})
+def load_run_and_windows(phase_path: Path) -> Tuple[Dict[str, Any], List[Window], Dict[str, List[Dict[str, Any]]]]:
+    with open(phase_path, "r", encoding="utf-8") as f:
+        raw = json.load(f)
 
-    # Metadaten der Messung
+    data = (raw or {}).get("data", {}) or {}
+
     run = {
         "id": data.get("id"),
         "name": data.get("name"),
@@ -159,52 +226,43 @@ def load_run_and_windows(phase_path: Path):
         "end_measurement": data.get("end_measurement"),
         "usage_scenario_variables": data.get("usage_scenario_variables"),
     }
-
     run = {k: v for k, v in run.items() if v is not None}
 
-    windows = []
-    for p in data.get("phases", []) or []:
+    windows: List[Window] = []
+    for p in (data.get("phases") or []):
         if p.get("hidden") is True:
             continue
         name = p.get("name")
         if not name:
             continue
-        s, e = int(p["start"]), int(p["end"])
+        start_us, end_us = int(p["start"]), int(p["end"])
         kind = "gmt_phase" if (name.startswith("[") and name.endswith("]")) else "workflow_step"
-        windows.append({
-            "name": name,
-            "kind": kind,
-            "start_us": s,
-            "end_us": e,
-            "duration_s": (e - s) / 1e6,
-        })
+        windows.append(Window(name=name, kind=kind, start_us=start_us, end_us=end_us))
 
-    logs = data.get("logs", {}) or {}
-    rag_logs = logs.get("rag-app", []) or []
-    indexing_stdout = extract_stdout_from_cmd(rag_logs, "python -m app.indexing")
-    rag_stdout = extract_stdout_from_cmd(rag_logs, "docker run -it -d --name rag-app")
+    logs = (data.get("logs") or {})
+    rag_logs = logs.get("rag-app") or []
+
+    indexing_stdout = extract_stdout_from_cmd(rag_logs, [CMD_INDEXING])
+    rag_stdout = extract_stdout_from_cmd(rag_logs, [CMD_RAG])
+
     indexing_markers = parse_markers(indexing_stdout)
     rag_markers = parse_markers(rag_stdout)
 
-    sub_windows = []
-    # Indexing: EMBEDDING_* und PERSIST_IN_DB_*
-    sub_windows += build_subwindows_from_markers("Indexing", indexing_markers, allow_qid=False)
-
-    # RAG Querries: RETRIEVAL_* mit q_id
-    sub_windows += build_subwindows_from_markers("RAG Querries", rag_markers, allow_qid=True)
-
-    windows.extend(sub_windows)
-    windows.sort(key=lambda w: w["start_us"])
+    windows.extend(build_subwindows_from_markers(PARENT_INDEXING, indexing_markers, allow_qid=False))
+    windows.extend(build_subwindows_from_markers(PARENT_RAG, rag_markers, allow_qid=True))
+    windows.sort(key=lambda w: w.start_us)
 
     marker_map = {
-        "Indexing": indexing_markers,
-        "RAG Querries": rag_markers,
+        PARENT_INDEXING: [m.to_json() for m in indexing_markers],
+        PARENT_RAG: [m.to_json() for m in rag_markers],
     }
-
     return run, windows, marker_map
 
 
-def iter_measurements(path: Path):
+# ===================== #
+# Measurements Auslesen #
+# ===================== #
+def iter_measurements(path: Path) -> Iterator[Tuple[str, int, str, Any, str]]:
     if path.suffix != ".json":
         raise ValueError(f"Measurements müssen als .json vorliegen.\nFehlerhalftes Dateiformat: {path}")
 
@@ -216,59 +274,107 @@ def iter_measurements(path: Path):
             yield str(entity), int(timestamp), str(metric), value, str(unit)
 
 
-def normalize(metric: str, entity: str, unit: str, value, mappings: dict):
+# ====================== #
+# Metriken normalisieren #
+# ====================== #
+def normalize(metric: str, raw_entity: str, unit: str, value: Any, entity_mappings: Dict[str, set], ) \
+        -> Optional[Tuple[str, float]]:
     if metric not in METRIC_SPEC:
         return None
 
-    # Energie Metriken (uJ)
+    # Energie
     if metric == "cpu_energy_rapl_msr_component":
-        return ("Package_0", float(value)) if (unit == "uJ" and entity == "Package_0") else None
+        if unit == "uJ" and raw_entity == "Package_0":
+            return "Package_0", float(value)
+        return None
 
     if metric == "memory_energy_rapl_msr_component":
-        if unit == "uJ" and entity.startswith("DRAM"):
-            mappings["DRAM_TOTAL"].add(entity)
+        if unit == "uJ" and raw_entity.startswith("DRAM"):
+            entity_mappings["DRAM_TOTAL"].add(raw_entity)
             return "DRAM_TOTAL", float(value)
         return None
 
     if metric == "gpu_energy_nvidia_nvml_component":
         if unit == "uJ":
-            mappings["GPU_TOTAL"].add(entity)
+            entity_mappings["GPU_TOTAL"].add(raw_entity)
             return "GPU_TOTAL", float(value)
         return None
 
     if metric == "psu_energy_ac_mcp_machine":
-        return ("PSU_TOTAL", float(value)) if (unit == "uJ" and entity == "[MACHINE]") else None
+        if unit == "uJ" and raw_entity == "[MACHINE]":
+            return "PSU_TOTAL", float(value)
+        return None
 
-    # MEAN/MAX
+    # Auslastung in %
     if metric == "cpu_utilization_procfs_system":
-        return ("[SYSTEM]", float(value)) if (unit == "Ratio" and entity == "[SYSTEM]") else None
+        if unit == "Ratio" and raw_entity == "[SYSTEM]":
+            return "[SYSTEM]", float(value)
+        return None
 
     if metric == "cpu_utilization_cgroup_container":
-        return (entity, float(value)) if (unit == "Ratio" and entity in {"rag-app", "ollama"}) else None
+        if unit == "Ratio" and raw_entity in CONTAINERS:
+            return raw_entity, float(value)
+        return None
 
-    if metric == "memory_used_cgroup_container":
-        return (entity, float(value)) if (entity in {"rag-app", "ollama"} and unit in BYTES_UNITS) else None
-
-    if metric == "network_io_cgroup_container":
-        return (entity, float(value)) if (entity in {"rag-app", "ollama"} and unit in BYTES_UNITS) else None
+    # RAM/Netzwerk Auslastung in Byte
+    if metric in {"memory_used_cgroup_container", "network_io_cgroup_container"}:
+        if raw_entity in CONTAINERS and unit in BYTES_UNITS:
+            return raw_entity, float(value)
+        return None
 
     # Temperatur
     if metric == "lmsensors_temperature_component":
-        if unit not in TEMP_UNITS:
+        if unit not in TEMP_INPUT_UNITS:
             return None
-        if "_Core-" in entity:
-            mappings["TEMP_CORE"].add(entity)
+
+        if "_Core-" in raw_entity:
+            entity_mappings["TEMP_CORE"].add(raw_entity)
             return "TEMP_CORE", float(value) / 100.0
-        if "Package-id" in entity:
-            mappings["TEMP_PACKAGE"].add(entity)
+
+        if "Package-id" in raw_entity:
+            entity_mappings["TEMP_PACKAGE"].add(raw_entity)
             return "TEMP_PACKAGE", float(value) / 100.0
-        mappings["TEMP_IGNORED"].add(entity)
+
+        entity_mappings["TEMP_IGNORED"].add(raw_entity)
         return None
 
     return None
 
 
-def empty_agg(mtype: str):
+# ========================== #
+# Window-Timestamp Zuordnung #
+# ========================== #
+class WindowMatcher:
+    def __init__(self, windows: List[Window]):
+        self._windows = sorted(windows, key=lambda w: w.start_us)
+        self._i = 0
+        self._active: List[Window] = []
+        self._last_ts: Optional[int] = None
+        self._fallback = False
+
+    def match(self, ts_us: int) -> List[Window]:
+        if self._fallback or (self._last_ts is not None and ts_us < self._last_ts):
+            self._fallback = True
+            return [w for w in self._windows if w.start_us <= ts_us < w.end_us]
+
+        self._last_ts = ts_us
+
+        # Activate new windows
+        while self._i < len(self._windows) and self._windows[self._i].start_us <= ts_us:
+            self._active.append(self._windows[self._i])
+            self._i += 1
+
+        # Drop expired
+        if self._active:
+            self._active = [w for w in self._active if ts_us < w.end_us]
+
+        return [w for w in self._active if w.start_us <= ts_us < w.end_us]
+
+
+# =================== #
+# Output Formatierung #
+# =================== #
+def empty_agg(mtype: str) -> Dict[str, Any]:
     if mtype == "energy":
         return {"sum": None, "sum_Wh": None, "count": 0}
     if mtype == "summax_bytes":
@@ -276,7 +382,23 @@ def empty_agg(mtype: str):
     return {"mean": None, "max": None, "count": 0}
 
 
-def main():
+def finalize_bucket(mtype: str, b: Optional[AggBucket]) -> Dict[str, Any]:
+    if b is None or b.count == 0:
+        return empty_agg(mtype)
+
+    if mtype == "energy":
+        s = b.sum
+        return {"sum": s, "sum_Wh": s / 3.6e9, "count": b.count}
+
+    if mtype == "summax_bytes":
+        s = b.sum
+        return {"sum": s, "sum_MiB": s / (1024.0 * 1024.0), "max": b.max, "count": b.count}
+
+    # meanmax
+    return {"mean": b.sum / b.count, "max": b.max, "count": b.count}
+
+
+def main() -> None:
     args = parse_args()
 
     measurements_path = Path(args.measurements)
@@ -285,100 +407,87 @@ def main():
     run, windows, marker_map = load_run_and_windows(phase_path)
     run_id = run.get("id") or "unknown"
 
-    OUT_DIR.mkdir(parents=True, exist_ok=True)
-    out_path = OUT_DIR / f"{run.get('date', date_prefix(phase_path))}_{run_id}_summary.json.gz"
+    out_dir: Path = OUT_DIR
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_path = out_dir / f"{run.get('date', date_prefix(phase_path))}_{run_id}_summary.json.gz"
 
-    mappings = {
+    entity_mappings: Dict[str, set] = {
         "DRAM_TOTAL": set(),
         "GPU_TOTAL": set(),
         "TEMP_CORE": set(),
         "TEMP_PACKAGE": set(),
-        "TEMP_IGNORED": set()
+        "TEMP_IGNORED": set(),
     }
-    stats = {}
+
+    # stats[window_name][metric][entity] -> AggBucket
+    stats: Dict[str, Dict[str, Dict[str, AggBucket]]] = {}
 
     total_rows = 0
     used_updates = 0
 
-    for raw_entity, timestamp, metric, value, unit in iter_measurements(measurements_path):
-        total_rows += 1
-        n = normalize(metric, raw_entity, unit, value, mappings)
-        if not n:
-            continue
-        ent, v = n
+    matcher = WindowMatcher(windows)
 
-        matched = [window for window in windows if window["start_us"] <= timestamp < window["end_us"]]
+    for raw_entity, ts_us, metric, value, unit in iter_measurements(measurements_path):
+        total_rows += 1
+
+        norm = normalize(metric, raw_entity, unit, value, entity_mappings)
+        if not norm:
+            continue
+        entity, v = norm
+
+        matched = matcher.match(ts_us)
         if not matched:
             continue
 
-        track_max = METRIC_SPEC[metric]["type"] != "energy"
+        spec = METRIC_SPEC[metric]
+        track_max = spec.mtype != "energy"
+
         for w in matched:
-            b = (stats.setdefault(w["name"], {})
-                 .setdefault(metric, {})
-                 .setdefault(ent, {"sum": 0.0, "count": 0, "max": None}))
-            b["sum"] += v
-            b["count"] += 1
-            if track_max:
-                b["max"] = v if b["max"] is None else (v if v > b["max"] else b["max"])
+            bucket = (
+                stats.setdefault(w.name, {})
+                .setdefault(metric, {})
+                .setdefault(entity, AggBucket())
+            )
+            bucket.update(v, track_max=track_max)
             used_updates += 1
 
-    records = []
+    # Einträge erstellen
+    records: List[Dict[str, Any]] = []
     for w in windows:
-        wname = w["name"]
-        metrics_out = {}
-        wstats = stats.get(wname, {})
+        wstats = stats.get(w.name, {})
+        metrics_out: Dict[str, Any] = {}
 
         for metric, spec in METRIC_SPEC.items():
-            mtype = spec["type"]
             mstats = wstats.get(metric, {})
-            entities = {}
-            for ent in spec["entities"]:
-                b = mstats.get(ent)
-                if not b or b["count"] == 0:
-                    entities[ent] = empty_agg(mtype)
-                    continue
+            entities_out: Dict[str, Any] = {}
+            for ent in spec.out_entities:
+                entities_out[ent] = finalize_bucket(spec.mtype, mstats.get(ent))
 
-                if mtype == "energy":
-                    s = b["sum"]
-                    entities[ent] = {"sum": s, "sum_Wh": s / 3.6e9, "count": b["count"]}
-                elif mtype == "summax_bytes":
-                    s = b["sum"]
-                    entities[ent] = {"sum": s, "sum_MiB": s / (1024.0 * 1024.0), "max": b["max"], "count": b["count"]}
-                else:
-                    entities[ent] = {"mean": b["sum"] / b["count"], "max": b["max"], "count": b["count"]}
+            metrics_out[metric] = {"unit": spec.out_unit, "entities": entities_out}
 
-            metrics_out[metric] = {"unit": spec["unit"], "entities": entities}
-
-        records.append({"window": wname, "kind": w["kind"], "metrics": metrics_out})
+        records.append({"window": w.name, "kind": w.kind, "metrics": metrics_out})
 
     summary = {
-        "schema_version": "1.0",
         "run": run,
         "source_files": {
             "phase_data": str(phase_path),
             "measurements": str(measurements_path),
         },
-        "windows": windows,
+        "windows": [w.to_json() for w in windows],
         "records": records,
         "markers": marker_map,
-        "entity_mappings": {
-            k: sorted(v) for k, v in mappings.items()
-        },
+        "entity_mappings": {k: sorted(v) for k, v in entity_mappings.items()},
         "stats": {
             "total_rows_seen": total_rows,
-            "updates_written": used_updates
+            "updates_written": used_updates,
         },
-        "notes": {
-            "timebase": "unix_us"
-        },
+        "notes": {"timebase": "unix_us"},
     }
 
     with gzip.open(out_path, "wt", encoding="utf-8", compresslevel=args.compress_lvl) as fout:
         json.dump(summary, fout, ensure_ascii=False)
 
-    print(f"Measurements Summary erfolgreich gespeichert: {out_path}.")
-    print(f"Anzahl der Phasen: {len(windows)}\nMesspunkte gesehen: {total_rows}")
-    print("########## SUMMARY DONE ##########")
+    print("========== SUMMARY DONE ==========")
 
 
 if __name__ == "__main__":

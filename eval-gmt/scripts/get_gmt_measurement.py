@@ -53,7 +53,7 @@ def main() -> None:
     phase_url = PHASE_URL.format(id=args.run_id)
     phase_data = fetch_json(phase_url, args.key, timeout_s=120)
     phase_path.write_text(json.dumps(phase_data, ensure_ascii=False), encoding="utf-8")
-    print(f"Phase-data gespeichert: {phase_path}\n########## DOWNLOAD DONE ##########")
+    print(f"Phase-data gespeichert: {phase_path}\n========== DOWNLOAD DONE ==========")
 
 
 if __name__ == "__main__":

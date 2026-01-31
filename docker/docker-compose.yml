@@ -35,7 +35,7 @@ services:
       - ollama-data:/root/.ollama           # Caching Ollama Modelle
       - ./entrypoint.sh:/entrypoint.sh
     environment:
-      OLLAMA_MODEL: "llama3:latest"         # Ollama Modell
+      OLLAMA_MODEL: "llama3:8b"         # Ollama Modell
     restart: unless-stopped
     deploy:
       resources:
