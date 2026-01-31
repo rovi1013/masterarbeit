@@ -18,14 +18,8 @@ class Question(BaseModel):
     question: str
 
 
-# Einfacher POST endpoint für RAG-APP
+# POST endpoint für RAG-APP
 @app.post("/ask")
 async def ask(payload: Question):
-    q_id = payload.q_id
-    mark("ASK_START", q_id=q_id)
-
-    try:
-        result = pipeline.answer(payload.q_id, payload.question)
-        return result
-    finally:
-        mark("ASK_ENDT", q_id=q_id)
+    result = pipeline.answer(payload.q_id, payload.question)
+    return result
