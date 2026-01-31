@@ -1,45 +1,45 @@
 [
   {
     "q_id": "q001",
-    "question": "What does the variable Q represent in Equation (29)?",
+    "question": "What is the nature of gravity in string theory at high energies?",
     "gold_doc": "arxiv_0908.0606.txt",
-    "ground_truth": "the interaction term with Γ>0"
+    "ground_truth": "scalar-tensor"
   },
   {
     "q_id": "q002",
-    "question": "What does Figure 10 represent?",
+    "question": "What is the name of the phase in Boolean networks where most or all nodes become fixed in a state which is independent of the initial conditions?",
     "gold_doc": "arxiv_0905.0925.txt",
-    "ground_truth": "Example of input and output trajectories on the k-hypercube representing the states of the inputs, for functions with k=3"
+    "ground_truth": "frozen"
   },
   {
     "q_id": "q003",
-    "question": "What does the variable E_1 represent in equation (49)?",
+    "question": "Which equation's soliton solutions were studied to show that the order of two Backlund transformations is irrelevant?",
     "gold_doc": "arxiv_0902.2456.txt",
-    "ground_truth": "E_1 is defined as b_1 exp(2σ_1 x + 2σ_1^-1 t)"
+    "ground_truth": "sine-Gordon"
   },
   {
     "q_id": "q004",
-    "question": "What does the green curve in Figure 4 represent?",
+    "question": "What is the name of the theory described as a 5D weakly-coupled system?",
     "gold_doc": "arxiv_0804.0124.txt",
-    "ground_truth": "The green curves are obtained using L1/¯L=1,2,3,4,5"
+    "ground_truth": "effective field theory"
   },
   {
     "q_id": "q005",
-    "question": "What does the equation labeled as (81) represent?",
+    "question": "What is the probability that the quantum channel collapses to an EPR pair after Charlie’s measurement?",
     "gold_doc": "arxiv_0802.2469.txt",
-    "ground_truth": "an expression involving trigonometric functions and variables a_0, a_1, a_2, a_3, a_4, y, φ"
+    "ground_truth": "$p_{1}=p_{2}=\frac{a_{0}^{2}(1-a_{0}^{2}+3a_{1}^{2}+4a_{1}a_{4}+a_{4}^{2})}{a_{0}^{2}+(a_{1}+a_{4})^{2}}$"
   },
   {
     "q_id": "q006",
-    "question": "What does the term 'scattering size' refer to in Definition 1.2?",
-    "gold_doc": "arxiv_1212.6816.txt",
-    "ground_truth": "the scattering size of a solution u to (1.1) on a time interval I"
+    "question": "What is the relationship between the direction of doping and the direction of the electric field in persistent electric-field doping?",
+    "gold_doc": "arxiv_1202.1665.txt",
+    "ground_truth": "The direction of doping should depend on the direction of the electric field, i.e., should be odd with respect to the bias voltage."
   },
   {
     "q_id": "q007",
-    "question": "What is the definition of a c-rigid R-module?",
+    "question": "What are the dimensions of the free modules in the minimal free resolution of M over R as discovered by Tchernev?",
     "gold_doc": "arxiv_1210.5882.txt",
-    "ground_truth": "An R–module M is said to be c-rigid if for all R–modules N, Tor_{i+1}^{R}(M,N)=Tor_{i+2}^{R}(M,N)=⋯=Tor_{i+c}^{R}(M,N)=0 for some i≥0 implies that Tor_{n}^{R}(M,N)=0 for all n>i."
+    "ground_truth": "$R^{k}$ and $R^{m+1}$"
   },
   {
     "q_id": "q008",
@@ -49,21 +49,21 @@
   },
   {
     "q_id": "q009",
-    "question": "What does the term $A_{T,S}^{(2)}$ represent in the given context?",
+    "question": "What is the definition of a Moore–Penrose inverse?",
     "gold_doc": "arxiv_1209.1767.txt",
-    "ground_truth": "$A_{T,S}^{(2)}$ is a closed subspace of $X$ such that $A_{T,S}^{(2)}$ exists."
+    "ground_truth": "A unique matrix pseudoinverse"
   },
   {
     "q_id": "q010",
-    "question": "What is the definition of the operator $\\bar{\\partial}$?",
-    "gold_doc": "arxiv_1201.3967.txt",
-    "ground_truth": "\\displaystyle\\bar{\\partial}u(z,w)=\\sum^{n}_{j=1}\\frac{\\partial u}{\\partial\\bar{z}_{j}}d\\bar{z}_{j}+\\frac{\\partial u}{\\partial\\bar{w}}d\\bar{w}"
+    "question": "What does the requirement of positive black hole entropy prevent in the corresponding scalar field theory?",
+    "gold_doc": "arxiv_1301.2769.txt",
+    "ground_truth": "the appearance of ghost or tachyon fields"
   },
   {
     "q_id": "q011",
-    "question": "What does the variable $w$ represent in the context of fringe-stopping?",
-    "gold_doc": "arxiv_1201.3872.txt",
-    "ground_truth": "the measured visibilities are multiplied by a factor of $\\mbox{exp}(-2 \\pi i w)$"
+    "question": "What are the primary goals of the Open Data movement?",
+    "gold_doc": "arxiv_0908.0373.txt",
+    "ground_truth": "The primary goals of the Open Data movement are focused on the legal and licensing issues around publicly exposed data."
   },
   {
     "q_id": "q012",
@@ -73,1130 +73,428 @@
   },
   {
     "q_id": "q013",
-    "question": "What is the mean vertical abundance gradient reported in the excerpt, including units?",
+    "question": "What is the wavelength range covered by the BATC multicolor photometric system?",
     "gold_doc": "arxiv_1111.4719.txt",
-    "ground_truth": "-0.21± 0.05 dex kpc-1"
+    "ground_truth": "an optical wavelength range from 3000 to 10000 Å"
   },
   {
     "q_id": "q014",
-    "question": "What does the variable g represent?",
+    "question": "What is the name of the theory used in the construction of wedge-local nets?",
     "gold_doc": "arxiv_1107.2629.txt",
-    "ground_truth": "g represents an element of PSL(2,ℝ)."
+    "ground_truth": "chiral CFT"
   },
   {
     "q_id": "q015",
-    "question": "What is the value of V_0 reported in the excerpt, and what does it represent?",
+    "question": "What is the name of the equation that replaces the Schrödinger equation in the mean-field description of Bose-Einstein condensates?",
     "gold_doc": "arxiv_1104.5176.txt",
-    "ground_truth": "The modulation depth to be 0.02"
+    "ground_truth": "Gross-Pitaevskii"
   },
   {
     "q_id": "q016",
-    "question": "Which model is used to describe ENA production?",
+    "question": "What is the velocity of interstellar Heo observed inside of the heliosphere by the Ulysses satellite?",
     "gold_doc": "arxiv_1011.4962.txt",
-    "ground_truth": "Heerikhuisen et al. (2010) model"
+    "ground_truth": "26.3 km s-1"
   },
   {
     "q_id": "q017",
-    "question": "What is the definition of $\\breve{\\sigma}$-orthogonal cycles?",
+    "question": "What is the effect of subgroup K on orbits in elliptic, parabolic and hyperbolic cases?",
     "gold_doc": "arxiv_1006.2115.txt",
-    "ground_truth": "Two cycles are called $\\breve{\\sigma}$-orthogonal if $\\left\\langle C_{\\breve{\\sigma}}^{s}, \\tilde{C}_{\\breve{\\sigma}}^{s}\\right\\rangle=0$."
+    "ground_truth": "In elliptic, parabolic and hyperbolic cases $K$-orbits are circles, parabolas and (equilateral) hyperbolas correspondingly."
   },
   {
     "q_id": "q018",
-    "question": "What is the definition of the complex polarization vector $\\vec{e}_{+}$?",
+    "question": "What is the range of base length for real quantum dots?",
     "gold_doc": "arxiv_1003.0638.txt",
-    "ground_truth": "$\\frac{1}{\\sqrt{2}}(\\vec{x}+i\\vec{y})$"
+    "ground_truth": "50-400 Å"
   },
   {
     "q_id": "q019",
-    "question": "What is the special surface density parameter defined by the acceleration constant of MOND?",
+    "question": "Which theory is used to determine the MOND gravitational potential?",
     "gold_doc": "arxiv_0909.5184.txt",
-    "ground_truth": "$\\Sigma_{\\scriptscriptstyle M}=a_{\\scriptscriptstyle 0}/2\\pi G$"
+    "ground_truth": "the formulation of MOND as modified gravity put forth by Bekenstein & Milgrom"
   },
   {
     "q_id": "q020",
-    "question": "What is the value for $k$ reported in the excerpt (including units), and what does it represent?",
-    "gold_doc": "arxiv_0909.3713.txt",
-    "ground_truth": "$9.71\times 10^{-25}m^{-1}$; a parameter"
-  },
-  {
-    "q_id": "q021",
     "question": "Which code is used as a representative example of how to synthesize fault-tolerant circuits from the stabilizer structure of quantum codes?",
     "gold_doc": "arxiv_0905.2794.txt",
     "ground_truth": "$[[7,1,3]]$ Steane code"
   },
   {
-    "q_id": "q022",
-    "question": "What is the value for H_0 reported in the excerpt (including units), and what does it represent?",
+    "q_id": "q021",
+    "question": "What is the wavelength of the blue component of the 7.7 µm PAH feature?",
     "gold_doc": "arxiv_0904.4479.txt",
-    "ground_truth": "$H_{0}=70$ km s-1 Mpc-1, Hubble constant"
+    "ground_truth": "7.6 µm"
+  },
+  {
+    "q_id": "q022",
+    "question": "What are the two categories of uncertainties in atmospheric neutrino flux estimation?",
+    "gold_doc": "arxiv_0812.4639.txt",
+    "ground_truth": "overall uncertainties and tilt uncertainties"
   },
   {
     "q_id": "q023",
-    "question": "What does the symbol $[dx]$ represent?",
-    "gold_doc": "arxiv_0904.1304.txt",
-    "ground_truth": "$dx_1 dx_2 dx_3$"
+    "question": "What are some phenomena associated with the vee configuration?",
+    "gold_doc": "arxiv_0802.0368.txt",
+    "ground_truth": "quantum jump, quantum zeno effect, quantum beat"
   },
   {
     "q_id": "q024",
-    "question": "What is the name of the Monte Carlo model used to simulate neutrino interactions with detector material?",
-    "gold_doc": "arxiv_0812.4639.txt",
-    "ground_truth": "Nuance (version-3)"
+    "question": "Which model acquires dynamical mass in nonzero baryon densities?",
+    "gold_doc": "arxiv_1201.3228.txt",
+    "ground_truth": "NJL method"
   },
   {
     "q_id": "q025",
-    "question": "What does the variable $N_s$ represent in the excerpt?",
-    "gold_doc": "arxiv_0805.4416.txt",
-    "ground_truth": "the expected number of gamma-rays from a subhalo in one GLAST 9 arcmin “pixel”"
+    "question": "What is the form of the tachyon potential in the context of entropy corrected holographic and agegraphic dark energy models?",
+    "gold_doc": "arxiv_1106.5697.txt",
+    "ground_truth": "The explicit form of the tachyon potential, V=V(φ), has not been reconstructed due to the complexity of the equations involved."
   },
   {
     "q_id": "q026",
-    "question": "What does the blue line represent in Fig.3?",
-    "gold_doc": "arxiv_0802.0368.txt",
-    "ground_truth": "$|C_{1}^{i}(t)|^{2}$"
+    "question": "What is the name of the instrument used to exchange coordinates between horizontal and longitudinal degrees of freedom?",
+    "gold_doc": "arxiv_1011.1182.txt",
+    "ground_truth": "EEX beamline"
   },
   {
     "q_id": "q027",
-    "question": "What is the name of the transform defined by equation (5.14)?",
-    "gold_doc": "arxiv_1209.5072.txt",
-    "ground_truth": "extended contravariant transform"
+    "question": "What is the thermal entangled state representation (TESR) constructed in?",
+    "gold_doc": "arxiv_1010.5555.txt",
+    "ground_truth": "the doubled Fock space"
   },
   {
     "q_id": "q028",
-    "question": "What does the variable M represent in the equation for S_max?",
-    "gold_doc": "arxiv_1204.0951.txt",
-    "ground_truth": "the dimension of the Hilbert space of the individual modes"
+    "question": "Of which algorithms are fast Radon and inverse Radon transforms the computational kernels?",
+    "gold_doc": "arxiv_1009.1380.txt",
+    "ground_truth": "image reconstruction algorithms"
   },
   {
     "q_id": "q029",
-    "question": "What method did Carol use to calculate the equation of state and structure for hybrid stars?",
-    "gold_doc": "arxiv_1201.3228.txt",
-    "ground_truth": "Nambu-Jona-Lasinio"
+    "question": "What is the title of the paper by Dieckmann and Law published in 1996?",
+    "gold_doc": "arxiv_1004.4233.txt",
+    "ground_truth": "The dynamical theory of coevolution: a derivation from stochastic ecological processes"
   },
   {
     "q_id": "q030",
-    "question": "What does the variable F(x) represent in the equation?",
-    "gold_doc": "arxiv_1109.6525.txt",
-    "ground_truth": "a two-channel waveguide with different refractive index"
+    "question": "What is the name of the field that compensates for the difference in diffusion coefficients of electrons and holes?",
+    "gold_doc": "arxiv_0912.2768.txt",
+    "ground_truth": "the Dember field"
   },
   {
     "q_id": "q031",
-    "question": "What does the equation of state parameter $w_{D}$ represent?",
-    "gold_doc": "arxiv_1106.5697.txt",
-    "ground_truth": "the equation of state parameter of HDE"
+    "question": "What does UTM stand for?",
+    "gold_doc": "arxiv_0911.5262.txt",
+    "ground_truth": "Universal Turing Machine"
   },
   {
     "q_id": "q032",
-    "question": "What does the variable H represent in Equation (1)?",
-    "gold_doc": "arxiv_1106.5186.txt",
-    "ground_truth": "H represents mean curvature."
+    "question": "The SYZ conjecture can be seen as a hyperkaehler version of which conjecture?",
+    "gold_doc": "arxiv_0907.4217.txt",
+    "ground_truth": "abundance conjecture"
   },
   {
     "q_id": "q033",
-    "question": "What does the notation \\{X,h_j\\} represent according to equation (5.14)?",
-    "gold_doc": "arxiv_1101.1193.txt",
-    "ground_truth": "\\{X,h_j\\}=\\frac{\\partial X}{\\partial\\xi}\\frac{\\partial h_j}{\\partial\\eta}-\\frac{\\partial X}{\\partial\\eta}\\frac{\\partial h_j}{\\partial\\xi}"
+    "question": "What type of fields are discussed in the context of nonmass eigenstates?",
+    "gold_doc": "arxiv_0906.2441.txt",
+    "ground_truth": "Fermion and Boson Fields"
   },
   {
     "q_id": "q034",
-    "question": "What does the variable $\\xi$ represent in Equation (3)?",
-    "gold_doc": "arxiv_1011.1182.txt",
-    "ground_truth": "the horizontal dispersion generated by one dogleg"
+    "question": "What is the upper bound for the decay time in terms of the squeezing parameter and photon-subtraction number?",
+    "gold_doc": "arxiv_0905.2648.txt",
+    "ground_truth": "the decay time exceeds an upper bound (κt>1/2ln(2n¯+2)/(2n¯+1))"
   },
   {
     "q_id": "q035",
-    "question": "What does the variable $\\alpha$ represent in the equation $Q(\\alpha) = \\frac{1}{\\pi}\\left\\langle\\alpha\\right|\\rho\\left|\\alpha\\right\\rangle$?",
-    "gold_doc": "arxiv_1010.5555.txt",
-    "ground_truth": "The variable $\\alpha$ represents a complex number."
+    "question": "Which model is used to consider the propagation of extremely short electromagnetic pulses?",
+    "gold_doc": "arxiv_0812.4794.txt",
+    "ground_truth": "the total Maxwell-Duffing-Lorentz model"
   },
   {
     "q_id": "q036",
-    "question": "What does the variable $\\delta$ represent in the equation $n=1-\\delta+i\\beta$?",
-    "gold_doc": "arxiv_1009.1380.txt",
-    "ground_truth": "the real part of the refractive index"
+    "question": "What is the name of the interaction that causes magnetic moments of f-electrons on each rare earth site to interact with neighbouring moments?",
+    "gold_doc": "arxiv_0806.3935.txt",
+    "ground_truth": "RKKY exchange interactions"
   },
   {
     "q_id": "q037",
-    "question": "What does the term $m_{Q}([b,T]f)$ represent in equation (41)?",
-    "gold_doc": "arxiv_1009.1274.txt",
-    "ground_truth": "$m_{Q}([b,T]f)$ represents a mean value of $[b,T]f$ over a set Q."
+    "question": "What is the relationship between the dimension map and the Grothendieck group in the context of a single point?",
+    "gold_doc": "arxiv_1303.3959.txt",
+    "ground_truth": "The dimension map gives an isomorphism from F(point) to N, and since the Grothendieck group of N is Z, we have K(point)=Z."
   },
   {
     "q_id": "q038",
-    "question": "What does the variable $b(x)$ represent in Equation (9)?",
-    "gold_doc": "arxiv_1004.4233.txt",
-    "ground_truth": "the per-capita birth rate at equilibrium"
-  },
-  {
-    "q_id": "q039",
-    "question": "What does the variable Q(n,T) represent in Equation (18)?",
-    "gold_doc": "arxiv_0912.2768.txt",
-    "ground_truth": "a ratio of the coefficients of ambipolar diffusivity calculated with and without interaction"
-  },
-  {
-    "q_id": "q040",
-    "question": "What does the variable C represent in Equation (1)?",
-    "gold_doc": "arxiv_0911.5262.txt",
-    "ground_truth": "the cost of a computation"
-  },
-  {
-    "q_id": "q041",
-    "question": "What does the variable c represent in the equation u=c log ∑|g_i|^2?",
-    "gold_doc": "arxiv_0907.4217.txt",
-    "ground_truth": "c is a constant."
-  },
-  {
-    "q_id": "q042",
-    "question": "What does the symbol g represent in equation (35)?",
-    "gold_doc": "arxiv_0906.2441.txt",
-    "ground_truth": "the coupling constant"
-  },
-  {
-    "q_id": "q043",
-    "question": "What does the variable λ represent in Equation (1)?",
-    "gold_doc": "arxiv_0905.2648.txt",
-    "ground_truth": "a real squeezing parameter"
-  },
-  {
-    "q_id": "q044",
-    "question": "What does the variable $\tau$ represent in the equations?",
-    "gold_doc": "arxiv_0812.4794.txt",
-    "ground_truth": "the characteristic time"
-  },
-  {
-    "q_id": "q045",
-    "question": "What does the term $P_{\\textrm{out}}$ represent in equation (54)?",
-    "gold_doc": "arxiv_0809.1508.txt",
-    "ground_truth": "the probability of the outgoing particle"
-  },
-  {
-    "q_id": "q046",
-    "question": "What does the variable n represent according to the equation?",
-    "gold_doc": "arxiv_0806.3935.txt",
-    "ground_truth": "the degeneracy of the excited state"
-  },
-  {
-    "q_id": "q047",
-    "question": "What does the variable $T$ represent in equation (14)?",
-    "gold_doc": "arxiv_0806.1282.txt",
-    "ground_truth": "the total scattering matrix"
-  },
-  {
-    "q_id": "q048",
-    "question": "According to the equation, what does variable g(t) represent?",
-    "gold_doc": "arxiv_0804.0934.txt",
-    "ground_truth": "The expected value of V(x(t), t)"
-  },
-  {
-    "q_id": "q049",
-    "question": "What is the reduced K-group of a finite CW complex X defined as?",
-    "gold_doc": "arxiv_1303.3959.txt",
-    "ground_truth": "The reduced K-group of X is defined to be Ker[dim:K(X)→ℤ], where “dim” is the dimension map."
-  },
-  {
-    "q_id": "q050",
-    "question": "What is the name of the formula that is analytically derived for the voltages in the flow network model?",
-    "gold_doc": "arxiv_1301.2604.txt",
-    "ground_truth": "_Voltage-Flow (VF) problem_"
-  },
-  {
-    "q_id": "q051",
-    "question": "What reactions are compared in Figure 1?",
-    "gold_doc": "arxiv_1211.4330.txt",
-    "ground_truth": "The reactions 16O+76Ge and 18O+74Ge"
-  },
-  {
-    "q_id": "q052",
-    "question": "What are the values for T_A and T_B (including units) according to equation (92)?",
-    "gold_doc": "arxiv_1210.8193.txt",
-    "ground_truth": "T_A=8 time units, T_B=16 time units"
-  },
-  {
-    "q_id": "q053",
     "question": "What is the purpose of using simultaneous wind speed observations in the context of low SLP anomalies?",
     "gold_doc": "arxiv_1210.7191.txt",
     "ground_truth": "to identify any storms present, in which case low SLP anomalies are likely to be true"
   },
   {
-    "q_id": "q054",
-    "question": "What does the term 'osculating' mean in the context of mean motion?",
-    "gold_doc": "arxiv_1210.2923.txt",
-    "ground_truth": "The caveat about three neglected items implies that our n is the osculating mean motion"
-  },
-  {
-    "q_id": "q055",
-    "question": "What does the notation A={1,2,...,n} represent?",
-    "gold_doc": "arxiv_1209.1899.txt",
-    "ground_truth": "A finite set with n elements"
-  },
-  {
-    "q_id": "q056",
-    "question": "What does the variable $E^{a}$ represent in ordinary thermodynamics?",
-    "gold_doc": "arxiv_1207.5626.txt",
-    "ground_truth": "the extensive variables"
-  },
-  {
-    "q_id": "q057",
-    "question": "What is the name of the function represented by $G^{X{\bar{X}}}_{(N,M)}$?",
-    "gold_doc": "arxiv_1206.1431.txt",
-    "ground_truth": "$G^{X{\bar{X}}}_{(N,M)}(u,{\bar{u}};v,{\bar{v}};\\{x_{i}\\})"
-  },
-  {
-    "q_id": "q058",
-    "question": "What are two examples of systems where models may violate the principle of detailed balance?",
+    "q_id": "q039",
+    "question": "Who proposed a proof of the semi-detailed balance condition for the Boltzmann equation in 1952?",
     "gold_doc": "arxiv_1205.2052.txt",
-    "ground_truth": "inelastic processes in particle physics or in granular media"
+    "ground_truth": "Stueckelberg"
   },
   {
-    "q_id": "q059",
-    "question": "What does the symbol ρ represent in the excerpt?",
-    "gold_doc": "arxiv_1204.1559.txt",
-    "ground_truth": "a function order"
-  },
-  {
-    "q_id": "q060",
-    "question": "What does the variable k represent in Corollary 4.6?",
-    "gold_doc": "arxiv_1110.6653.txt",
-    "ground_truth": "the number of facets"
-  },
-  {
-    "q_id": "q061",
-    "question": "What are the equations solved under transformations (12)-(15)?",
+    "q_id": "q040",
+    "question": "What is the coordinate system used to describe the physics of accretion flow?",
     "gold_doc": "arxiv_1110.4191.txt",
-    "ground_truth": "(1), (10), (11), and (19)"
+    "ground_truth": "spherical coordinates"
   },
   {
-    "q_id": "q062",
-    "question": "What does the equation (4) state?",
+    "q_id": "q041",
+    "question": "What does it mean for a proper rational number to be in standard form?",
     "gold_doc": "arxiv_1109.6820.txt",
-    "ground_truth": "$c_{1}c_{2}=ib_{1}b_{2}$"
+    "ground_truth": "A proper rational number r is said to be in standard form if it is written as r=c/b, where c and b are relatively prime integers and b>=2"
   },
   {
-    "q_id": "q063",
-    "question": "What is the form of the equation of state used in the perturbative procedure?",
-    "gold_doc": "arxiv_1105.6238.txt",
-    "ground_truth": "μ(n)=μ_0(n)+μ_1(n)"
-  },
-  {
-    "q_id": "q064",
-    "question": "What does the term $\\varepsilon$ represent in the context of the probability distribution?",
+    "q_id": "q042",
+    "question": "What specific problem does the Unique Games Conjecture (UGC) address?",
     "gold_doc": "arxiv_1012.5043.txt",
-    "ground_truth": "the bias in the probability that v equals x_i ⊕ x_j"
+    "ground_truth": "a graph labeling problem"
   },
   {
-    "q_id": "q065",
-    "question": "Which method is used to study the finite U case?",
+    "q_id": "q043",
+    "question": "What is the effect of spin mixing on electron transport through a quantum point contact (QPC)?",
     "gold_doc": "arxiv_1012.4175.txt",
-    "ground_truth": "the essentially exact numerical renormalization group approach"
+    "ground_truth": "Spin mixings and avoided crossings generate spin rotation as electrons pass through the narrow constriction of the QPC, and can generate large values of the ratio G↑/G↓, even in the tunneling regime."
   },
   {
-    "q_id": "q066",
-    "question": "Which three SFT calculations are compared in Figure 11?",
+    "q_id": "q044",
+    "question": "What is the purpose of cross-correlating narrow strips of data from line-of-sight magnetograms?",
     "gold_doc": "arxiv_1010.1242.txt",
-    "ground_truth": "van Ballegooijen et al., 1998; Wang et al., 2009; Schrijver & Title, 2001"
+    "ground_truth": "to measure the axisymmetric transport of magnetic flux on the Sun"
   },
   {
-    "q_id": "q067",
-    "question": "What does the term 'Wigner function' represent in the context of this excerpt?",
-    "gold_doc": "arxiv_1010.0584.txt",
-    "ground_truth": "the Wigner function formula in thermo entangled state representation"
-  },
-  {
-    "q_id": "q068",
-    "question": "What is the equation that relates $e_{n}$ and $f^{2}(n)$?",
-    "gold_doc": "arxiv_1004.2199.txt",
-    "ground_truth": "$e_{n}=nf^{2}(n)"
-  },
-  {
-    "q_id": "q069",
-    "question": "What does the notation $\\text{\\rm CD}[m,\\upkappa]$ represent?",
-    "gold_doc": "arxiv_1003.5948.txt",
-    "ground_truth": "the class metric-measure spaces which satisfy a weak curvature-dimension condition for dimension $m$ and curvature $\\upkappa$"
-  },
-  {
-    "q_id": "q070",
-    "question": "What does the term $F(D_x, D_t, D_n)$ represent in Corollary 1?",
+    "q_id": "q045",
+    "question": "Which equations were obtained using the periodic wave solutions of Nakamura's method?",
     "gold_doc": "arxiv_1001.2159.txt",
-    "ground_truth": "a linear combination of even and odd functions"
+    "ground_truth": "the KdV equation and the Boussinesq equation"
   },
   {
-    "q_id": "q071",
-    "question": "What does the symbol $q$ represent in the context of a two-mode squeezed state?",
+    "q_id": "q046",
+    "question": "What is the initial bipartite Gaussian pure state?",
     "gold_doc": "arxiv_1001.0156.txt",
-    "ground_truth": "a parameter that determines the entanglement of a Gaussian pure state"
+    "ground_truth": "TMSS"
   },
   {
-    "q_id": "q072",
-    "question": "What does the variable $N(\bar{x},\bar{p})$ represent?",
+    "q_id": "q047",
+    "question": "What is the name of the distribution that represents the maximum entropy state with Lorentz symmetry?",
     "gold_doc": "arxiv_0909.2732.txt",
-    "ground_truth": "the proper density of the fluid element that has the four velocity $\\bar{u}=\\bar{p}/m$"
+    "ground_truth": "Jüttner distribution"
   },
   {
-    "q_id": "q073",
-    "question": "What does the notation $S(E)$ represent?",
+    "q_id": "q048",
+    "question": "What is the frink ideal topology?",
     "gold_doc": "arxiv_0908.3350.txt",
-    "ground_truth": "a sub-effect algebra"
+    "ground_truth": "An intrinsic topology defined on a partially ordered set"
   },
   {
-    "q_id": "q074",
-    "question": "What does the variable nside represent?",
+    "q_id": "q049",
+    "question": "What is the unique property of the frequency shift of CMB light induced by density perturbations?",
     "gold_doc": "arxiv_0904.2513.txt",
-    "ground_truth": "nside is a parameter that defines the resolution of the sky map."
+    "ground_truth": "It leads to changes in the temperature of the black body spectrum and not the shape of it."
   },
   {
-    "q_id": "q075",
-    "question": "What does the term 'Independent Cascade model' refer to?",
+    "q_id": "q050",
+    "question": "What is the name of the problem that involves computing a spanning tree with the maximum number of leaf nodes?",
     "gold_doc": "arxiv_0902.3485.txt",
-    "ground_truth": "a model where there is a fixed probability p that a node will purchase a product each time it is recommended to them"
+    "ground_truth": "MAXLEAF"
   },
   {
-    "q_id": "q076",
-    "question": "What are the different values of temperature shown in Figure 7?",
-    "gold_doc": "arxiv_0810.3552.txt",
-    "ground_truth": "$T=1.0,3.0,5.0,6.0K$"
-  },
-  {
-    "q_id": "q077",
-    "question": "What is the definition of $\\Pi'$ in the context of this proof?",
-    "gold_doc": "arxiv_0805.3912.txt",
-    "ground_truth": "a refinement of partition \\Pi"
-  },
-  {
-    "q_id": "q078",
-    "question": "What does the $Q$ factor scale as according to the rheological models?",
-    "gold_doc": "arxiv_0803.3299.txt",
-    "ground_truth": "the tidal frequency to a positive fractional power"
-  },
-  {
-    "q_id": "q079",
-    "question": "What does the parameter p represent in exclusion statistics?",
+    "q_id": "q051",
+    "question": "What is the name of the distribution that the scaled distribution of the largest part of the Young diagram has for all p?",
     "gold_doc": "arxiv_0707.2312.txt",
-    "ground_truth": "a generalization of Bose and Fermi statistics"
+    "ground_truth": "Gumbel"
   },
   {
-    "q_id": "q080",
-    "question": "What is the ratio of interlayer and intralayer exchange found in LaFeAsO?",
-    "gold_doc": "arxiv_1303.4033.txt",
-    "ground_truth": "less than ~ 10^-4"
-  },
-  {
-    "q_id": "q081",
-    "question": "What is the value for $f_{K^{+}}$ reported in the excerpt (including units), and what does it refer to?",
-    "gold_doc": "arxiv_1301.5855.txt",
-    "ground_truth": "$f_{K^{+}}=155.80(34)_{\\rm stat}(48)_{\\mathrm{sys}}(24)_{f_{\\pi}}$, where the errors are due to statistics, systematics in $f_{K}/f_{\\pi}$, and the uncertainty in $f_{\\pi}$"
-  },
-  {
-    "q_id": "q082",
+    "q_id": "q052",
     "question": "What is the frequency range that HEBs are preferred for?",
     "gold_doc": "arxiv_1208.5776.txt",
     "ground_truth": "frequencies above 1.5 THz"
   },
   {
-    "q_id": "q083",
-    "question": "Which molecules were used in the supersonic molecular gas jet?",
+    "q_id": "q053",
+    "question": "What is the name of the mechanism described as promoting the second electron directly into the continuum or exciting the molecular cation?",
     "gold_doc": "arxiv_1208.4545.txt",
-    "ground_truth": "acetylene, ethylene, or 1,3-butadiene"
+    "ground_truth": "recollision-induced excitation (RE) and subsequent field ionization (RESI)"
   },
   {
-    "q_id": "q084",
-    "question": "What does the abbreviation FBNA refer to?",
-    "gold_doc": "arxiv_1207.0174.txt",
-    "ground_truth": "Funfschilling et al. (2005)"
-  },
-  {
-    "q_id": "q085",
-    "question": "What is the longest flare total duration for V1005 Ori, and what does it refer to?",
+    "q_id": "q054",
+    "question": "Which type of stars were studied in order to understand the general flare process for stellar flare activity?",
     "gold_doc": "arxiv_1206.5793.txt",
-    "ground_truth": "The longest flare total duration for V1005 Ori is 5236 seconds. It refers to the total duration of the longest flare observed from this star."
+    "ground_truth": "UV Ceti"
   },
   {
-    "q_id": "q086",
-    "question": "What is the value for the hopping parameter γ reported in the excerpt (including units), and what does it refer to?",
-    "gold_doc": "arxiv_1205.3923.txt",
-    "ground_truth": "-2.6 eV, nearest-neighbor interactions"
-  },
-  {
-    "q_id": "q087",
-    "question": "What is the value for the ratio of branching fractions reported in the excerpt (including units)?",
-    "gold_doc": "arxiv_1202.6267.txt",
-    "ground_truth": "1.12± 0.08(stat)"
-  },
-  {
-    "q_id": "q088",
-    "question": "What is the value for T* reported in the excerpt (including units), and what does it refer to?",
-    "gold_doc": "arxiv_1201.5131.txt",
-    "ground_truth": "$T^{*}<0.06$ refers to low temperatures."
-  },
-  {
-    "q_id": "q089",
-    "question": "What value for tau (τ) is reported in the excerpt, and what does it refer to?",
+    "q_id": "q055",
+    "question": "Which numerical package is based on an isotropic and spatially uniform diffusion coefficient throughout all the Galaxy?",
     "gold_doc": "arxiv_1111.1636.txt",
-    "ground_truth": "0.8; the exponent in the relationship between the diffusion coefficient D and the source term Q"
+    "ground_truth": "GALPROP"
   },
   {
-    "q_id": "q090",
-    "question": "What is the value of the lattice spacing L_t used in the computations?",
+    "q_id": "q056",
+    "question": "Which experiments found the signatures of the strong interactions in the quark-gluon matter?",
     "gold_doc": "arxiv_1111.0169.txt",
-    "ground_truth": "$L_{t}=4$ and 6"
+    "ground_truth": "heavy ion collisions"
   },
   {
-    "q_id": "q091",
-    "question": "What are the four admissible $(i,j)$ pairs in the $1\times 2\times 2$ hexagon?",
-    "gold_doc": "arxiv_1110.4176.txt",
-    "ground_truth": "(1/2, 1), (1, 2), (0, 2), and (1/2, 3)"
-  },
-  {
-    "q_id": "q092",
-    "question": "What is the value of the magnetic field for the dash-dotted curve, and what does it refer to?",
-    "gold_doc": "arxiv_1108.2312.txt",
-    "ground_truth": "$1.5$ times as large as that for the dotted-curve"
-  },
-  {
-    "q_id": "q093",
-    "question": "What value for $R_{0}$ is reported in the excerpt (including units), and what does it refer to?",
-    "gold_doc": "arxiv_1108.1379.txt",
-    "ground_truth": "$20$ a0, interatomic separation"
-  },
-  {
-    "q_id": "q094",
-    "question": "Which states of the $\\Sigma_{c}\\bar{\\Sigma}_{c}$ system do not exist as bound state solutions due to repulsive $\\pi$ exchange?",
-    "gold_doc": "arxiv_1104.4257.txt",
-    "ground_truth": "$\\Psi_{\\Sigma_{c}\\bar{\\Sigma}_{c}}^{[0,1]}$ and $\\Psi_{\\Sigma_{c}\\bar{\\Sigma}_{c}}^{[1,1]}$"
-  },
-  {
-    "q_id": "q095",
-    "question": "What is the maximum potential denoted by $P(0)$ in the proof sketch?",
-    "gold_doc": "arxiv_1103.5071.txt",
-    "ground_truth": "$\\frac{n^{2}}{2}w_{max}$"
-  },
-  {
-    "q_id": "q096",
-    "question": "What are the four cases in which Eq. (15) is satisfied?",
-    "gold_doc": "arxiv_1101.1927.txt",
-    "ground_truth": "The four cases in which Eq. (15) is satisfied are: 1. α0=1 and β0=1; 2. α0=1 and β0<1; 3. α0<1 and β0=1; 4."
-  },
-  {
-    "q_id": "q097",
-    "question": "What value for W is reported in the excerpt (including units), and what does it refer to?",
-    "gold_doc": "arxiv_1010.4149.txt",
-    "ground_truth": "0.09, reduced fluid-wall energy"
-  },
-  {
-    "q_id": "q098",
-    "question": "What value for t is reported in the excerpt (including units), and what does it refer to?",
-    "gold_doc": "arxiv_1005.1533.txt",
-    "ground_truth": "19182937474703818751, the largest odd solution"
-  },
-  {
-    "q_id": "q099",
-    "question": "What does the symbol G_i denote?",
-    "gold_doc": "arxiv_1004.1917.txt",
-    "ground_truth": "$F_{t}-F_{i}$, i.e. an edge e with x^{*}_{e}=1-(F_{i}/F_{t})"
-  },
-  {
-    "q_id": "q100",
-    "question": "What is the frequency of the probe laser, and what does it refer to?",
-    "gold_doc": "arxiv_0911.4527.txt",
-    "ground_truth": "The probe laser frequency is 1.12 PHz."
-  },
-  {
-    "q_id": "q101",
-    "question": "What is the initial temperature chosen for the controlled entanglement evolution in Fig. 7?",
-    "gold_doc": "arxiv_0910.5793.txt",
-    "ground_truth": "$k_{B}T_{0}=30$"
-  },
-  {
-    "q_id": "q102",
-    "question": "What fraction of muons per parent b quark does isolation leave?",
-    "gold_doc": "arxiv_0909.2131.txt",
-    "ground_truth": "$7.5\\times 10^{-3}$"
-  },
-  {
-    "q_id": "q103",
-    "question": "What does the term 'special K-type' refer to?",
-    "gold_doc": "arxiv_0905.4143.txt",
-    "ground_truth": "minimal, and minimal K-types for GL(n,A) are unique, and appear with multiplicity 1"
-  },
-  {
-    "q_id": "q104",
-    "question": "What does the term 'fractional monodromy' refer to in this context?",
-    "gold_doc": "arxiv_0905.0334.txt",
-    "ground_truth": "the action I2 changes by I1/(pq)"
-  },
-  {
-    "q_id": "q105",
-    "question": "Which two galaxies are excluded in subsequent sections where pure photoionization is assumed?",
+    "q_id": "q057",
+    "question": "What does the acronym EUV stand for?",
     "gold_doc": "arxiv_0903.4197.txt",
-    "ground_truth": "NGC 2768 and NGC 4125"
+    "ground_truth": "extreme ultraviolet"
   },
   {
-    "q_id": "q106",
-    "question": "What is the formula for the variance $\\sigma_{a}^{2}$ in terms of $D$ and $\\Lambda_{a}$?",
-    "gold_doc": "arxiv_0902.4269.txt",
-    "ground_truth": "$\\sigma_{a}^{2}={2D}/{(\\Lambda_{a}^{2}-1)}$"
-  },
-  {
-    "q_id": "q107",
-    "question": "What is the redshift of ESO 185-013?",
+    "q_id": "q058",
+    "question": "What instrument demonstrated the existence of copious amounts of O VI absorption in the Milky Way halo?",
     "gold_doc": "arxiv_0902.1989.txt",
-    "ground_truth": "$z_{\rm{em}}=0.019$"
+    "ground_truth": "FUSE"
   },
   {
-    "q_id": "q108",
+    "q_id": "q059",
     "question": "What does the term 'Pauli blocking' refer to in the context of neutrino emission?",
     "gold_doc": "arxiv_0901.3491.txt",
     "ground_truth": "a suppression [1−F_i(p)] due to Pauli blocking from this thermal distribution"
   },
   {
-    "q_id": "q109",
-    "question": "What is the name of the universality class predicted as a possible alternative in case of a light η′ meson at the transition?",
-    "gold_doc": "arxiv_0901.3231.txt",
-    "ground_truth": "$U(2)_{L}\\times U(2)_{R}/U(2)_{V}$"
-  },
-  {
-    "q_id": "q110",
-    "question": "What is the value of $P_{DC}$ reported for APD #2 at $238$ K, and what does it refer to?",
+    "q_id": "q060",
+    "question": "Which APD was used to compare the new (ASIC) and old (conventional non-integrated circuit) quenching electronics?",
     "gold_doc": "arxiv_0812.2840.txt",
-    "ground_truth": "$4.5\times 10^{-7}$ ns-1"
+    "ground_truth": "#3"
   },
   {
-    "q_id": "q111",
-    "question": "What are the four P-wave mesons listed in the excerpt?",
-    "gold_doc": "arxiv_0810.3607.txt",
-    "ground_truth": "χ0(3P0), χ1(3P1), χ2(3P2), h(1P1)"
-  },
-  {
-    "q_id": "q112",
-    "question": "What is the value of $\tilde{T}$ in eV?",
-    "gold_doc": "arxiv_0810.3465.txt",
-    "ground_truth": "$1.3\times 10^{-33}$"
-  },
-  {
-    "q_id": "q113",
-    "question": "What does the term 'eight-fold degeneracy' refer to?",
-    "gold_doc": "arxiv_0809.4829.txt",
-    "ground_truth": "The situation that complicates the experimental determination of δ and θ13."
-  },
-  {
-    "q_id": "q114",
-    "question": "What is the mass of the bilepton according to reference [29]?",
+    "q_id": "q061",
+    "question": "How many Higgs triplets are required in the economical 3-3-1 model?",
     "gold_doc": "arxiv_0804.3875.txt",
-    "ground_truth": "greater than 440 GeV"
+    "ground_truth": "two"
   },
   {
-    "q_id": "q115",
-    "question": "What does the empirical distribution of $n^{-1/2}x^{n}_{i}$ converge to?",
-    "gold_doc": "arxiv_0803.2037.txt",
-    "ground_truth": "the uniform distribution on $[0,1]^{2}$"
-  },
-  {
-    "q_id": "q116",
-    "question": "What does the term 'NUT solution' refer to?",
-    "gold_doc": "arxiv_0802.1813.txt",
-    "ground_truth": "a Killing vector that corresponds to the coordinate that parameterizes the fibre S1 can have a zero-dimensional fixed point set"
-  },
-  {
-    "q_id": "q117",
-    "question": "What does the variable X represent in the equation?",
-    "gold_doc": "arxiv_0807.4230.txt",
-    "ground_truth": "$x+x_{0}=X$"
-  },
-  {
-    "q_id": "q118",
-    "question": "What does the term 'maximal minor' refer to in the context of the determinant equation?",
-    "gold_doc": "arxiv_1210.3193.txt",
-    "ground_truth": "the determinant of the maximal minor formed by the columns of a set"
-  },
-  {
-    "q_id": "q119",
-    "question": "What does red indicate in Figure 5?",
+    "q_id": "q062",
+    "question": "What is the minimum magnitude for an event to be considered large?",
     "gold_doc": "arxiv_1203.1031.txt",
-    "ground_truth": "statistically significant overpopulation"
+    "ground_truth": "$M>7.3$"
   },
   {
-    "q_id": "q120",
-    "question": "What does the equation for the exterior derivative of X transform into?",
+    "q_id": "q063",
+    "question": "What did Dirac introduce in his paper on the quantum theory of the electron?",
     "gold_doc": "arxiv_1106.2037.txt",
-    "ground_truth": "The exterior derivative is defined as follows"
+    "ground_truth": "his famous square root of the Klein-Gordon equation"
   },
   {
-    "q_id": "q121",
-    "question": "What does Figure 6 show for $v=10$?",
-    "gold_doc": "arxiv_1104.3103.txt",
-    "ground_truth": "fire cascade distributions on the usual log-log plot"
-  },
-  {
-    "q_id": "q122",
-    "question": "What is the title of the practical guide to running IPF in R?",
+    "q_id": "q064",
+    "question": "What is the name of the method that involves sampling rows of survey data to generate lists of individuals for geographic zones?",
     "gold_doc": "arxiv_1303.5228.txt",
-    "ground_truth": "\"Spatial microsimulation in R: a beginner’s guide to iterative proportional fitting (IPF)\""
+    "ground_truth": "spatial microsimulation"
   },
   {
-    "q_id": "q123",
-    "question": "What are the four clusters significantly enriched for both ERα and FOXA1 binding within 40kb?",
-    "gold_doc": "arxiv_1303.4926.txt",
-    "ground_truth": "those that showed the earliest peak in pol-II activity at the promoter"
-  },
-  {
-    "q_id": "q124",
-    "question": "What does the term 'color-octet' refer to in the context of heavy-quark-antiquark pair states?",
-    "gold_doc": "arxiv_1303.1383.txt",
-    "ground_truth": "a conventional color-singlet or a color-octet state"
-  },
-  {
-    "q_id": "q125",
-    "question": "What does the term 'GF' stand for in the context of this excerpt?",
-    "gold_doc": "arxiv_1301.7139.txt",
-    "ground_truth": "Green's function"
-  },
-  {
-    "q_id": "q126",
-    "question": "What is the initial electron velocity distribution?",
+    "q_id": "q065",
+    "question": "Which phenomena are associated with electron heating as a result of the Buneman instability?",
     "gold_doc": "arxiv_1211.6036.txt",
-    "ground_truth": "a Maxwellian with a drift"
+    "ground_truth": "intense electron current layers formed during magnetic reconnection, shocks and turbulent energy cascades to sub-proton scales"
   },
   {
-    "q_id": "q127",
-    "question": "What does the acronym 'PID' stand for?",
-    "gold_doc": "arxiv_1209.5637.txt",
-    "ground_truth": "particle identification"
-  },
-  {
-    "q_id": "q128",
-    "question": "What is the name of the algorithm proposed by Fan and Li (2001) used for non-convex regression spline?",
-    "gold_doc": "arxiv_1209.1994.txt",
-    "ground_truth": "modified Newton-Raphson"
-  },
-  {
-    "q_id": "q129",
-    "question": "Which university is associated with the EcoTopia Science Institute?",
+    "q_id": "q066",
+    "question": "What is the critical temperature for optimally doped Bi2201?",
     "gold_doc": "arxiv_1208.3448.txt",
-    "ground_truth": "Nagoya University"
+    "ground_truth": "32K"
   },
   {
-    "q_id": "q130",
-    "question": "What is the name of the measure chosen on E in Example 1?",
-    "gold_doc": "arxiv_1207.0330.txt",
-    "ground_truth": "the measure of Haar"
-  },
-  {
-    "q_id": "q131",
-    "question": "What are the six allowed types for $C^{+}$ according to the excerpt?",
-    "gold_doc": "arxiv_1204.5133.txt",
-    "ground_truth": "[O,O], [I,I], [D,D], [II,II], [III,III] and [N,N]"
-  },
-  {
-    "q_id": "q132",
-    "question": "What does the theorem of Erdős-Rado state?",
-    "gold_doc": "arxiv_1204.4488.txt",
-    "ground_truth": "il existe ψ∈ResT(φ) et (a¯i|i<λ) une suite extraite de la suite (a¯i|i<α)"
-  },
-  {
-    "q_id": "q133",
-    "question": "What does the term 'd-closure condition' refer to in the context of vector spaces?",
-    "gold_doc": "arxiv_1204.4347.txt",
-    "ground_truth": "a d-closure condition for vector spaces"
-  },
-  {
-    "q_id": "q134",
-    "question": "What does the term 'natural projection' refer to in this context?",
-    "gold_doc": "arxiv_1203.3603.txt",
-    "ground_truth": "the n-th partial sum operator"
-  },
-  {
-    "q_id": "q135",
-    "question": "What is the name of the identity used for asymptotic optimization of the variance of the estimated reliabilities?",
-    "gold_doc": "arxiv_1202.5334.txt",
-    "ground_truth": "Lagrange’s identity"
-  },
-  {
-    "q_id": "q136",
-    "question": "What does the term quasi-uniformly refer to?",
-    "gold_doc": "arxiv_1202.2436.txt",
-    "ground_truth": "convergence point wise outside a subset of Capω,m zero"
-  },
-  {
-    "q_id": "q137",
-    "question": "What was the topic of the twenty-fourth specialized course organized by the CERN Accelerator School?",
-    "gold_doc": "arxiv_1201.4648.txt",
-    "ground_truth": "'RF for Accelerators'"
-  },
-  {
-    "q_id": "q138",
-    "question": "What are the two disjoint subspaces delineated by the plasma membrane?",
-    "gold_doc": "arxiv_1112.4907.txt",
-    "ground_truth": "the intra and extra-cellular subspaces"
-  },
-  {
-    "q_id": "q139",
-    "question": "What are the two types of time increments hierarchy mentioned in the prediction construction algorithm?",
-    "gold_doc": "arxiv_1111.5254.txt",
-    "ground_truth": "simple – powers of two, complex – product of powers of the first simple numbers"
-  },
-  {
-    "q_id": "q140",
-    "question": "What are the two kinds of networks constructed using collaborative recipe data?",
-    "gold_doc": "arxiv_1111.3919.txt",
-    "ground_truth": "one of ingredient complements, the other of ingredient substitutes"
-  },
-  {
-    "q_id": "q141",
-    "question": "What does the notation (u,w) denote?",
+    "q_id": "q067",
+    "question": "What is the Pythagorean triple that has the reciprocal property R(1,1,1)?",
     "gold_doc": "arxiv_1110.0217.txt",
-    "ground_truth": "the greatest common divisor of two integers u and v"
+    "ground_truth": "(3,4,5)"
   },
   {
-    "q_id": "q142",
-    "question": "What are the two ways in which surface roughness is introduced in the simulations?",
+    "q_id": "q068",
+    "question": "What is the method used to quantify how self diffusivity depends on confining boundaries?",
     "gold_doc": "arxiv_1108.6024.txt",
-    "ground_truth": "(i) by modifying the boundary conditions for collisions between fluid particles and a flat wall surface and (ii) by giving the surface of the confining walls physical roughness or shape."
+    "ground_truth": "event-driven molecular dynamics simulations"
   },
   {
-    "q_id": "q143",
-    "question": "Which telescope was used for observations on October 31, 2008?",
-    "gold_doc": "arxiv_1108.3987.txt",
-    "ground_truth": "Kit Peak National Observatory"
-  },
-  {
-    "q_id": "q144",
-    "question": "What are two examples of platforms that use the MediaWiki engine?",
-    "gold_doc": "arxiv_1107.4661.txt",
-    "ground_truth": "Wikipedia, Wikia"
-  },
-  {
-    "q_id": "q145",
-    "question": "What does the term 'jet resolution effects' refer to?",
-    "gold_doc": "arxiv_1107.3106.txt",
-    "ground_truth": "the pp fragmentation with jet resolution effects of PbPb collisions"
-  },
-  {
-    "q_id": "q146",
-    "question": "What is the name of the algorithm described in the excerpt?",
-    "gold_doc": "arxiv_1107.1851.txt",
-    "ground_truth": "A task reassignment by using adjacent task swappings"
-  },
-  {
-    "q_id": "q147",
-    "question": "What is the title of the book authored by J. Hunter in 2009?",
-    "gold_doc": "arxiv_1106.5178.txt",
-    "ground_truth": "_Collaborative Semantic Tagging and Annotation Systems_"
-  },
-  {
-    "q_id": "q148",
-    "question": "Which authors published a paper in the year 2008 with the title 'Meier et al.'?",
-    "gold_doc": "arxiv_1105.3543.txt",
-    "ground_truth": "Meier, D. S., Turner, J. L. & Hurt, R. L."
-  },
-  {
-    "q_id": "q149",
-    "question": "Which meson states are described as fundamental states of the q¯q meson system?",
-    "gold_doc": "arxiv_1104.2575.txt",
-    "ground_truth": "σ, ω, Φ, J/Ψ and Υ"
-  },
-  {
-    "q_id": "q150",
+    "q_id": "q069",
     "question": "What does the abbreviation NGRIP stand for?",
     "gold_doc": "arxiv_1103.4385.txt",
     "ground_truth": "North Greenland Ice Core Project"
   },
   {
-    "q_id": "q151",
-    "question": "What are the two main components of the experimental setup?",
+    "q_id": "q070",
+    "question": "What is the name of the experimental area at CERN where the study on Closed Loop gas purifiers was conducted?",
     "gold_doc": "arxiv_1012.5511.txt",
-    "ground_truth": "a CL system and an open mode gas system"
+    "ground_truth": "ISR"
   },
   {
-    "q_id": "q152",
-    "question": "What does the zero-flux peaking factor (PF_0) express?",
-    "gold_doc": "arxiv_1012.4308.txt",
-    "ground_truth": "the impurity density gradient at which the convective and diffusive transport of impurities are exactly balanced."
-  },
-  {
-    "q_id": "q153",
-    "question": "What does the matrix $U$ diagonalize?",
-    "gold_doc": "arxiv_1011.2449.txt",
-    "ground_truth": "the chargino matrix"
-  },
-  {
-    "q_id": "q154",
-    "question": "What does the term 'static or unconditional strategy' refer to?",
-    "gold_doc": "arxiv_1010.3425.txt",
-    "ground_truth": "a fixed pre-defined sequence of actions, irrespective of any observations on the patient"
-  },
-  {
-    "q_id": "q155",
-    "question": "What is the name of the family of topological insulators described in this document?",
-    "gold_doc": "arxiv_1007.0291.txt",
-    "ground_truth": "single-Dirac-cone"
-  },
-  {
-    "q_id": "q156",
-    "question": "What does the acronym CENBOL stand for?",
+    "q_id": "q071",
+    "question": "What ist the acronym of Centrifugal pressure supported Boundary Layer?",
     "gold_doc": "arxiv_1006.4024.txt",
-    "ground_truth": "CENtrifugal pressure supported BOundary Layer"
+    "ground_truth": "CENBOL"
   },
   {
-    "q_id": "q157",
-    "question": "What is the factor by which the offset alone can give rise to a difference between the lensing and X-ray determined masses for the core regions of a cluster?",
-    "gold_doc": "arxiv_1006.3484.txt",
-    "ground_truth": "a factor of two"
-  },
-  {
-    "q_id": "q158",
+    "q_id": "q072",
     "question": "What does the term 'QoS' stand for in the context of maximizing global utility?",
     "gold_doc": "arxiv_1004.0313.txt",
     "ground_truth": "Quality of Service"
   },
   {
-    "q_id": "q159",
-    "question": "What is the title of the paper presented by K. Saito at SRF2007?",
-    "gold_doc": "arxiv_0910.4384.txt",
-    "ground_truth": "Gradient Yield Improvement Efforts for Single- and Multicells and Progress for Very High Gradient Cavities"
-  },
-  {
-    "q_id": "q160",
+    "q_id": "q073",
     "question": "What technology was originally developed as a backup but was chosen as a baseline to assure scalability of database access on the Grid?",
     "gold_doc": "arxiv_0910.0097.txt",
     "ground_truth": "Conditions DB Release"
   },
   {
-    "q_id": "q161",
-    "question": "What is the name given to a binary three numbers function that is zero in all discrete points except one?",
-    "gold_doc": "arxiv_0909.3747.txt",
-    "ground_truth": "singular binary three numbers function"
-  },
-  {
-    "q_id": "q162",
-    "question": "What technique is used to study electron transport properties through single conjugated molecules?",
-    "gold_doc": "arxiv_0909.2404.txt",
-    "ground_truth": "Green’s function technique"
-  },
-  {
-    "q_id": "q163",
-    "question": "What does the acronym EPI stand for?",
-    "gold_doc": "arxiv_0908.0501.txt",
-    "ground_truth": "extreme physical information"
-  },
-  {
-    "q_id": "q164",
-    "question": "What is the name of the theorem that this proof generalizes?",
-    "gold_doc": "arxiv_0904.4145.txt",
-    "ground_truth": "Kolodziej stability theorem"
-  },
-  {
-    "q_id": "q165",
-    "question": "What does the term 'safe mapping' refer to?",
-    "gold_doc": "arxiv_0904.0981.txt",
-    "ground_truth": "A function that associates with every n-ary function symbol f the set of safe argument positions."
-  },
-  {
-    "q_id": "q166",
-    "question": "Which types of fermion actions are mentioned as commonly used?",
+    "q_id": "q074",
+    "question": "Which types of fermion actions are commonly used?",
     "gold_doc": "arxiv_0903.4080.txt",
     "ground_truth": "domain-wall fermions (DWF), overlap fermions, Wilson/clover fermions, twisted-Wilson fermions and staggered fermions"
   },
   {
-    "q_id": "q167",
-    "question": "What is the title of the paper by V. de Silva and J. B. Tenenbaum published in Advances in Neural Information Processing Systems?",
-    "gold_doc": "arxiv_0901.0537.txt",
-    "ground_truth": "Global versus local methods in nonlinear dimensionality reduction"
-  },
-  {
-    "q_id": "q168",
-    "question": "What is the title of the article by M.A. Henning and A. Yeo?",
-    "gold_doc": "arxiv_0810.4667.txt",
-    "ground_truth": "A new upper bound on the total domination number of a graph"
-  },
-  {
-    "q_id": "q169",
-    "question": "What is the title of the book authored by A. Bohr and B. R. Mottelson?",
-    "gold_doc": "arxiv_0807.0478.txt",
-    "ground_truth": "Nuclear Structure, Vol. II"
-  },
-  {
-    "q_id": "q170",
+    "q_id": "q075",
     "question": "What are interface-selected waves (ISWs)?",
     "gold_doc": "arxiv_0806.3312.txt",
-    "ground_truth": "a novel phenomenon: interface can select a type of waves"
+    "ground_truth": "Waves generated at the boundary between two different media."
   },
   {
-    "q_id": "q171",
-    "question": "What formula is used to calculate the local scattering rate for the probe and trap beams?",
-    "gold_doc": "arxiv_0805.3797.txt",
-    "ground_truth": "Kramers-Heisenberg"
-  },
-  {
-    "q_id": "q172",
-    "question": "What are the Liao qualitative functions of S?",
-    "gold_doc": "arxiv_0805.2679.txt",
-    "ground_truth": "the “Liao qualitative functions” of S"
-  },
-  {
-    "q_id": "q173",
-    "question": "What does the Berry phase act as for singlet states?",
-    "gold_doc": "arxiv_0803.3745.txt",
-    "ground_truth": "a local order parameter"
-  },
-  {
-    "q_id": "q174",
-    "question": "What does the term 'm/n' represent in the context of the equation?",
-    "gold_doc": "arxiv_1103.0713.txt",
-    "ground_truth": "an odd integer"
-  },
-  {
-    "q_id": "q175",
-    "question": "What does the variable $\tau$ represent in equation (4.5)?",
+    "q_id": "q076",
+    "question": "What transformation defines a one to one correspondence between stationary and self-similar processes?",
     "gold_doc": "arxiv_1003.1187.txt",
-    "ground_truth": "an integer"
+    "ground_truth": "Lamperti transformation"
   },
   {
-    "q_id": "q176",
-    "question": "What does the color blue represent in the context of comparing CKM and PMNS cases?",
-    "gold_doc": "arxiv_1207.7227.txt",
-    "ground_truth": "the CKM case"
-  },
-  {
-    "q_id": "q177",
-    "question": "What is the name of the method that approximates a sampled function f(n) with a sum of N exponentials?",
-    "gold_doc": "arxiv_1207.4526.txt",
-    "ground_truth": "Prony’s method"
-  },
-  {
-    "q_id": "q178",
-    "question": "What does the symbol $\theta_{W}$ represent?",
-    "gold_doc": "arxiv_1010.1912.txt",
-    "ground_truth": "the weak angle"
-  },
-  {
-    "q_id": "q179",
-    "question": "What is the relationship between the relevant length ξ(t) and the metastable disclination density below the critical temperature?",
-    "gold_doc": "arxiv_0809.4104.txt",
-    "ground_truth": "ξ(t)=√(1/ρv)"
-  },
-  {
-    "q_id": "q180",
-    "question": "What are the eigenvalues of the matrix $J_n$?",
-    "gold_doc": "arxiv_1303.3861.txt",
-    "ground_truth": "0, and n"
-  },
-  {
-    "q_id": "q181",
-    "question": "What is the value of γ in the proof of Theorem 1.2?",
-    "gold_doc": "arxiv_1210.7340.txt",
-    "ground_truth": "γ = 1 - 3/q"
-  },
-  {
-    "q_id": "q182",
-    "question": "What is the total integrated luminosity used in this study?",
-    "gold_doc": "arxiv_1209.4029.txt",
-    "ground_truth": "1.0 fb-1"
-  },
-  {
-    "q_id": "q183",
-    "question": "What is the notation used to denote that an R-module M has weak Gorenstein dimension zero?",
+    "q_id": "q077",
+    "question": "What does the term 'CI-dim' represent in the context of R-modules?",
     "gold_doc": "arxiv_1204.4083.txt",
-    "ground_truth": "w.g.d_R(M)=0"
+    "ground_truth": "complete intersection dimension"
   },
   {
-    "q_id": "q184",
-    "question": "What is the nominal composition of the crystals grown by conventional solid-state reaction?",
-    "gold_doc": "arxiv_1204.1720.txt",
-    "ground_truth": "Ca1-xSrxCo2As2"
-  },
-  {
-    "q_id": "q185",
-    "question": "What is the dimensionality of the cosmic string considered in this excerpt?",
-    "gold_doc": "arxiv_1111.0026.txt",
-    "ground_truth": "5-dimensional"
-  },
-  {
-    "q_id": "q186",
-    "question": "What is the mass loss rate of ηA used in the simulations?",
-    "gold_doc": "arxiv_1110.6420.txt",
-    "ground_truth": "10-3 M⊙ yr-1"
-  },
-  {
-    "q_id": "q187",
-    "question": "What is the effective continuum frequency used in the observations?",
-    "gold_doc": "arxiv_1110.3865.txt",
-    "ground_truth": "345.8 GHz"
-  },
-  {
-    "q_id": "q188",
-    "question": "What is the energy of the PbPb collisions measured by CMS?",
-    "gold_doc": "arxiv_1107.1862.txt",
-    "ground_truth": "2.76 TeV"
-  },
-  {
-    "q_id": "q189",
-    "question": "What is the range of e-foldings number mentioned in the context of solving the flatness and horizon problem?",
-    "gold_doc": "arxiv_1105.3509.txt",
-    "ground_truth": "$60$ to $65$"
-  },
-  {
-    "q_id": "q190",
-    "question": "Which two submillimeter continuum sources are observed in Sgr B2(N)?",
-    "gold_doc": "arxiv_1105.0344.txt",
-    "ground_truth": "SMA1 and SMA2"
-  },
-  {
-    "q_id": "q191",
-    "question": "What is the title of the document?",
-    "gold_doc": "arxiv_1010.5976.txt",
-    "ground_truth": "CERN-2010-001"
-  },
-  {
-    "q_id": "q192",
-    "question": "What is the name of the theory studied by Demler et al.?",
+    "q_id": "q078",
+    "question": "What type of phase transition causes the multi-layer system to change from a SNS to a SIS junction?",
     "gold_doc": "arxiv_1009.2191.txt",
-    "ground_truth": "SO(5) theory"
+    "ground_truth": "A metal-Mott insulator phase transition"
   },
   {
-    "q_id": "q193",
-    "question": "What are the values of epsilon_2 and epsilon_4 for the deformed case?",
+    "q_id": "q079",
+    "question": "Which method is often used to analyze the deformed intrinsic states?",
     "gold_doc": "arxiv_1008.0294.txt",
-    "ground_truth": "0.19 and -0.05"
+    "ground_truth": "The cranked Hartree Fock Bogoliubov (CHFB) method"
   },
   {
-    "q_id": "q194",
-    "question": "What is the average rate of events with zenith angles larger than 100 degrees?",
+    "q_id": "q080",
+    "question": "What is the depth at which the Baikal neutrino telescope NT200 operates?",
     "gold_doc": "arxiv_0910.4327.txt",
-    "ground_truth": "0.037 Hz"
+    "ground_truth": "1.1 km"
   },
   {
-    "q_id": "q195",
-    "question": "What is the value for $p_T$ of high $J/ψ$ in GeV/c?",
-    "gold_doc": "arxiv_0804.4846.txt",
-    "ground_truth": "$p_{T}>5$"
+    "q_id": "q081",
+    "question": "What is the purpose of using static code analyzers?",
+    "gold_doc": "arxiv_1010.2511.txt",
+    "ground_truth": "to detect and report source code weaknesses and report them appropriately to the developers"
   },
   {
-    "q_id": "q196",
-    "question": "What is the length of interval J?",
-    "gold_doc": "arxiv_0803.0434.txt",
-    "ground_truth": "at least c/2"
+    "q_id": "q082",
+    "question": "What is the purpose of performing a Hadamard transformation on two physical qubits?",
+    "gold_doc": "arxiv_0808.1618.txt",
+    "ground_truth": "To recouple the two neighboring logical qubits and implement W gate of logical qubits."
   },
   {
-    "q_id": "q197",
-    "question": "What does the equation (2.3) state?",
-    "gold_doc": "arxiv_1301.0175.txt",
-    "ground_truth": "Rn,n=Y^n"
-  },
-  {
-    "q_id": "q198",
-    "question": "What is the name of the inequality applied in equation (3.12)?",
-    "gold_doc": "arxiv_1011.5380.txt",
-    "ground_truth": "isoperimetric"
-  },
-  {
-    "q_id": "q199",
-    "question": "What is the name of the identity that is transformed in the equation?",
-    "gold_doc": "arxiv_0802.4331.txt",
-    "ground_truth": "key identity"
-  },
-  {
-    "q_id": "q200",
-    "question": "Who obtained the most deepest results in the field of isomorphisms or automorphisms?",
-    "gold_doc": "arxiv_1302.3356.txt",
-    "ground_truth": "Lajos Monlar"
+    "q_id": "q083",
+    "question": "What is the term that represents the ways in which the scattering polarization can be modified by weak magnetic fields?",
+    "gold_doc": "arxiv_0912.5068.txt",
+    "ground_truth": "Hanle effect"
   }
 ]
