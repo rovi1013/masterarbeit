@@ -103,9 +103,6 @@ def reset_index_dir(index_dir: str) -> None:
 def _build_index(cfg: Config | None = None, reset_db: bool = False) -> None:
     if cfg is None:
         cfg = load_config()
-        print(f"{cfg.chunk_size} von Typ: {type(cfg.chunk_size)}")
-        print(f"{cfg.chunk_overlap} von Typ: {type(cfg.chunk_overlap)}")
-        print(f"{cfg.top_k} von Typ: {type(cfg.top_k)}")
 
     if reset_db:
         reset_index_dir(cfg.index_dir)
