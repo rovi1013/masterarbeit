@@ -29,10 +29,13 @@ class Config:
 def _env_override(var_name: str, default: str) -> str:
     v = os.getenv(var_name)
     if not v:
+        print(f"{var_name}: {default}")
         return default
     # Wenn GMT placeholder nicht ersetzt wurde
     if v == f"__GMT_VAR_{var_name}__":
+        print(f"GMT_VAR nicht überschriebeb: {var_name}")
         return default
+    print(f"Überschrieben: {var_name}")
     return v
 
 
