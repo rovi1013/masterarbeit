@@ -103,6 +103,8 @@ def reset_index_dir(index_dir: str) -> None:
 def _build_index(cfg: Config | None = None, reset_db: bool = False) -> None:
     if cfg is None:
         cfg = load_config()
+        for c in cfg:
+            print(f"{c} von Typ: {type(c)}")
 
     if reset_db:
         reset_index_dir(cfg.index_dir)
