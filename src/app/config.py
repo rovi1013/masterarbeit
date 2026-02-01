@@ -35,7 +35,7 @@ def _env_override(var_name: str, default: str) -> str:
     if v == f"__GMT_VAR_{var_name}__":
         print(f"GMT_VAR nicht überschriebeb: {var_name}")
         return default
-    print(f"Überschrieben: {var_name}")
+    print(f"Überschrieben: {var_name}, type={type(v)}")
     return v
 
 
