@@ -26,16 +26,14 @@ class Config:
     log_level: str
 
 
-def _env_override(var_name: str, default: str) -> str:
+def _env_override(var_name: str, default: Any) -> Any:
     v = os.getenv(var_name)
-    if not v:
-        print(f"{var_name}: {default}")
+    if not v or v == f"__GMT_VAR_{var_name}__":
         return default
-    # Wenn GMT placeholder nicht ersetzt wurde
-    if v == f"__GMT_VAR_{var_name}__":
-        print(f"GMT_VAR nicht überschriebeb: {var_name}")
-        return default
-    print(f"Überschrieben: {var_name}, type={type(v)}")
+    if isinstance(default, int):
+        return int(v)
+    if isinstance(default, float):
+        return float(v)
     return v
 
 
