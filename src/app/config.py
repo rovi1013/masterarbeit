@@ -1,7 +1,8 @@
 import os
 import yaml
-from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
+from dataclasses import dataclass
 
 
 @dataclass
@@ -26,13 +27,14 @@ class Config:
     log_level: str
 
 
-def _env_override(var_name: str, default: str) -> str:
+def _env_override(var_name: str, default: Any) -> Any:
     v = os.getenv(var_name)
-    if not v:
+    if not v or v == f"__GMT_VAR_{var_name}__":
         return default
-    # Wenn GMT placeholder nicht ersetzt wurde
-    if v == f"__GMT_VAR_{var_name}__":
-        return default
+    if isinstance(default, int):
+        return int(v)
+    if isinstance(default, float):
+        return float(v)
     return v
 
 

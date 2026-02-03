@@ -4,7 +4,7 @@ import json
 import gzip
 from tqdm import tqdm
 from pathlib import Path
-from statistics import mean
+from statistics import mean, stdev
 from datetime import datetime, timezone
 
 from openai import AsyncOpenAI
@@ -100,6 +100,10 @@ async def main():
         vals = [x["metrics"][name] for x in scored]
         return mean(vals) if vals else None
 
+    def mstdev(name):
+        vals = [x["metrics"][name] for x in scored]
+        return stdev(vals) if vals else None
+
     out = {
         "meta": {
             "run_id": run_id,
@@ -115,8 +119,11 @@ async def main():
         },
         "summary": {
             "faithfulness_mean": mavg("faithfulness"),
+            "faithfulness_stdev": mstdev("faithfulness"),
             "answer_relevancy_mean": mavg("answer_relevancy"),
+            "answer_relevancy_stdev": mstdev("answer_relevancy"),
             "context_utilization_mean": mavg("context_utilization"),
+            "context_utilization_stdev": mstdev("context_utilization"),
             "answers_scored": len(scored),
         },
         "records": scored,

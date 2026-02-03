@@ -5,6 +5,9 @@ services:
       dockerfile: Dockerfile.gmt
     container_name: rag-app
     environment:
+      CHUNK_SIZE: __GMT_VAR_CHUNK_SIZE__
+      CHUNK_OVERLAP: __GMT_VAR_CHUNK_OVERLAP__
+      TOP_K: __GMT_VAR_TOP_K__
       HF_HOME: "/root/.cache/huggingface"
       ANONYMIZED_TELEMETRY: "False"
       RAG_PRINT_RESPONSES: __GMT_VAR_RAG_PRINT_RESPONSES__

@@ -88,8 +88,6 @@ def _simple_chunk(doc: RawDocument, chunk_size: int, overlap: int) -> List[RawDo
 
 
 # ========== INDEXING ==========
-
-
 def reset_index_dir(index_dir: str) -> None:
     p = Path(index_dir)
     if p.exists():

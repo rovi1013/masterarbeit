@@ -91,11 +91,11 @@ METRIC_SPEC: Dict[str, MetricSpec] = {
     # CPU/RAM Auslastung (Ratio/Bytes -> MEAN/MAX)
     "cpu_utilization_procfs_system": MetricSpec("meanmax", "Ratio", ("[SYSTEM]",)),
     "cpu_utilization_cgroup_container": MetricSpec("meanmax", "Ratio", ("rag-app", "ollama")),
-    "memory_used_cgroup_container": MetricSpec("meanmax", "Bytes", ("rag-app", "ollama")),
+    "memory_used_cgroup_container": MetricSpec("meanmax_B", "Bytes", ("rag-app", "ollama")),
     # Network IO (Bytes deltas -> SUM/MAX)
     "network_io_cgroup_container": MetricSpec("summax_bytes", "Bytes", ("rag-app", "ollama")),
     # Temperatur (centi°C -> °C -> MEAN/MAX)
-    "lmsensors_temperature_component": MetricSpec("meanmax", "C", ("TEMP_CORE", "TEMP_PACKAGE")),
+    "lmsensors_temperature_component": MetricSpec("meanmax", "C", ("TEMP_CORE", "TEMP_PACK")),
 }
 
 
@@ -332,8 +332,8 @@ def normalize(metric: str, raw_entity: str, unit: str, value: Any, entity_mappin
             return "TEMP_CORE", float(value) / 100.0
 
         if "Package-id" in raw_entity:
-            entity_mappings["TEMP_PACKAGE"].add(raw_entity)
-            return "TEMP_PACKAGE", float(value) / 100.0
+            entity_mappings["TEMP_PACK"].add(raw_entity)
+            return "TEMP_PACK", float(value) / 100.0
 
         entity_mappings["TEMP_IGNORED"].add(raw_entity)
         return None
@@ -377,6 +377,8 @@ class WindowMatcher:
 def empty_agg(mtype: str) -> Dict[str, Any]:
     if mtype == "energy":
         return {"sum": None, "sum_Wh": None, "count": 0}
+    if mtype == "meanmax_B":
+        return {"mean": None, "mean_MiB": None, "max": None, "count": 0}
     if mtype == "summax_bytes":
         return {"sum": None, "sum_MiB": None, "max": None, "count": 0}
     return {"mean": None, "max": None, "count": 0}
@@ -389,6 +391,10 @@ def finalize_bucket(mtype: str, b: Optional[AggBucket]) -> Dict[str, Any]:
     if mtype == "energy":
         s = b.sum
         return {"sum": s, "sum_Wh": s / 3.6e9, "count": b.count}
+
+    if mtype == "meanmax_B":
+        s = b.sum / b.count
+        return {"mean": s, "mean_MiB": s / (1024.0 * 1024.0), "max": b.max, "count": b.count}
 
     if mtype == "summax_bytes":
         s = b.sum
@@ -415,7 +421,7 @@ def main() -> None:
         "DRAM_TOTAL": set(),
         "GPU_TOTAL": set(),
         "TEMP_CORE": set(),
-        "TEMP_PACKAGE": set(),
+        "TEMP_PACK": set(),
         "TEMP_IGNORED": set(),
     }
 
