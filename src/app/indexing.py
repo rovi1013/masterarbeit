@@ -57,7 +57,7 @@ def _load_documents(data_dir: str) -> List[RawDocument]:
 #
 # Verschiedene Chunking Strategien implementieren
 # 1. _simple_chunk(): Feste Chunk Größe und fester Overlap, möglichst einfaches aufteilen der Dokumente
-# 2. _semantic_chunk(): Chunking auf Basis der
+# 2. ...
 
 def _simple_chunk(doc: RawDocument, chunk_size: int, overlap: int) -> List[RawDocument]:
     """
@@ -117,7 +117,7 @@ def _build_index(cfg: Config | None = None, reset_db: bool = False) -> None:
 
     mark("CHUNKING_START")
     for doc in docs:
-        chunked_docs.extend(_simple_chunk(doc, cfg.chunk_size, cfg.chunk_overlap))#
+        chunked_docs.extend(_simple_chunk(doc, cfg.chunk_size, cfg.chunk_overlap))
     mark("CHUNKING_END")
 
     logger.info(f"Insgesamt {len(chunked_docs)} Chunks erstellt.")
