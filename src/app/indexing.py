@@ -1,9 +1,9 @@
-from dataclasses import dataclass
-from pathlib import Path
-from typing import List, Dict, Any
 import chromadb
 import shutil
 import logging
+from dataclasses import dataclass
+from pathlib import Path
+from typing import List, Dict, Any
 
 from app.config import load_config, Config
 from app.embedding import get_embed_model
@@ -79,6 +79,8 @@ def _simple_chunk(doc: RawDocument, chunk_size: int, overlap: int) -> List[RawDo
         chunk_text = text[start:end]
         metadata = dict(doc.metadata)
         metadata["chunk_index"] = chunk_index
+        metadata["chunk_start"] = start
+        metadata["chunk_end"] = min(end, len(text))
         if chunk_text.strip():
             chunks.append(RawDocument(text=chunk_text, metadata=metadata))
         chunk_index += 1
@@ -130,6 +132,7 @@ def _build_index(cfg: Config | None = None, reset_db: bool = False) -> None:
     mark("EMBEDDING_START")
     embeddings = model.encode(
         texts,
+        batch_size=128,
         convert_to_numpy=True,
         normalize_embeddings=True,
         show_progress_bar=True
@@ -146,7 +149,7 @@ def _build_index(cfg: Config | None = None, reset_db: bool = False) -> None:
         "rag",
         metadata={
             "hnsw:space": "cosine",
-            "hnsw:num_threads": 4,
+            "hnsw:num_threads": 5,
             "hnsw:batch_size": 10_000,
             "hnsw:sync_threshold": 200_000,
         }
@@ -166,14 +169,12 @@ def _build_index(cfg: Config | None = None, reset_db: bool = False) -> None:
     for start in range(0, total, batch_size):
         end = min(start + batch_size, total)
         batch_ids = ids[start:end]
-        batch_docs = texts[start:end]
         batch_embs = embeddings[start:end]
         batch_metas = metadatas[start:end]
 
-        logger.info(f"Füge Batch {start}–{end} von {total} hinzu ...")
+        logger.debug(f"Füge Batch {start}–{end} von {total} hinzu ...")
         collection.add(
             ids=batch_ids,
-            documents=batch_docs,
             embeddings=batch_embs,
             metadatas=batch_metas,
         )
