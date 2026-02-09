@@ -5,12 +5,14 @@ services:
       dockerfile: docker/Dockerfile
     container_name: rag-app
     environment:
+      INDEX_DIR: "A:/AAA_TEMP_CHROMA/index"
       HF_HOME: "/root/.cache/huggingface"           # Fester Ordner fuer HF Cache
       ANONYMIZED_TELEMETRY: "False"                 # ChromaDB Telemetrie deaktivieren
       RAG_PRINT_RESPONSES: "0"                      # Ausgabe der rag_querries [0/1]
     ports:
       - "8000:8000"
     volumes:
+      - A:/AAA_TEMP_CHROMA/index:/src/data/index
       - ../src/data:/src/data
       - ../src/scripts:/src/scripts
       - ../hf-cache:/root/.cache/huggingface
