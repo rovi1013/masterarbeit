@@ -40,3 +40,4 @@ eval-ragas/ragas-data/*
 misc/rag_querries.sh
 experiments/
 misc/
+*.json
