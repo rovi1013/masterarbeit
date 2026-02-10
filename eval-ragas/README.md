@@ -48,17 +48,22 @@ Das Skript [get_rag_answers.py](#rag-api-antworten) ruft die API der RAG App auf
 python .\scripts\get_rag_answers.py --run-id "<GMT RUN ID>" --date "YYYY-MM-DD"
 ````
 
-### Evaluation mit RAGAS
-Das Skript [ragas_evaluation.py](#ragas-evaluation) verwendet das Framework RAGAS, um die Antworten der RAG App zu evaluieren, die Ergebnisse werden in [ragas-data/](ragas-data) gespeichert.
+### Evaluation mit RAGAS (lokal/remote)
+**(LOKAL)** Das Skript [ragas_evaluation.py](#ragas-evaluation-lokalremote) verwendet das Framework RAGAS, um die Antworten der RAG App lokal zu evaluieren.
 ````shell
 python .\scripts\ragas_evaluation.py --input ".\ragas-data\YYYY-MM-DD_<GMT RUN ID>_answers.json"
+````
+
+**(REMOTE)** Das Skript [ragas_eval_remote.py](#ragas-evaluation-lokalremote) verwendet das Framework RAGAS, um die Antworten der RAG App remote zu evaluieren.
+````shell
+python .\scripts\ragas_eval_remote.py --input ".\ragas-data\YYYY-MM-DD_<GMT RUN ID>_answers.json" --open-api-key "<OPEN API KEY>"
 ````
 
 
 ## Skripts
 
 ### RAG API Antworten
-Das Skript [get_rag_answer.py](scripts/get_rag_answers.py) ruft die RAG-App API mit dem Fragekatalog auf, der auch für die GMT Messläufe verwendet wird in [src/scripts/questions.json](../src/scripts/questions.json). Die Antworten werden in [ragas-data/](ragas-data) als JSON mit dem Format ``YYYY-MM-DD_<GMT RUN ID>_answers.json`` gespeichert.
+Das Skript [get_rag_answer.py](scripts/get_rag_answers.py) ruft die RAG-App API mit dem Fragekatalog auf, der auch für die GMT Messläufe verwendet wird in [src/scripts/questions.json](../src/scripts/questions.json). Die Antworten als JSON mit dem Format ``YYYY-MM-DD_<GMT RUN ID>_answers.json`` gespeichert.
 
 ````shell
 usage: get_rag_answers.py [-h] -r RUN_ID -d DATE
@@ -107,9 +112,12 @@ Das Schema der gespeicherten Antworten sieht so aus:
 }
 ````
 
-### RAGAS Evaluation
-Das Skript [ragas_evaluation.py](#ragas-evaluation) verwendet das Framework RAGAS, um die Antworten der RAG App aus ``YYYY-MM-DD_<GMT RUN ID>_answers.json`` zu evaluieren. Die Ergebnisse werden in [ragas-data/](ragas-data) als GZIP komprimierte JSON mit dem Format ``YYYY-MM-DD_<GMT RUN ID>_answers_eval.json.gz`` gespeichert.
+### RAGAS Evaluation (lokal/remote)
+**(LOKAL)** Das Skript [ragas_evaluation.py](scripts/ragas_evaluation.py) verwendet das Framework RAGAS, um die Antworten der RAG App aus ``YYYY-MM-DD_<GMT RUN ID>_answers.json`` zu evaluieren. Der Judge ist eine lokale LLM, die über den Docker Service Ollama läuft. Die Ergebnisse werden als GZIP komprimierte JSON mit dem Format ``YYYY-MM-DD_<GMT RUN ID>_answers_eval.json.gz`` gespeichert.
 
+**(REMOTE)** Das Skript [ragas_eval_remote.py](scripts/ragas_eval_remote.py) verwendet das Framework RAGAS, um die Antworten der RAG App aus ``YYYY-MM-DD_<GMT RUN ID>_answers.json`` zu evaluieren. Der Judge ist eine OpenAI LLM, die über die API und den OPEN_API_KEY angesteuert wird. Die Ergebnisse werden als GZIP komprimierte JSON mit dem Format ``YYYY-MM-DD_<GMT RUN ID>_answers_eval.json.gz`` gespeichert.
+
+**LOKAL:**
 ````shell
 usage: ragas_evaluation.py [-h] -i INPUT
 
@@ -118,6 +126,18 @@ Evaluation der RAG Antworten mit RAGAS.
 options:
   -h, --help         show this help message and exit
   -i, --input INPUT  Pfad zu *_answers.json.
+````
+
+**REMOTE:**
+````shell
+usage: ragas_eval_remote.py [-h] -i INPUT -k OPENAI_API_KEY
+
+RAGAS Evaluation via OpenAI API.
+
+options:
+  -h, --help                            show this help message and exit
+  -i, --input INPUT                     Pfad zu *_answers.json.
+  -k, --openai-api-key OPENAI_API_KEY   OpenAI API Key.
 ````
 
 Das Schema der gespeicherten JSON sieht so aus:
@@ -167,4 +187,18 @@ Das Schema der gespeicherten JSON sieht so aus:
     "..."
   ]
 }
+````
+
+### Messläufe zusammenfassen
+Das Skript [create_ragas_summary.py](scripts/create_ragas_summary.py) erstellt eine statistische Auswertung von mehreren RAGAS Messläufen.
+
+````shell
+usage: create_ragas_summary.py [-h] -i INPUT_DIR [-o OUTPUT_NAME]
+
+Aggregiert mehrere RAGAS *_eval.json(.gz) pro q_id über Runs.
+
+options:
+  -h, --help                      show this help message and exit
+  -i, --input-dir INPUT_DIR       Ordner mit *_eval.json oder *_eval.json.gz Dateien.
+  -o, --output-name OUTPUT_NAME   Ausgabename ohne Endung (.json.gz wird angehängt).
 ````

@@ -415,7 +415,7 @@ def main() -> None:
 
     out_dir: Path = OUT_DIR
     out_dir.mkdir(parents=True, exist_ok=True)
-    out_path = out_dir / f"{run.get('date', date_prefix(phase_path))}_{run_id}_summary.json.gz"
+    out_path = out_dir / f"{run.get('date', date_prefix(phase_path))}_{run_id}_merged.json.gz"
 
     entity_mappings: Dict[str, set] = {
         "DRAM_TOTAL": set(),
@@ -493,7 +493,7 @@ def main() -> None:
     with gzip.open(out_path, "wt", encoding="utf-8", compresslevel=args.compress_lvl) as fout:
         json.dump(summary, fout, ensure_ascii=False)
 
-    print("========== SUMMARY DONE ==========")
+    print("========== MERGE DONE ==========")
 
 
 if __name__ == "__main__":
