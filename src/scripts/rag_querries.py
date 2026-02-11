@@ -6,7 +6,7 @@ from urllib.request import Request, urlopen
 
 JSON_PATH = "./scripts/questions.json"
 API_URL = "http://127.0.0.1:8000/ask"
-PRINT = os.getenv("RAG_PRINT_RESPONSES", "1") == "1"
+PRINT = False   # os.getenv("RAG_PRINT_RESPONSES", "1") == "1"
 
 
 def post_question(question: str, q_id: str) -> str:

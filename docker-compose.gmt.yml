@@ -15,7 +15,6 @@ services:
       TOP_K: __GMT_VAR_TOP_K__
       HF_HOME: "/root/.cache/huggingface"
       ANONYMIZED_TELEMETRY: "False"
-      RAG_PRINT_RESPONSES: __GMT_VAR_RAG_PRINT_RESPONSES__
     ports:
       - "8000:8000"
     depends_on:

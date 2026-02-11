@@ -258,6 +258,9 @@ def _build_index(cfg: Config | None = None, reset_db: bool = False) -> None:
             "hnsw:num_threads": 5,
             "hnsw:batch_size": 10_000,
             "hnsw:sync_threshold": 200_000,
+            "ef_construction": cfg.hnsw_ef_construction,
+            "ef_search": cfg.hnsw_ef_search,
+            "max_neighbors": cfg.hnsw_max_neighbors,
         }
     )
 
