@@ -46,6 +46,8 @@ def _env_override(var_name: str, default: Any) -> Any:
         return int(v)
     if isinstance(default, float):
         return float(v)
+    if isinstance(default, bool):
+        return bool(v)
     return v
 
 
@@ -66,6 +68,10 @@ def load_config(path: str | Path = Path(__file__).parent / "config.yaml") -> Con
     data["embedding_model"] = _env_override("EMBEDDING_MODEL", data["embedding_model"])
     data["embedding_device"] = _env_override("EMBEDDING_DEVICE", data["embedding_device"])
     data["normalize_embeddings"] = _env_override("NORMALIZE_EMBEDDINGS", data["normalize_embeddings"])
+
+    data["hnsw_ef_construction"] = _env_override("HNSW_EF_CONSTRUCTION", data["hnsw_ef_construction"])
+    data["hnsw_ef_search"] = _env_override("HNSW_EF_SEARCH", data["hnsw_ef_search"])
+    data["hnsw_max_neighbors"] = _env_override("HNSW_MAX_NEIGHBORS", data["hnsw_max_neighbors"])
 
     data["top_k"] = _env_override("TOP_K", data["top_k"])
 
