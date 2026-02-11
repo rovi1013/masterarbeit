@@ -72,10 +72,10 @@ def _simple_chunk(doc: RawDocument, chunk_size: int, chunk_overlap: int) -> List
     """
     text = doc.text
     chunks: list[RawDocument] = []
+    chunk_index = 0
 
     start = 0
     step = max(1, chunk_size - chunk_overlap)
-    chunk_index = 0
 
     while start < len(text):
         end = start + chunk_size
@@ -103,20 +103,25 @@ def _structure_chunk(doc: RawDocument, chunk_size: int, chunk_overlap: int) -> L
     :param chunk_overlap: Overlap zwischen Chunks
     :return: Liste der gechunkten Dokumente
     """
-    text = doc.text.replace("\r\n", "\n")
+    text = doc.text
     chunks: List[RawDocument] = []
     chunk_index = 0
 
     # Extract Doc Title: "#..."; fallback wenn kein "#": 1st (non-empty) line in Doc
-    doc_title = ""
-    for line in text.split("\n"):
-        if not line.strip():
+    doc_title, first_non_empty = "", ""
+    for line in text.splitlines():
+        s = line.strip()
+        if not s:
             continue
-        m = _MARKER_RE.match(line.strip())
+        if not first_non_empty:
+            first_non_empty = s
+
+        m = _MARKER_RE.match(s)
         if m and len(m.group(1)) == 1:
-            doc_title = m.group(2).strip() or ""
-        else:
-            doc_title = line.strip()
+            doc_title = (m.group(2).strip() or first_non_empty)
+            break
+
+    doc_title = doc_title or first_non_empty
 
     block_start = 0
     block_title = ""
@@ -147,9 +152,9 @@ def _structure_chunk(doc: RawDocument, chunk_size: int, chunk_overlap: int) -> L
         start = 0
         while start < len(block_text):
             end = min(start + chunk_size, len(block_text))
-            chunk_text = block_text[start:end].strip()
+            chunk_text = block_text[start:end]
 
-            if chunk_text:
+            if chunk_text.strip():
                 emit_chunk(chunk_text, block_start + start, block_start + end)
 
             if end == len(block_text):
@@ -163,7 +168,7 @@ def _structure_chunk(doc: RawDocument, chunk_size: int, chunk_overlap: int) -> L
         line_end = pos + len(line)
         pos = line_end
 
-        marker = _MARKER_RE.match(line.rstrip("\n"))
+        marker = _MARKER_RE.match(line.rstrip("\r\n"))
         if not marker:
             continue
 
@@ -173,7 +178,11 @@ def _structure_chunk(doc: RawDocument, chunk_size: int, chunk_overlap: int) -> L
         title = (marker.group(2).strip() or "")
 
         block_title = title
-        if len(hashes) == 6:
+        seen_title = False
+        if len(hashes) == 1 and not seen_title:
+            block_type = "title"
+            seen_title = True
+        elif len(hashes) == 6:
             block_type = title.split()[0].lower() if title else "special"
         else:
             block_type = "heading"
