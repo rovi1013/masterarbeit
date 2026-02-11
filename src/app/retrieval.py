@@ -24,7 +24,7 @@ def retrieve(cfg: Config, question: str):
         [question],
         batch_size=128,
         convert_to_numpy=True,
-        normalize_embeddings=True,
+        normalize_embeddings=cfg.normalize_embeddings,
     )
 
     retrieval_result = collection.query(
