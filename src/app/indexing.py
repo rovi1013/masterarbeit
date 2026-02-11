@@ -62,19 +62,19 @@ def _load_documents(data_dir: str) -> List[RawDocument]:
 # 1. _simple_chunk(): Feste Chunk Größe und fester Overlap, möglichst einfaches aufteilen der Dokumente
 # 2. _structure_chunk(): Chunking auf Basis von strukturellen Eigenschaften der Dokumente
 
-def _simple_chunk(doc: RawDocument, chunk_size: int, overlap: int) -> List[RawDocument]:
+def _simple_chunk(doc: RawDocument, chunk_size: int, chunk_overlap: int) -> List[RawDocument]:
     """
     Einfache Chunking Strategie mit fester chunk size und einem festen overlap zwischen den Chunks.
     :param doc: Liste der Raw Textdokumente
     :param chunk_size: Größe der Chunks
-    :param overlap: Overlap zwischen Chunks
+    :param chunk_overlap: Overlap zwischen Chunks
     :return: Liste der gechunkten Dokumente
     """
     text = doc.text
     chunks: list[RawDocument] = []
 
     start = 0
-    step = max(1, chunk_size - overlap)
+    step = max(1, chunk_size - chunk_overlap)
     chunk_index = 0
 
     while start < len(text):
@@ -210,9 +210,17 @@ def _build_index(cfg: Config | None = None, reset_db: bool = False) -> None:
     logger.info("Chunking der Dokumente ...")
     chunked_docs: list[RawDocument] = []
 
+    if cfg.chunking_strategy == "simple":
+        chunk_func = _simple_chunk
+    elif cfg.chunking_strategy == "structure":
+        chunk_func = _structure_chunk
+    else:
+        logging.error(f"Unbekannte Chunking Strategie: {cfg.chunking_strategy}")
+        raise ValueError()
+
     mark("CHUNKING_START")
     for doc in docs:
-        chunked_docs.extend(_structure_chunk(doc, chunk_size=cfg.chunk_size, chunk_overlap=cfg.chunk_overlap))
+        chunked_docs.extend(chunk_func(doc, chunk_size=cfg.chunk_size, chunk_overlap=cfg.chunk_overlap))
     mark("CHUNKING_END")
 
     logger.info(f"Insgesamt {len(chunked_docs)} Chunks erstellt.")
