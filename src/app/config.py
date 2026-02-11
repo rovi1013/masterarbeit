@@ -26,8 +26,8 @@ class Config:
 
     top_k: int
 
-    post_filter: str
-    post_rerank: str
+    post_filter: bool
+    post_rerank: bool
     simularity_threshold: float
 
     llm_host: str

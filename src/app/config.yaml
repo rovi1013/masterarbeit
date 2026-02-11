@@ -5,7 +5,7 @@ embed_dir: "/emb_models"
 log_dir: "/logs"
 
 # Chunking
-chunking_strategy: "simple"
+chunking_strategy: "structure"  # simple | structure
 chunk_size: 512
 chunk_overlap: 64
 
@@ -23,8 +23,8 @@ hnsw_max_neighbors: 16
 top_k: 5
 
 # Post-Retrieval
-post_filter: "none"
-post_rerank: "none"
+post_filter: False
+post_rerank: False
 simularity_threshold: 0
 
 # Generation
