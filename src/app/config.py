@@ -42,12 +42,17 @@ def _env_override(var_name: str, default: Any) -> Any:
     v = os.getenv(var_name)
     if not v or v == f"__GMT_VAR_{var_name}__":
         return default
+    if isinstance(default, bool):
+        s = v.strip().lower()
+        if s in ["true", "t", "yes", "y"]:
+            return True
+        if s in ["false", "f", "no", "n"]:
+            return False
+        return bool(v)
     if isinstance(default, int):
         return int(v)
     if isinstance(default, float):
         return float(v)
-    if isinstance(default, bool):
-        return bool(v)
     return v
 
 

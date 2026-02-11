@@ -12,7 +12,7 @@ chunk_overlap: 64
 # Embedding
 embedding_model: "sentence-transformers/all-MiniLM-L6-v2"
 embedding_device: "cuda"
-normalize_embeddings: true
+normalize_embeddings: True
 
 # Index Parameters (chroma)
 hnsw_ef_construction: 100
