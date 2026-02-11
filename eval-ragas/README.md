@@ -200,5 +200,5 @@ Aggregiert mehrere RAGAS *_eval.json(.gz) pro q_id über Runs.
 options:
   -h, --help                      show this help message and exit
   -i, --input-dir INPUT_DIR       Ordner mit *_eval.json oder *_eval.json.gz Dateien.
-  -o, --output-name OUTPUT_NAME   Ausgabename ohne Endung (.json.gz wird angehängt).
+  -o, --output-name OUTPUT_NAME   Ausgabename ohne Endung (.json.gz wird angehaengt).
 ````
