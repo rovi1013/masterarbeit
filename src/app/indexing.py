@@ -240,7 +240,7 @@ def _build_index(cfg: Config | None = None, reset_db: bool = False) -> None:
         texts,
         batch_size=128,
         convert_to_numpy=True,
-        normalize_embeddings=True,
+        normalize_embeddings=cfg.normalize_embeddings,
         show_progress_bar=True
     )
     mark("EMBEDDING_END")
