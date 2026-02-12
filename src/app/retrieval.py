@@ -23,7 +23,7 @@ def get_collection(cfg: Config | None = None):
 
 def _apply_metadata_filter(hits: list[dict[str, Any]]) -> list[dict[str, Any]]:
     drop_types = {"title", "contents", "index", "doi", "pacs", "msc", "acknowledgments"}
-    min_span_chars = 50
+    min_span_chars = 20
 
     out: list[dict[str, Any]] = []
     for h in hits:
@@ -51,11 +51,11 @@ def _enhance_context(docs: list[str], metas: list[dict[str, Any]]) -> list[str]:
         block_type = m.get("block_type", "").strip()
 
         header = (
-            "### Metadaten\n"
+            "### Metadata\n"
             f"- Document title: {doc_title}\n"
             f"- Block title: {block_title}\n"
             f"- Block type: {block_type}\n"
-            "### Inhalt\n"
+            "### Content\n"
         )
         out.append(header + doc)
 
@@ -93,7 +93,7 @@ def retrieve(cfg: Config, question: str):
 
     retrieval_result = collection.query(
         query_embeddings=query_emb,
-        n_results=cfg.top_k,
+        n_results=20,
         include=["metadatas", "distances"],
     )
 
@@ -162,5 +162,7 @@ def retrieve(cfg: Config, question: str):
     if cfg.metadata_enhancement and chunking_is_structure:
         docs = _enhance_context(docs, out_metas)
 
-    logger.debug(f"Retriever hat {len(docs)} Dokumente zurückgegeben.")
-    return docs, out_metas
+    max_top_k = cfg.top_k
+    logger.debug(f"Retriever hat {len(docs)} Textsegmente zurückgegeben.\n"
+                 f"Top-k = {max_top_k} Textsegmente werden als Kontext verwendet.")
+    return docs[: max_top_k], out_metas[: max_top_k]
