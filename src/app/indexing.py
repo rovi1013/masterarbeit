@@ -103,6 +103,8 @@ def _structure_chunk(doc: RawDocument, chunk_size: int, chunk_overlap: int) -> L
     :param chunk_overlap: Overlap zwischen Chunks
     :return: Liste der gechunkten Dokumente
     """
+    from app.block_types import ALLOWED_BLOCK_TYPES, BLOCK_TYPES_ALIASES
+
     text = doc.text
     chunks: List[RawDocument] = []
     chunk_index = 0
@@ -182,8 +184,16 @@ def _structure_chunk(doc: RawDocument, chunk_size: int, chunk_overlap: int) -> L
         if len(hashes) == 1 and not seen_title:
             block_type = "title"
             seen_title = True
+
         elif len(hashes) == 6:
-            block_type = title.split()[0].lower() if title else "special"
+            first = (title.split()[0] if title else "").lower()
+            first = first.strip(" \t\r\n()[]{}<>\"'“”‘’").rstrip(".,;:")    # Satzzeichen filtern
+            if (not first) or any(ch.isdigit() for ch in first):            # Nummerierungen filtern
+                block_type = "special"
+            else:
+                first = BLOCK_TYPES_ALIASES.get(first, first)
+                block_type = first if first in ALLOWED_BLOCK_TYPES else "special"
+
         else:
             block_type = "heading"
 
