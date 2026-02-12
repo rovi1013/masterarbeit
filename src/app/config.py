@@ -26,8 +26,9 @@ class Config:
 
     top_k: int
 
-    post_filter: bool
-    post_rerank: bool
+    metadata_filter: bool
+    metadata_enhancement: bool
+    post_bm25_rerank: bool
     simularity_threshold: float
 
     llm_host: str
@@ -80,8 +81,9 @@ def load_config(path: str | Path = Path(__file__).parent / "config.yaml") -> Con
 
     data["top_k"] = _env_override("TOP_K", data["top_k"])
 
-    data["post_filter"] = _env_override("POST_FILTER", data["post_filter"])
-    data["post_rerank"] = _env_override("POST_RERANK", data["post_rerank"])
+    data["metadata_filter"] = _env_override("METADATA_FILTER", data["metadata_filter"])
+    data["metadata_enhancement"] = _env_override("METADATA_ENHACEMENT", data["metadata_enhancement"])
+    data["post_bm25_rerank"] = _env_override("POST_BM25_RERANK", data["post_bm25_rerank"])
     data["simularity_threshold"] = _env_override("SIMULARITY_THRESHOLD", data["simularity_threshold"])
 
     data["llm_host"] = _env_override("LLM_HOST", data["llm_host"])

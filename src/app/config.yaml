@@ -23,9 +23,10 @@ hnsw_max_neighbors: 16
 top_k: 5
 
 # Post-Retrieval
-post_filter: False
-post_rerank: False
-simularity_threshold: 0
+metadata_filter: False
+metadata_enhancement: False
+post_bm25_rerank: True
+simularity_threshold: 3.0
 
 # Generation
 llm_host: "http://ollama:11434"
