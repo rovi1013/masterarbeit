@@ -17,7 +17,7 @@ def main():
     collection = get_collection(cfg)
     logger.debug(f"[WARMUP] Collection Größe: {collection.count()} Chunks.")
     result_10 = collection.get(ids="10")
-    logger.debug(f"[WARMUP] Collection-Eintrag Metadata der ID #10:\n{result_10.get("metadatas", [[]])}\n====================")
+    logger.debug(f"[WARMUP] Collection-Eintrag Metadata der ID #10:\n{result_10.get("metadatas", [[]])}")
 
     # Embedding Model vorladen und ein einfaches embedding ausführen
     model = get_embed_model(cfg)
