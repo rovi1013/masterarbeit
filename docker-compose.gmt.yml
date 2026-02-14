@@ -5,14 +5,19 @@ services:
       dockerfile: Dockerfile.gmt
     container_name: rag-app
     environment:
-      CHUNKING_STRATEGY: __GMT_VAR_CHUNKING_STRATEGY__
-      CHUNK_SIZE: __GMT_VAR_CHUNK_SIZE__
-      CHUNK_OVERLAP: __GMT_VAR_CHUNK_OVERLAP__
-      NORMALIZE_EMBEDDINGS: __GMT_VAR_NORMALIZE_EMBEDDINGS__
-      HNSW_EF_CONSTRUCTION: __GMT_VAR_HNSW_EF_CONSTRUCTION__
-      HNSW_EF_SEARCH: __GMT_VAR_HNSW_EF_SEARCH__
-      HNSW_MAX_NEIGHBORS: __GMT_VAR_HNSW_MAX_NEIGHBORS__
-      TOP_K: __GMT_VAR_TOP_K__
+      CHUNKING_STRATEGY: "simple"
+      CHUNK_SIZE: 512
+      CHUNK_OVERLAP: 64
+      EMBEDDING_MODEL: "sentence-transformers/all-MiniLM-L6-v2"
+      NORMALIZE_EMBEDDINGS: False
+      HNSW_EF_CONSTRUCTION: 100
+      HNSW_EF_SEARCH: 100
+      HNSW_MAX_NEIGHBORS: 16
+      METADATA_FILTER: False
+      METADATA_ENHACEMENT: False
+      POST_BM25_RERANK: False
+      SIMULARITY_THRESHOLD: 3.0
+      OLLAMA_MODEL: "llama3:8b"
       HF_HOME: "/root/.cache/huggingface"
       ANONYMIZED_TELEMETRY: "False"
     ports:

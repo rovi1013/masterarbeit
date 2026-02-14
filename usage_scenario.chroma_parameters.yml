@@ -1,0 +1,59 @@
+---
+name: RAG Retrieval – Chroma HNSW-Parameter
+author: Vincent Roßkencht <vincent.rossknecht@envite.de>
+description: Es werden die Index- und Suchparameter der Vektordatenbank variiert. Gemessen werden Erstellen des Index und Beantworten der Fragen.
+
+compose-file: !include docker-compose.gmt.yml
+
+services:
+  rag-app:
+    environment:
+      HNSW_EF_CONSTRUCTION: __GMT_VAR_HNSW_EF_CONSTRUCTION__
+      HNSW_EF_SEARCH: __GMT_VAR_HNSW_EF_SEARCH__
+      HNSW_MAX_NEIGHBORS: __GMT_VAR_HNSW_MAX_NEIGHBORS__
+
+flow:
+  # 0. Datensatz von HF downloaden
+  - name: Download Dataset
+    container: rag-app
+    commands:
+      - type: console
+        command: python scripts/get_dataset.py
+        log-stdout: true
+        read-notes-stdout: true
+
+  # 1. Warmup Indexing
+  - name: Warmup Indexing
+    container: rag-app
+    commands:
+      - type: console
+        command: python -m app.warmup_indexing
+        log-stdout: true
+        read-notes-stdout: true
+
+  # 2. Indexing
+  - name: Indexing
+    container: rag-app
+    commands:
+      - type: console
+        command: python -m app.indexing
+        log-stdout: true
+        read-notes-stdout: true
+
+  # 3. Warmup RAG
+  - name: Warmup RAG
+    container: rag-app
+    commands:
+      - type: console
+        command: python -m app.warmup_rag
+        log-stdout: true
+        read-notes-stdout: true
+
+  # 4. RAG Querries
+  - name: RAG Querries
+    container: rag-app
+    commands:
+      - type: console
+        command: python scripts/rag_querries.py
+        log-stdout: true
+        read-notes-stdout: true

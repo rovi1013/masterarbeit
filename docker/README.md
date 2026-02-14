@@ -124,7 +124,7 @@ Environment Variablen:
 
 
 ## Container in GMT
-Die Ausführung auf der GMT Testbench erfordert das [usage_scenario.yml](../usage_scenario.yml). Hier wird ein bestimmter Workflow festgelegt, der auf der Testbench ausgeführt wird. Die Orchestrierung der Container erfolgt in GMT über ``docker run`` mit den Parametern aus der Docker Compose Datei. 
+Die Ausführung auf der GMT Testbench erfordert das eine ``usage_scenario`` Datei. Hier wird ein bestimmter Workflow festgelegt, der auf der Testbench ausgeführt wird. Die Orchestrierung der Container erfolgt in GMT über ``docker run`` mit den Parametern aus der Docker Compose Datei. 
 
 Beispiel für den ``rag-app`` Service:
 ````shell

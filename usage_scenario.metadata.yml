@@ -1,0 +1,58 @@
+---
+name: RAG Metadaten – Filter und Enhancement
+author: Vincent Roßkencht <vincent.rossknecht@envite.de>
+description: Es werden Metadaten-Filter und/oder Metadaten-Enhancement eingeschaltet. Gemessen wird das Beantworten der Fragen.
+
+compose-file: !include docker-compose.gmt.yml
+
+services:
+  rag-app:
+    environment:
+      METADATA_FILTER: __GMT_VAR_METADATA_FILTER__
+      METADATA_ENHACEMENT: __GMT_VAR_METADATA_ENHACEMENT__
+
+flow:
+  # 0. Datensatz von HF downloaden
+  - name: Download Dataset
+    container: rag-app
+    commands:
+      - type: console
+        command: python scripts/get_dataset.py
+        log-stdout: true
+        read-notes-stdout: true
+
+  # 1. Warmup Indexing
+  - name: Warmup Indexing
+    container: rag-app
+    commands:
+      - type: console
+        command: python -m app.warmup_indexing
+        log-stdout: true
+        read-notes-stdout: true
+
+  # 2. Indexing
+  - name: Indexing
+    container: rag-app
+    commands:
+      - type: console
+        command: python -m app.indexing
+        log-stdout: true
+        read-notes-stdout: true
+
+  # 3. Warmup RAG
+  - name: Warmup RAG
+    container: rag-app
+    commands:
+      - type: console
+        command: python -m app.warmup_rag
+        log-stdout: true
+        read-notes-stdout: true
+
+  # 4. RAG Querries
+  - name: RAG Querries
+    container: rag-app
+    commands:
+      - type: console
+        command: python scripts/rag_querries.py
+        log-stdout: true
+        read-notes-stdout: true
