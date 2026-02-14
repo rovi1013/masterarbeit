@@ -76,7 +76,7 @@ def _bm25_rerank(question: str, docs: list[str], metas: list[dict[str, Any]]) ->
 
     # BM25: hoher score = besserer Match
     order = sorted(range(len(docs)), key=lambda i: scores[i], reverse=True)
-    logger.debug(f"Neue Reihenfolge der Textsegmente nach BM25 Re-Ranking: {order}.")
+    logger.info(f"Neue Reihenfolge der Textsegmente nach BM25 Re-Ranking: {order}.")
     return [docs[i] for i in order], [metas[i] for i in order]
 
 
@@ -163,6 +163,6 @@ def retrieve(cfg: Config, question: str):
         docs = _enhance_context(docs, out_metas)
 
     max_top_k = cfg.top_k
-    logger.debug(f"Retriever hat {len(docs)} Textsegmente zurückgegeben.\n"
-                 f"Top-k = {max_top_k} Textsegmente werden als Kontext verwendet.")
+    logger.info(f"Retriever hat {len(docs)} Textsegmente zurückgegeben.\n"
+                f"Top-k = {max_top_k} Textsegmente werden als Kontext verwendet.")
     return docs[: max_top_k], out_metas[: max_top_k]
