@@ -8,6 +8,7 @@ compose-file: !include docker-compose.gmt.yml
 services:
   rag-app:
     environment:
+      CHUNKING_STRATEGY: "structure"
       METADATA_FILTER: __GMT_VAR_METADATA_FILTER__
       METADATA_ENHACEMENT: __GMT_VAR_METADATA_ENHACEMENT__
 
