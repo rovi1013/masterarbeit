@@ -36,5 +36,5 @@ services:
     ports:
       - "11434:11434"
     environment:
-      OLLAMA_MODEL: "llama3.2:3b"
+      OLLAMA_MODEL: "llama3:8b"
     restart: unless-stopped

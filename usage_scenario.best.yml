@@ -13,7 +13,6 @@ services:
       CHUNK_OVERLAP: 32
       METADATA_FILTER: True
       POST_BM25_RERANK: True
-      OLLAMA_MODEL: "llama3.2:3b"
 
 flow:
   # 0. Datensatz von HF downloaden
