@@ -12,15 +12,14 @@ from typing import Any, Dict, Iterable, Iterator, List, Optional, Tuple
 
 OUT_DIR = Path("gmt-data/processed-data")
 
-BYTES_UNITS = {"Bytes", "bytes", "Byte", "B"}  # GMT may emit different spellings
-TEMP_INPUT_UNITS = {"centi°C"}  # temperature values come as centi°C
+BYTES_UNITS = {"Bytes", "bytes", "Byte", "B"}
+TEMP_INPUT_UNITS = {"centi°C"}
 
 MARK_PREFIX = "##GMT_MARK##"
 MARK_RE = re.compile(r".*##GMT_MARK##\s+ts_us=(\d+)\s+event=([A-Z0-9_]+)(?:\s+(.*))?$")
 
 CONTAINERS = {"rag-app", "ollama"}
 
-# Keep the original spelling to avoid breaking downstream consumers.
 PARENT_INDEXING = "Indexing"
 PARENT_RAG = "RAG Querries"
 
@@ -97,17 +96,6 @@ METRIC_SPEC: Dict[str, MetricSpec] = {
     # Temperatur (centi°C -> °C -> MEAN/MAX)
     "lmsensors_temperature_component": MetricSpec("meanmax", "C", ("TEMP_CORE", "TEMP_PACK")),
 }
-
-
-# ================ #
-# Aufruf Parameter #
-# ================ #
-def parse_args() -> argparse.Namespace:
-    ap = argparse.ArgumentParser(description="Fasse die Measurement und Phase-Data Daten zusammen.")
-    ap.add_argument("-m", "--measurements", required=True, help="Pfad zu *_measurements.json")
-    ap.add_argument("-p", "--phase-data", required=True, help="Pfad zu *_phase-data.json")
-    ap.add_argument("-c", "--compress-lvl", type=int, default=9, help="Gzip compression level (1-9)")
-    return ap.parse_args()
 
 
 # ==================== #
@@ -404,18 +392,31 @@ def finalize_bucket(mtype: str, b: Optional[AggBucket]) -> Dict[str, Any]:
     return {"mean": b.sum / b.count, "max": b.max, "count": b.count}
 
 
+# ================ #
+# Aufruf Parameter #
+# ================ #
+def parse_args() -> argparse.Namespace:
+    ap = argparse.ArgumentParser(description="Fasse die Measurement und Phase-Data Daten zusammen.")
+    ap.add_argument("-r", "--run-id", required=True, help="GMT Run ID der measurements und phase-data.")
+    ap.add_argument("-o", "--output-name", help="Ouput Name für den Run.")
+    ap.add_argument("-c", "--compress-lvl", type=int, default=9, help="Gzip compression level (1-9)")
+    return ap.parse_args()
+
+
 def main() -> None:
     args = parse_args()
 
-    measurements_path = Path(args.measurements)
-    phase_path = Path(args.phase_data)
+    gmt_runs_dir = Path("gmt-data/raw-data")
+    measurements_path = next(gmt_runs_dir.rglob(f"*{args.run_id}_measurements.json"))
+    phase_path = next(gmt_runs_dir.rglob(f"*{args.run_id}_phase-data.json"))
+    output_name = args.output_name
 
     run, windows, marker_map = load_run_and_windows(phase_path)
-    run_id = run.get("id") or "unknown"
+    run_name = output_name if output_name else run.get("id")
 
     out_dir: Path = OUT_DIR
     out_dir.mkdir(parents=True, exist_ok=True)
-    out_path = out_dir / f"{run.get('date', date_prefix(phase_path))}_{run_id}_merged.json.gz"
+    out_path = out_dir / f"{run.get('date', date_prefix(phase_path))}_{run_name}_merged.json.gz"
 
     entity_mappings: Dict[str, set] = {
         "DRAM_TOTAL": set(),

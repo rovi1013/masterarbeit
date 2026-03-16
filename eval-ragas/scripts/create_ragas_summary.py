@@ -18,10 +18,7 @@ RAGAS_METRICS: tuple[str, ...] = (
 
 
 def load_json(path: Path) -> dict[str, Any]:
-    if path.suffix == ".gz":
-        with gzip.open(path, "rt", encoding="utf-8") as f:
-            return json.load(f)
-    with path.open("r", encoding="utf-8") as f:
+    with gzip.open(path, "rt", encoding="utf-8") as f:
         return json.load(f)
 
 
@@ -29,13 +26,6 @@ def dump_json_gz(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with gzip.open(path, "wt", encoding="utf-8") as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)
-
-
-def find_eval_files(input_dir: Path) -> list[Path]:
-    files: list[Path] = []
-    for pat in ("*_eval.json", "*_eval.json.gz"):
-        files.extend(input_dir.rglob(pat))
-    return sorted(set(files), key=lambda p: p.as_posix())
 
 
 def metric_summary(values: list[float | None]) -> dict[str, Any]:
@@ -87,25 +77,20 @@ def metric_summary(values: list[float | None]) -> dict[str, Any]:
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser(description="Aggregiert mehrere RAGAS *_eval.json(.gz) pro q_id über Runs.")
-    ap.add_argument("-i", "--input-dir", required=True, help="Ordner mit *_eval.json oder *_eval.json.gz Dateien.")
-    ap.add_argument(
-        "-o",
-        "--output-name",
-        default="ragas_runs_aggregated",
-        help="Ausgabename ohne Endung (.json.gz wird angehängt).",
-    )
+    ap = argparse.ArgumentParser(description="Aggregiert mehrere RAGAS *_eval.json.gz pro q_id über Runs.")
+    ap.add_argument("-i", "--input-dir", required=True, help="Ordner mit *_eval.json.gz Dateien.")
+    ap.add_argument("-o", "--output", default="ragas_runs_aggregated", help="Ausgabename ohne Endung (wird.json.gz).")
     args = ap.parse_args()
 
     input_dir = Path(args.input_dir)
     if not input_dir.is_dir():
         raise SystemExit(f"Kein Ordner: {input_dir}")
 
-    out_path = input_dir / f"{args.output_name}.json.gz"
+    out_path = input_dir / f"{args.output}.json.gz"
 
-    files = find_eval_files(input_dir)
+    files = [input_dir / p.name for p in input_dir.glob("*.json.gz")]
     if not files:
-        raise SystemExit(f"Keine *_eval.json(.gz) Dateien in: {input_dir}")
+        raise SystemExit(f"Keine *.json.gz) Dateien in: {input_dir}")
 
     # data[q_id][metric] -> Liste der Werte über Runs
     data: dict[str, dict[str, list[float | None]]] = {}

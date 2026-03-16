@@ -1,7 +1,8 @@
 import argparse
 import asyncio
-import gzip
 import json
+import math
+import gzip
 import statistics
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -116,27 +117,36 @@ async def score_one_record(
         answer = r["answer"]
         contexts = r.get("contexts") or []
         context_meta = r.get("context_meta") or []
+        f_res, cu_res = None, None
 
-        f_res = await call_with_retries(
-            lambda: faithfulness.ascore(
-                user_input=question,
-                response=answer,
-                retrieved_contexts=contexts,
+        if contexts:
+            f_res = await call_with_retries(
+                lambda: faithfulness.ascore(
+                    user_input=question,
+                    response=answer,
+                    retrieved_contexts=contexts,
+                )
             )
-        )
-        ar_res = await call_with_retries(
-            lambda: answer_rel.ascore(
-                user_input=question,
-                response=answer,
+            ar_res = await call_with_retries(
+                lambda: answer_rel.ascore(
+                    user_input=question,
+                    response=answer,
+                )
             )
-        )
-        cu_res = await call_with_retries(
-            lambda: ctx_util.ascore(
-                user_input=question,
-                response=answer,
-                retrieved_contexts=contexts,
+            cu_res = await call_with_retries(
+                lambda: ctx_util.ascore(
+                    user_input=question,
+                    response=answer,
+                    retrieved_contexts=contexts,
+                )
             )
-        )
+        else:
+            ar_res = await call_with_retries(
+                lambda: answer_rel.ascore(
+                    user_input=question,
+                    response=answer,
+                )
+            )
 
         item = {
             "q_id": q_id,
@@ -146,9 +156,9 @@ async def score_one_record(
             "gold_doc": r.get("gold_doc"),
             "ground_truth": r.get("ground_truth"),
             "metrics": {
-                "faithfulness": f_res.value,
+                "faithfulness": None if f_res is None else f_res.value,
                 "answer_relevancy": ar_res.value,
-                "context_utilization": cu_res.value,
+                "context_utilization": None if cu_res is None else cu_res.value,
             },
         }
         return ScoredRecord(idx=idx, q_id=q_id, item=item)
@@ -175,6 +185,7 @@ async def main():
         provider="openai",
         client=client,
         temperature=JUDGE_TEMPERATURE,
+        max_tokens=8192,
     )
     embeddings = embedding_factory(
         "openai",
