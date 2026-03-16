@@ -107,7 +107,7 @@ def retrieve(cfg: Config, question: str):
         hits = _apply_metadata_filter(hits)
 
     # OPTION 2) Filter über Distanz; nur wenn threshold eine gültige Zahl ist
-    threshold = float(cfg.simularity_threshold)
+    threshold = float(cfg.similarity_threshold)
     if 0.0 < threshold <= 2.0:
         hits = [h for h in hits if h["dist"] <= threshold]
 
@@ -164,5 +164,5 @@ def retrieve(cfg: Config, question: str):
 
     max_top_k = cfg.top_k
     logger.info(f"Retriever hat {len(docs)} Textsegmente zurückgegeben.\n"
-                f"Top-k = {max_top_k} Textsegmente werden als Kontext verwendet.")
+                f"Top-k = {max_top_k if max_top_k < len(docs) else len(docs)} Textsegmente werden als Kontext verwendet.")
     return docs[: max_top_k], out_metas[: max_top_k]
