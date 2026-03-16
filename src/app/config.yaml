@@ -26,7 +26,7 @@ top_k: 5
 metadata_filter: False
 metadata_enhancement: False
 post_bm25_rerank: False
-simularity_threshold: 3.0
+similarity_threshold: 3.0
 
 # Generation
 llm_host: "http://ollama:11434"

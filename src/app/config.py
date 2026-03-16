@@ -29,7 +29,7 @@ class Config:
     metadata_filter: bool
     metadata_enhancement: bool
     post_bm25_rerank: bool
-    simularity_threshold: float
+    similarity_threshold: float
 
     llm_host: str
     llm_model: str
@@ -84,7 +84,7 @@ def load_config(path: str | Path = Path(__file__).parent / "config.yaml") -> Con
     data["metadata_filter"] = _env_override("METADATA_FILTER", data["metadata_filter"])
     data["metadata_enhancement"] = _env_override("METADATA_ENHACEMENT", data["metadata_enhancement"])
     data["post_bm25_rerank"] = _env_override("POST_BM25_RERANK", data["post_bm25_rerank"])
-    data["simularity_threshold"] = _env_override("SIMULARITY_THRESHOLD", data["simularity_threshold"])
+    data["similarity_threshold"] = _env_override("SIMILARITY_THRESHOLD", data["similarity_threshold"])
 
     data["llm_host"] = _env_override("LLM_HOST", data["llm_host"])
     data["llm_model"] = _env_override("OLLAMA_MODEL", data["llm_model"])
