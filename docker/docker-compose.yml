@@ -11,6 +11,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
+      - ../src/data/index:/src/data/index
       - ../src/data:/src/data
       - ../src/scripts:/src/scripts
       - ../hf-cache:/root/.cache/huggingface

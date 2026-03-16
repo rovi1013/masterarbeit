@@ -46,7 +46,7 @@ async def main():
     out_path = in_path.with_name(f"{in_path.stem}_eval.json.gz")
 
     client = AsyncOpenAI(api_key=OLLAMA_API_KEY, base_url=OLLAMA_BASE_URL)
-    llm = llm_factory(JUDGE_MODEL, provider="openai", client=client)
+    llm = llm_factory(JUDGE_MODEL, provider="openai", client=client, temperature=0)
     embeddings = embedding_factory("openai", model=EMBEDDING_MODEL, client=client)
 
     faithfulness = Faithfulness(llm=llm)

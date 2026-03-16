@@ -1,9 +1,14 @@
 ---
-name: RAG-System Test
+name: RAG Re-Ranking – BM25
 author: Vincent Roßkencht <vincent.rossknecht@envite.de>
-description: Dieser Test dient der Messung des Energieverbrauchs des RAG-Systems.
+description: Es wird das BM25 Re-Ranking aktiviert. Gemessen wird das Beantworten der Fragen.
 
 compose-file: !include docker-compose.gmt.yml
+
+services:
+  rag-app:
+    environment:
+      POST_BM25_RERANK: __GMT_VAR_POST_BM25_RERANK__
 
 flow:
   # 0. Datensatz von HF downloaden

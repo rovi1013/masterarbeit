@@ -1,15 +1,18 @@
-from dataclasses import dataclass
-from pathlib import Path
-from typing import List, Dict, Any
 import chromadb
 import shutil
 import logging
+import re
+from dataclasses import dataclass
+from pathlib import Path
+from typing import List, Dict, Any
 
 from app.config import load_config, Config
 from app.embedding import get_embed_model
 from app.time_marker import mark
 
 logger = logging.getLogger(__name__)
+
+_MARKER_RE = re.compile(r"^(#{1,6})\s+(.*)\s*$")
 
 
 @dataclass
@@ -56,34 +59,147 @@ def _load_documents(data_dir: str) -> List[RawDocument]:
 # ========== CHUNKING ==========
 #
 # Verschiedene Chunking Strategien implementieren
-# 1. simple_chunk(): Feste Chunk Größe und fester Overlap, möglichst einfaches aufteilen der Dokumente
-# 2. ....
+# 1. _simple_chunk(): Feste Chunk Größe und fester Overlap, möglichst einfaches aufteilen der Dokumente
+# 2. _structure_chunk(): Chunking auf Basis von strukturellen Eigenschaften der Dokumente
 
-def _simple_chunk(doc: RawDocument, chunk_size: int, overlap: int) -> List[RawDocument]:
+def _simple_chunk(doc: RawDocument, chunk_size: int, chunk_overlap: int) -> List[RawDocument]:
     """
     Einfache Chunking Strategie mit fester chunk size und einem festen overlap zwischen den Chunks.
-    :param doc: Liste der Klasse RawDocument
+    :param doc: Liste der Raw Textdokumente
     :param chunk_size: Größe der Chunks
-    :param overlap: Overlap zwischen Chunks
+    :param chunk_overlap: Overlap zwischen Chunks
     :return: Liste der gechunkten Dokumente
     """
     text = doc.text
     chunks: list[RawDocument] = []
+    chunk_index = 0
 
     start = 0
-    step = max(1, chunk_size - overlap)
-    chunk_index = 0
+    step = max(1, chunk_size - chunk_overlap)
 
     while start < len(text):
         end = start + chunk_size
         chunk_text = text[start:end]
         metadata = dict(doc.metadata)
         metadata["chunk_index"] = chunk_index
+        metadata["chunk_start"] = start
+        metadata["chunk_end"] = min(end, len(text))
         if chunk_text.strip():
             chunks.append(RawDocument(text=chunk_text, metadata=metadata))
         chunk_index += 1
         start += step
 
+    return chunks
+
+
+def _structure_chunk(doc: RawDocument, chunk_size: int, chunk_overlap: int) -> List[RawDocument]:
+    """
+    Chunking auf Basis der Markdown Strukturen der arXiv Dokumente im Datensatz. Mit sections: #-#####;
+    besondere Blöcke: ###### (Abstract, Theorem, Definition, Proof, ...). Das Chunking findet auf Basis dieser Blöcke
+    statt. Die Information dieser Blöcke (Typ, Titel, ...) wird zusätzlich zu Start und Ende des Chunks als Metadaten
+    zum Chunk gespeichert.
+    :param doc: Liste der Raw Textdokumente
+    :param chunk_size: maximale Größe der Chunks
+    :param chunk_overlap: Overlap zwischen Chunks
+    :return: Liste der gechunkten Dokumente
+    """
+    from app.block_types import ALLOWED_BLOCK_TYPES, BLOCK_TYPES_ALIASES
+
+    text = doc.text
+    chunks: List[RawDocument] = []
+    chunk_index = 0
+
+    # Extract Doc Title: "#..."; fallback wenn kein "#": 1st (non-empty) line in Doc
+    doc_title, first_non_empty = "", ""
+    for line in text.splitlines():
+        s = line.strip()
+        if not s:
+            continue
+        if not first_non_empty:
+            first_non_empty = s
+
+        m = _MARKER_RE.match(s)
+        if m and len(m.group(1)) == 1:
+            doc_title = (m.group(2).strip() or first_non_empty)
+            break
+
+    doc_title = doc_title or first_non_empty
+
+    block_start = 0
+    block_title = ""
+    block_type = "text"
+
+    def emit_chunk(chunk_text: str, start_abs: int, end_abs: int):
+        nonlocal chunk_index
+        meta = dict(doc.metadata)
+        meta["doc_title"] = doc_title
+        meta["block_title"] = block_title
+        meta["block_type"] = block_type
+        meta["chunk_index"] = chunk_index
+        meta["chunk_start"] = start_abs
+        meta["chunk_end"] = end_abs
+
+        chunks.append(RawDocument(text=chunk_text, metadata=meta))
+        chunk_index += 1
+
+    # Aufteilen der Dokumente in Blöcke nach "#" und dann Chunks
+    def finalize_block(block_end: int):
+        if block_end <= block_start:
+            return
+
+        block_text = text[block_start:block_end]
+        if not block_text.strip():
+            return
+
+        start = 0
+        while start < len(block_text):
+            end = min(start + chunk_size, len(block_text))
+            chunk_text = block_text[start:end]
+
+            if chunk_text.strip():
+                emit_chunk(chunk_text, block_start + start, block_start + end)
+
+            if end == len(block_text):
+                break
+
+            start = end - chunk_overlap if chunk_overlap > 0 else end
+
+    pos = 0
+    for line in text.splitlines(keepends=True):
+        line_start = pos
+        line_end = pos + len(line)
+        pos = line_end
+
+        marker = _MARKER_RE.match(line.rstrip("\r\n"))
+        if not marker:
+            continue
+
+        finalize_block(line_start)
+
+        hashes = marker.group(1)
+        title = (marker.group(2).strip() or "")
+
+        block_title = title
+        seen_title = False
+        if len(hashes) == 1 and not seen_title:
+            block_type = "title"
+            seen_title = True
+
+        elif len(hashes) == 6:
+            first = (title.split()[0] if title else "").lower()
+            first = first.strip(" \t\r\n()[]{}<>\"'“”‘’").rstrip(".,;:")    # Satzzeichen filtern
+            if (not first) or any(ch.isdigit() for ch in first):            # Nummerierungen filtern
+                block_type = "special"
+            else:
+                first = BLOCK_TYPES_ALIASES.get(first, first)
+                block_type = first if first in ALLOWED_BLOCK_TYPES else "special"
+
+        else:
+            block_type = "heading"
+
+        block_start = line_end
+
+    finalize_block(len(text))
     return chunks
 
 
@@ -112,8 +228,19 @@ def _build_index(cfg: Config | None = None, reset_db: bool = False) -> None:
     # ========== 2. Dokumente Chunken ==========
     logger.info("Chunking der Dokumente ...")
     chunked_docs: list[RawDocument] = []
+
+    if cfg.chunking_strategy == "simple":
+        chunk_func = _simple_chunk
+    elif cfg.chunking_strategy == "structure":
+        chunk_func = _structure_chunk
+    else:
+        logging.error(f"Unbekannte Chunking Strategie: {cfg.chunking_strategy}")
+        raise ValueError()
+
+    mark("CHUNKING_START")
     for doc in docs:
-        chunked_docs.extend(_simple_chunk(doc, cfg.chunk_size, cfg.chunk_overlap))
+        chunked_docs.extend(chunk_func(doc, chunk_size=cfg.chunk_size, chunk_overlap=cfg.chunk_overlap))
+    mark("CHUNKING_END")
 
     logger.info(f"Insgesamt {len(chunked_docs)} Chunks erstellt.")
 
@@ -130,8 +257,9 @@ def _build_index(cfg: Config | None = None, reset_db: bool = False) -> None:
     mark("EMBEDDING_START")
     embeddings = model.encode(
         texts,
+        batch_size=128,
         convert_to_numpy=True,
-        normalize_embeddings=True,
+        normalize_embeddings=cfg.normalize_embeddings,
         show_progress_bar=True
     )
     mark("EMBEDDING_END")
@@ -146,9 +274,12 @@ def _build_index(cfg: Config | None = None, reset_db: bool = False) -> None:
         "rag",
         metadata={
             "hnsw:space": "cosine",
-            "hnsw:num_threads": 4,
+            "hnsw:num_threads": 5,
             "hnsw:batch_size": 10_000,
             "hnsw:sync_threshold": 200_000,
+            "ef_construction": cfg.hnsw_ef_construction,
+            "ef_search": cfg.hnsw_ef_search,
+            "max_neighbors": cfg.hnsw_max_neighbors,
         }
     )
 
@@ -166,14 +297,12 @@ def _build_index(cfg: Config | None = None, reset_db: bool = False) -> None:
     for start in range(0, total, batch_size):
         end = min(start + batch_size, total)
         batch_ids = ids[start:end]
-        batch_docs = texts[start:end]
         batch_embs = embeddings[start:end]
         batch_metas = metadatas[start:end]
 
-        logger.info(f"Füge Batch {start}–{end} von {total} hinzu ...")
+        logger.debug(f"Füge Batch {start}–{end} von {total} hinzu ...")
         collection.add(
             ids=batch_ids,
-            documents=batch_docs,
             embeddings=batch_embs,
             metadatas=batch_metas,
         )

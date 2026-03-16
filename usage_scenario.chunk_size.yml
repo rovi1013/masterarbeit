@@ -1,0 +1,58 @@
+---
+name: RAG Chunking - Chunk-Größe und Overlap
+author: Vincent Roßkencht <vincent.rossknecht@envite.de>
+description: Es werden Chunk-Größe und Overlap variiert. Gemessen werden Chunk-Erstellung, Berechnung der Embeddings, Erstellen des Index und Beantworten der Fragen.
+
+compose-file: !include docker-compose.gmt.yml
+
+services:
+  rag-app:
+    environment:
+      CHUNK_SIZE: __GMT_VAR_CHUNK_SIZE__
+      CHUNK_OVERLAP: __GMT_VAR_CHUNK_OVERLAP__
+
+flow:
+  # 0. Datensatz von HF downloaden
+  - name: Download Dataset
+    container: rag-app
+    commands:
+      - type: console
+        command: python scripts/get_dataset.py
+        log-stdout: true
+        read-notes-stdout: true
+
+  # 1. Warmup Indexing
+  - name: Warmup Indexing
+    container: rag-app
+    commands:
+      - type: console
+        command: python -m app.warmup_indexing
+        log-stdout: true
+        read-notes-stdout: true
+
+  # 2. Indexing
+  - name: Indexing
+    container: rag-app
+    commands:
+      - type: console
+        command: python -m app.indexing
+        log-stdout: true
+        read-notes-stdout: true
+
+  # 3. Warmup RAG
+  - name: Warmup RAG
+    container: rag-app
+    commands:
+      - type: console
+        command: python -m app.warmup_rag
+        log-stdout: true
+        read-notes-stdout: true
+
+  # 4. RAG Querries
+  - name: RAG Querries
+    container: rag-app
+    commands:
+      - type: console
+        command: python scripts/rag_querries.py
+        log-stdout: true
+        read-notes-stdout: true

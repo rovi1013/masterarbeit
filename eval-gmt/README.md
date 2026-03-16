@@ -10,14 +10,16 @@ Das Green Metrics Tool ist eine modulare Suite aus verschiedenen Tools, die Ener
 ## Struktur
 ````text
 eval-gmt/
-├── gmt-data/                           # MESSLAUF DATEN
-│   ├── filtered-data/                  # Gefilterete Daten
-│   └── raw_data/                       # Roh-Daten von GMT
+├── gmt-data/                           # GMT MESSLÄUFE ERGEBNISSE
+│   ├── opt-chunk_size/                 # Chunk Größen Variationen
+│   ├── 
+│   └── variance/                       # GMT Varianz Messung
 │
 ├── scripts/                            # MESSDATEN AUFBEREITUNG
-│   ├── create_measurement_summary.py   # Zusammenfassung eines Messlaufs
+│   ├── create_gmt_summary.py           # Mehrere Messungen zusammenfassen
 │   ├── filter_gmt_meassurement.py      # Filter der Messwerte
-│   └── get_gmt_measurement.py          # Download der Messwerte
+│   ├── get_gmt_measurement.py          # Download der Messwerte
+│   └── merge_gmt_measurement.py        # Zusammenführung eines Messlaufs
 │
 ├── requirements.txt
 └── README.md
@@ -43,15 +45,15 @@ _Messungen mit Community Version haben einige Limitationen, siehe [GMT Website](
 Die Messung kann über den Tab [Submit Software](https://metrics.green-coding.io/request.html) im Scenario Runner gestartet werden. Die Ergebnisse der Messung können unter [Runs / Repos](https://metrics.green-coding.io/runs.html) aufgerufen werden. Über die URL der einzelnen Messungen erhält man die ``GMT RUN ID``:  ``https://.../stats.html?id=<GMT RUN ID>``.
 
 ### Ergebnisse von GMT API abrufen
-Das Skript [get_gmt_measurement.py](#downlaod-der-messungen) ruft 2 Endpoints der GMT API auf und speichert die Antworten als JSON mit den Formaten ``YYYY-MM-DD_<GMT RUN ID>_measurements.json`` und ``YYYY-MM-DD_<GMT RUN ID>_phase-data.json`` in [gmt-data/raw-data/](gmt-data/raw-data).
+Das Skript [get_gmt_measurement.py](#downlaod-der-messungen) ruft 2 Endpoints der GMT API auf und speichert die Antworten als JSON mit den Formaten ``YYYY-MM-DD_<GMT RUN ID>_measurements.json`` und ``YYYY-MM-DD_<GMT RUN ID>_phase-data.json``.
 ````shell
 python .\scripts\get_gmt_measurement.py --key "<GMT AUTHENTICATION TOKEN>" --run-id "<GMT RUN ID>"
 ````
 
 ### Ergebnisse der Messung zusammenfassen
-Die 2 Endpoints der GMT API geben eine Menge Raw Data zurück, diese Daten werden mit dem Skript [create_measurement_summary.py](#summary-der-messwerte) zusammengefasst und als GZIP komprimierte JSON mit dem Format ``YYYY-MM-DD_<GMT RUN ID>_summary.json.gz`` in [gmt-data/processed-data/](gmt-data/processed-data) abgespeichert.
+Die 2 Endpoints der GMT API geben eine Menge Raw Data zurück, diese Daten werden mit dem Skript [merge_gmt_measurement.py](#summary-der-messwerte) zusammengefasst und als GZIP komprimierte JSON mit dem Format ``YYYY-MM-DD_<GMT RUN ID>_summary.json.gz``.
 ````shell
-python .\scripts\create_measurement_summary.py --measurements "*_measurements.json" --phase-data "*_phase-data.json"
+python .\scripts\merge_gmt_measurement.py --measurements "*_measurements.json" --phase-data "*_phase-data.json"
 ````
 
 
@@ -105,10 +107,10 @@ options:
 
 
 ### Summary der Messwerte
-Das Skript [create_measurement_summary.py](scripts/create_measurement_summary.py) erstellt aus den beiden Dateien ``YYYY-MM-DD_<Messlauf-ID>_measurements.json`` und ``YYYY-MM-DD_<Messlauf-ID>_phase-data.json`` eine Zusammenfassung für den entsprechenden Messlauf.
+Das Skript [merge_gmt_measurement.py](scripts/merge_gmt_measurement.py) erstellt aus den beiden Dateien ``YYYY-MM-DD_<Messlauf-ID>_measurements.json`` und ``YYYY-MM-DD_<Messlauf-ID>_phase-data.json`` eine Zusammenfassung für den entsprechenden Messlauf.
 
 ````shell
-usage: create_measurement_summary.py [-h] -m MEASUREMENTS -p PHASE_DATA [-c COMPRESS_LVL]
+usage: merge_gmt_measurement.py [-h] -m MEASUREMENTS -p PHASE_DATA [-c COMPRESS_LVL]
 
 Fasse die Measurement und Phase-Data Daten zusammen.
 
@@ -227,6 +229,21 @@ Entity name mappings:
 | lmsensors_temperature_component  | coretemp-isa-0000_Core-0       | TEMP_CORE       |
 | lmsensors_temperature_component  | coretemp-isa-0000_Package-id-0 | TEMP_PACKAGE    |
 | lmsensors_temperature_component  | unknown                        | TEMP_IGNORED    |
+
+
+### Messläufe zusammenfassen
+Das Skript [create_gmt_summary.py](scripts/create_gmt_summary.py) erstellt eine statistische Auswertung von mehreren GMT Messläufen.
+
+````shell
+usage: create_gmt_summary.py [-h] -i INPUT_DIR [-o OUTPUT_NAME]
+
+Aggregiert mehrere GMT *_merged.json(.gz) über Runs.
+
+options:
+  -h, --help                      show this help message and exit
+  -i, --input-dir INPUT_DIR       Ordner mit *_merged.json oder *_merged.json.gz Dateien.
+  -o, --output-name OUTPUT_NAME   Ausgabename ohne Endung (.json.gz wird angehaengt).
+````
 
 
 ### Filter der Messungen
