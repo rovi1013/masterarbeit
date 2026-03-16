@@ -30,11 +30,6 @@ emb_models/*
 # GMT Messungen
 eval-gmt/gmt-data/raw-data/*
 eval-gmt/gmt-data/processed-data/*
-!eval-gmt/gmt-data/processed-data/*.gz
-
-# RAGAS Messungen
-eval-ragas/ragas-data/*
-!eval-ragas/ragas-data/*.gz
 
 # Misc
 misc/rag_querries.sh
